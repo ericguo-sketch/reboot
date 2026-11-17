@@ -6,29 +6,35 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="重生系統" />
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23F7F6F2'/%3E%3Cpolygon points='90,28 148,62 148,118 90,152 32,118 32,62' fill='none' stroke='%235F7A61' stroke-width='10'/%3E%3Ccircle cx='90' cy='90' r='16' fill='%235F7A61'/%3E%3C/svg%3E" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23F6F4EF'/%3E%3Cpolygon points='90,28 148,62 148,118 90,152 32,118 32,62' fill='none' stroke='%234A664D' stroke-width='8'/%3E%3Ccircle cx='90' cy='90' r='13' fill='%234A664D'/%3E%3C/svg%3E" />
   <title>當我重生後獲得一套系統</title>
   <style>
     :root {
-      --bg-base: #F7F6F2;
-      --bg-card: #FFFFFF;
-      --bg-sub: #EFECE6;
-      --accent: #5F7A61;
-      --accent-soft: rgba(95, 122, 97, 0.14);
-      --text-main: #2C2E2B;
-      --text-muted: #787A75;
-      --border: rgba(44, 46, 43, 0.08);
-      --shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+      --bg-base: #F6F4EF;
+      --bg-card: rgba(253, 252, 249, 0.88);
+      --bg-solid: #FDFCF9;
+      --bg-sub: #ECE9E1;
+      --accent: #4A664D;
+      --accent-soft: rgba(74, 102, 77, 0.09);
+      --text-main: #1F221F;
+      --text-muted: #70746F;
+      --border: rgba(31, 34, 31, 0.09);
+      --shadow: 0 8px 28px -10px rgba(35, 44, 36, 0.08);
+      --dock-bg: rgba(253, 252, 249, 0.82);
+      --font-serif: "Songti TC", "Noto Serif TC", "PMingLiU", Georgia, serif;
+      --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang TC", "Microsoft JhengHei", sans-serif;
     }
 
     body.dark-mode {
-      --bg-base: #1C1B1A;
-      --bg-card: #262523;
-      --bg-sub: #302E2C;
-      --text-main: #EAE8E3;
-      --text-muted: #9B9892;
-      --border: rgba(255, 255, 255, 0.08);
-      --shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+      --bg-base: #181817;
+      --bg-card: rgba(33, 33, 31, 0.9);
+      --bg-solid: #21211F;
+      --bg-sub: #2C2B29;
+      --text-main: #ECEAE4;
+      --text-muted: #989690;
+      --border: rgba(255, 255, 255, 0.09);
+      --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.45);
+      --dock-bg: rgba(33, 33, 31, 0.86);
     }
 
     * {
@@ -43,300 +49,568 @@
       margin: 0;
       padding: 0;
       background-color: var(--bg-base);
+      background-image: radial-gradient(rgba(74, 102, 77, 0.045) 0.75px, transparent 0.75px);
+      background-size: 18px 18px;
       color: var(--text-main);
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      font-family: var(--font-sans);
       min-height: 100vh;
       padding-top: env(safe-area-inset-top, 16px);
-      padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 84px);
+      padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 98px);
       transition: background-color 0.25s ease, color 0.25s ease;
     }
 
     .container {
-      max-width: 480px;
+      max-width: 460px;
       margin: 0 auto;
-      padding: 14px 18px;
+      padding: 16px 20px;
     }
 
-    /* 系統浮動通知（升級/獲得經驗） */
+    /* 1.5px 極細單色線條 SVG */
+    svg.ico {
+      width: 17px;
+      height: 17px;
+      stroke: currentColor;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      flex-shrink: 0;
+    }
+
+    /* 入場雙模式動畫遮罩 */
+    .intro-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: var(--bg-base);
+      background-image: radial-gradient(rgba(74, 102, 77, 0.05) 0.75px, transparent 0.75px);
+      background-size: 18px 18px;
+      z-index: 500;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .intro-overlay.fade-out {
+      opacity: 0;
+      transform: translateY(-16px);
+      pointer-events: none;
+    }
+
+    .intro-skip {
+      position: absolute;
+      top: calc(env(safe-area-inset-top, 16px) + 14px);
+      right: 22px;
+      background: transparent;
+      border: 0.5px solid var(--border);
+      color: var(--text-muted);
+      font-size: 11.5px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    /* 初次覺醒鋼筆法陣動畫 */
+    .compass-svg {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 18px;
+      color: var(--accent);
+    }
+
+    .draw-path {
+      stroke-dasharray: 520;
+      stroke-dashoffset: 520;
+      animation: strokeDraw 1.8s cubic-bezier(0.35, 0, 0.25, 1) forwards;
+    }
+
+    .draw-path-delay {
+      stroke-dasharray: 420;
+      stroke-dashoffset: 420;
+      animation: strokeDraw 1.6s 0.4s cubic-bezier(0.35, 0, 0.25, 1) forwards;
+    }
+
+    @keyframes strokeDraw {
+      to { stroke-dashoffset: 0; }
+    }
+
+    .pulse-ring {
+      transform-origin: center;
+      animation: softPulse 2.4s infinite ease-in-out;
+    }
+
+    @keyframes softPulse {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.06); opacity: 0.45; }
+    }
+
+    .intro-eyebrow {
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .intro-title {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 700;
+      margin: 0 0 10px 0;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+
+    .intro-typewriter {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.65;
+      max-width: 320px;
+      min-height: 44px;
+      margin-bottom: 18px;
+    }
+
+    .intro-form {
+      width: 100%;
+      max-width: 330px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.5s ease;
+    }
+
+    .intro-form.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 系統頂部浮動通知 */
     .sys-toast {
       position: fixed;
       top: calc(env(safe-area-inset-top, 12px) + 12px);
       left: 50%;
-      transform: translateX(-50%) translateY(-120%);
-      background: var(--bg-card);
-      border: 1.5px solid var(--accent);
+      transform: translateX(-50%) translateY(-150%);
+      background: var(--bg-solid);
+      border: 0.5px solid var(--accent);
       color: var(--text-main);
-      padding: 10px 18px;
+      padding: 9px 18px;
       border-radius: 999px;
-      font-size: 13px;
-      font-weight: 700;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
-      z-index: 300;
+      font-size: 12.5px;
+      font-weight: 600;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+      z-index: 400;
       transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-      white-space: nowrap;
+      max-width: 90vw;
+      text-align: center;
     }
 
-    .sys-toast.show {
-      transform: translateX(-50%) translateY(0);
-    }
+    .sys-toast.show { transform: translateX(-50%) translateY(0); }
 
-    /* 頂部系統標題列 */
+    /* 頂部標題列 */
     .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
-    .sys-brand {
-      cursor: pointer;
+    .sys-brand { cursor: pointer; }
+
+    .greeting-title {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: 0.3px;
     }
 
     .sys-tag {
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 700;
       color: var(--accent);
-      letter-spacing: 0.5px;
+      letter-spacing: 1.4px;
+      margin-top: 3px;
     }
 
-    .greeting-title {
-      font-size: 18px;
-      font-weight: 800;
-      margin: 2px 0 0 0;
-    }
-
-    .top-actions { display: flex; gap: 7px; }
+    .top-actions { display: flex; gap: 8px; }
 
     .icon-btn {
-      width: 35px;
-      height: 35px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       background: var(--bg-card);
-      border: 1px solid var(--border);
+      border: 0.5px solid var(--border);
       color: var(--text-main);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 15px;
       cursor: pointer;
       box-shadow: var(--shadow);
+      position: relative;
     }
 
-    /* 卡片與區塊 */
-    .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 16px;
-      margin-bottom: 14px;
-      box-shadow: var(--shadow);
-    }
-
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .section-title {
-      font-size: 15px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .chip-btn {
-      background: var(--bg-sub);
-      border: none;
-      color: var(--text-main);
-      font-size: 12px;
-      font-weight: 600;
-      padding: 6px 11px;
-      border-radius: 999px;
-      cursor: pointer;
-    }
-
-    .chip-btn.primary {
-      background: var(--accent);
-      color: #fff;
-    }
-
-    /* 核心升級面板（LV + EXP + 五維雷達圖） */
-    .status-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-bottom: 8px;
-    }
-
-    .lv-badge {
-      font-size: 24px;
-      font-weight: 900;
+    .icon-btn.playing {
+      border-color: var(--accent);
       color: var(--accent);
-      line-height: 1;
-    }
-
-    .lv-title {
-      font-size: 12px;
-      font-weight: 700;
       background: var(--accent-soft);
-      color: var(--accent);
-      padding: 3px 9px;
-      border-radius: 999px;
-      margin-left: 8px;
+    }
+
+    .music-pulse {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: none;
+    }
+
+    .icon-btn.playing .music-pulse { display: block; }
+
+    /* 硫酸紙半透明核心狀態卡 */
+    .vellum-hero {
+      background: linear-gradient(175deg, var(--bg-card) 0%, var(--accent-soft) 100%);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 0.5px solid var(--border);
+      border-radius: 24px;
+      padding: 20px 18px 16px 18px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 4px;
+    }
+
+    .hero-lv-title {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
     }
 
     .exp-label {
-      font-size: 12px;
+      font-size: 11.5px;
       color: var(--text-muted);
       font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .chapter-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .exp-track {
-      height: 8px;
+      height: 5px;
       background: var(--bg-sub);
       border-radius: 999px;
       overflow: hidden;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
 
     .exp-fill {
       height: 100%;
       background: var(--accent);
       border-radius: 999px;
-      transition: width 0.4s ease;
+      transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    .radar-layout {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .radar-box {
-      width: 145px;
-      height: 145px;
-      flex-shrink: 0;
-    }
-
-    .stats-list {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .stat-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--bg-sub);
-      padding: 5px 10px;
-      border-radius: 9px;
-      font-size: 12px;
-    }
-
-    .stat-name { font-weight: 700; }
-    .stat-desc { color: var(--text-muted); font-size: 11px; margin-left: 4px; }
-    .stat-val { font-weight: 800; color: var(--accent); }
-
-    /* 結構化習慣卡片 */
-    .habit-row {
-      background: var(--bg-sub);
-      border-radius: 14px;
-      padding: 12px 13px;
-      margin-bottom: 9px;
+    /* 雷達圖 ＋ 右側三連資源儀表 */
+    .hero-mid-grid {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
+      padding-bottom: 14px;
+      border-bottom: 0.5px solid var(--border);
     }
 
-    .habit-row.done {
-      opacity: 0.58;
+    .radar-box {
+      width: 168px;
+      height: 158px;
+      flex-shrink: 0;
     }
 
-    .habit-left {
+    .resource-col {
+      flex: 1;
+      border-left: 0.5px solid var(--border);
+      padding-left: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    .res-item {
       display: flex;
       align-items: center;
-      gap: 11px;
+      justify-content: space-between;
+      font-size: 12.5px;
+    }
+
+    .res-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .res-left svg.ico {
+      width: 15px;
+      height: 15px;
+      color: var(--accent);
+    }
+
+    .res-val {
+      font-weight: 700;
+      color: var(--text-main);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* 底部境界突破試煉條 */
+    .trial-bar {
+      padding-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 12px;
+    }
+
+    .trial-text {
+      color: var(--text-main);
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .trial-progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .trial-mini-track {
+      width: 64px;
+      height: 4px;
+      background: var(--bg-sub);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .trial-mini-fill {
+      height: 100%;
+      background: var(--accent);
+      transition: width 0.35s ease;
+    }
+
+    .breakthrough-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      padding: 4px 11px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      animation: softPulse 1.8s infinite;
+    }
+
+    /* 通用卡片與段落標題 */
+    .card {
+      background: var(--bg-card);
+      border: 0.5px solid var(--border);
+      border-radius: 22px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .serif-heading {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .date-sub {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .chip-btn {
+      background: var(--bg-sub);
+      border: 0.5px solid var(--border);
+      color: var(--text-main);
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 5px 11px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .chip-btn.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    /* 極簡修煉清單 */
+    .clean-list-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 13px 2px;
+      border-bottom: 0.5px solid var(--border);
+      transition: opacity 0.2s ease;
+    }
+
+    .clean-list-row:last-child { border-bottom: none; padding-bottom: 2px; }
+    .clean-list-row:first-child { padding-top: 2px; }
+    .clean-list-row.done { opacity: 0.48; }
+
+    .row-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
       flex: 1;
       min-width: 0;
       cursor: pointer;
     }
 
-    .check-circle {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      border: 2px solid var(--accent);
+    .cat-icon-wrap {
+      width: 30px;
+      height: 30px;
+      color: var(--accent);
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      font-size: 13px;
-      color: #fff;
-      font-weight: 800;
     }
 
-    .habit-row.done .check-circle {
-      background: var(--accent);
-    }
-
-    .habit-title {
-      font-size: 14px;
-      font-weight: 700;
+    .row-title {
+      font-size: 14.5px;
+      font-weight: 600;
       word-break: break-word;
     }
 
-    .habit-row.done .habit-title {
-      text-decoration: line-through;
-    }
+    .clean-list-row.done .row-title { text-decoration: line-through; }
 
-    .habit-meta {
+    .row-sub {
       font-size: 11.5px;
       color: var(--text-muted);
-      margin-top: 3px;
+      margin-top: 2px;
+    }
+
+    .row-right {
       display: flex;
       align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
+      gap: 8px;
+      flex-shrink: 0;
     }
 
-    .attr-pill {
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-weight: 700;
-      padding: 1px 7px;
-      border-radius: 6px;
+    .step-pill {
+      background: var(--bg-sub);
+      border: 0.5px solid var(--border);
+      color: var(--text-main);
       font-size: 11px;
+      font-weight: 600;
+      padding: 4px 9px;
+      border-radius: 999px;
+      cursor: pointer;
     }
 
-    .step-btn {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      color: var(--accent);
-      font-size: 11.5px;
-      font-weight: 700;
-      padding: 5px 9px;
-      border-radius: 9px;
+    .step-pill.cooldown {
+      opacity: 0.55;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .squircle-check {
+      width: 21px;
+      height: 21px;
+      border-radius: 6px;
+      border: 1.25px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 12px;
       cursor: pointer;
-      white-space: nowrap;
+      transition: background-color 0.15s ease;
+    }
+
+    .clean-list-row.done .squircle-check {
+      background: var(--accent);
     }
 
     .del-icon {
       background: transparent;
       border: none;
       color: var(--text-muted);
-      font-size: 14px;
-      padding: 4px;
+      font-size: 12px;
+      padding: 2px;
+      cursor: pointer;
+      opacity: 0.5;
+    }
+
+    /* 今日系統結算盲盒條 */
+    .blindbox-banner {
+      margin-top: 14px;
+      padding-top: 13px;
+      border-top: 0.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       cursor: pointer;
     }
 
-    /* 習慣分類選擇格 */
+    .blindbox-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13.5px;
+      font-weight: 600;
+    }
+
+    .blindbox-left svg.ico {
+      color: var(--accent);
+      width: 19px;
+      height: 19px;
+    }
+
+    .blindbox-status {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    /* 習慣分類選擇 */
     .cat-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -346,12 +620,12 @@
 
     .cat-chip {
       background: var(--bg-sub);
-      border: 1.5px solid transparent;
-      border-radius: 12px;
+      border: 1px solid transparent;
+      border-radius: 11px;
       padding: 9px 6px;
       text-align: center;
-      font-size: 12.5px;
-      font-weight: 700;
+      font-size: 12px;
+      font-weight: 600;
       color: var(--text-main);
       cursor: pointer;
     }
@@ -370,14 +644,14 @@
       margin-bottom: 12px;
     }
 
-    .cal-month-label { font-size: 15px; font-weight: 700; }
+    .cal-month-label { font-family: var(--font-serif); font-size: 16px; font-weight: 700; }
 
     .cal-arrow {
       background: var(--bg-sub);
       border: none;
       color: var(--text-main);
-      width: 30px;
-      height: 30px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       font-size: 14px;
       cursor: pointer;
@@ -400,7 +674,7 @@
 
     .cal-day {
       aspect-ratio: 1;
-      border-radius: 12px;
+      border-radius: 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -410,8 +684,8 @@
       cursor: pointer;
     }
 
-    .cal-day.other-month { color: var(--text-muted); opacity: 0.4; }
-    .cal-day.today { border: 1.5px solid var(--accent); }
+    .cal-day.other-month { color: var(--text-muted); opacity: 0.35; }
+    .cal-day.today { border: 1px solid var(--accent); }
     .cal-day.selected { background: var(--accent); color: #fff; }
     .cal-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); margin-top: 2px; }
     .cal-day.selected .cal-dot { background: #fff; }
@@ -419,44 +693,46 @@
     /* 英文名言與單字卡 */
     .quote-card {
       background: var(--accent-soft);
-      border-radius: 16px;
-      padding: 14px 16px;
+      border: 0.5px solid var(--border);
+      border-radius: 18px;
+      padding: 15px 17px;
       margin-bottom: 14px;
     }
 
     .quote-en {
-      font-size: 14.5px;
+      font-family: var(--font-serif);
+      font-size: 15px;
       font-weight: 700;
       font-style: italic;
       line-height: 1.45;
       margin: 0 0 6px 0;
     }
 
-    .quote-zh { font-size: 12.5px; color: var(--text-muted); margin: 0; }
+    .quote-zh { font-size: 12px; color: var(--text-muted); margin: 0; }
 
     .vocab-card {
       background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 15px;
+      border: 0.5px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
       margin-bottom: 12px;
       box-shadow: var(--shadow);
     }
 
-    .vocab-card.learned { opacity: 0.65; border-color: var(--accent); }
+    .vocab-card.learned { opacity: 0.58; border-color: var(--accent); }
     .vocab-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
-    .vocab-word { font-size: 20px; font-weight: 800; color: var(--accent); margin: 0; }
-    .vocab-phonetic { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .vocab-word { font-family: var(--font-serif); font-size: 20px; font-weight: 700; color: var(--accent); margin: 0; }
+    .vocab-phonetic { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
     .vocab-actions { display: flex; gap: 6px; }
-    .vocab-meaning { font-size: 14px; font-weight: 600; margin: 8px 0; line-height: 1.4; }
-    .vocab-forms { font-size: 12px; background: var(--bg-sub); padding: 7px 10px; border-radius: 9px; margin-bottom: 8px; line-height: 1.45; }
-    .vocab-example { font-size: 12.5px; color: var(--text-muted); line-height: 1.45; border-left: 2.5px solid var(--accent); padding-left: 9px; }
+    .vocab-meaning { font-size: 13.5px; font-weight: 600; margin: 8px 0; line-height: 1.4; }
+    .vocab-forms { font-size: 11.5px; background: var(--bg-sub); padding: 7px 10px; border-radius: 9px; margin-bottom: 8px; line-height: 1.45; }
+    .vocab-example { font-size: 12px; color: var(--text-muted); line-height: 1.45; border-left: 1.5px solid var(--accent); padding-left: 9px; }
 
     .inline-add { display: flex; gap: 8px; margin-bottom: 12px; }
     .inline-add input {
       flex: 1;
       background: var(--bg-sub);
-      border: 1px solid var(--border);
+      border: 0.5px solid var(--border);
       border-radius: 11px;
       padding: 9px 12px;
       color: var(--text-main);
@@ -464,20 +740,45 @@
       outline: none;
     }
 
-    /* 分頁與底部導覽 */
+    /* 單字測驗選項 */
+    .quiz-option {
+      width: 100%;
+      text-align: left;
+      background: var(--bg-sub);
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .quiz-option:active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+    }
+
+    /* 分頁與懸浮毛玻璃膠囊導覽列 */
     .tab-page { display: none; }
     .tab-page.active { display: block; }
 
-    .bottom-nav {
+    .floating-dock {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--bg-card);
-      border-top: 1px solid var(--border);
+      bottom: calc(env(safe-area-inset-bottom, 12px) + 10px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--dock-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 0.5px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 14px;
       display: flex;
-      justify-content: space-around;
-      padding: 8px 0 calc(env(safe-area-inset-bottom, 8px) + 6px);
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
       z-index: 50;
     }
 
@@ -485,114 +786,86 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 3px;
+      gap: 2px;
       color: var(--text-muted);
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 600;
       cursor: pointer;
-      padding: 4px 10px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      position: relative;
+      transition: all 0.2s ease;
     }
 
-    .nav-btn.active { color: var(--accent); }
-    .nav-icon { font-size: 18px; }
+    .nav-btn.active {
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .nav-btn.active::after {
+      content: '';
+      width: 3.5px;
+      height: 3.5px;
+      border-radius: 50%;
+      background: var(--accent);
+      position: absolute;
+      bottom: 2px;
+    }
 
     /* 彈窗 */
     .modal-mask {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.48);
-      backdrop-filter: blur(5px);
+      background: rgba(0, 0, 0, 0.38);
+      backdrop-filter: blur(6px);
       display: none;
       align-items: center;
       justify-content: center;
       padding: 18px;
-      z-index: 100;
+      z-index: 200;
     }
 
     .modal-mask.show { display: flex; }
 
     .modal-panel {
-      background: var(--bg-card);
-      border-radius: 22px;
+      background: var(--bg-solid);
+      border: 0.5px solid var(--border);
+      border-radius: 24px;
       width: 100%;
-      max-width: 410px;
+      max-width: 390px;
       padding: 22px;
       max-height: 88vh;
       overflow-y: auto;
-      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.16);
     }
 
-    .modal-title { font-size: 18px; font-weight: 800; margin: 0 0 10px 0; }
+    .modal-title { font-family: var(--font-serif); font-size: 18px; font-weight: 700; margin: 0 0 8px 0; }
 
     .field { margin-bottom: 12px; }
-    .field label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; font-weight: 600; }
+    .field label { display: block; font-size: 11.5px; color: var(--text-muted); margin-bottom: 5px; font-weight: 600; }
     .field input, .field textarea, .field select {
       width: 100%;
       background: var(--bg-sub);
-      border: 1px solid var(--border);
+      border: 0.5px solid var(--border);
       border-radius: 11px;
       padding: 10px 12px;
       color: var(--text-main);
-      font-size: 14px;
+      font-size: 13.5px;
       outline: none;
     }
 
     .modal-btns { display: flex; gap: 10px; margin-top: 16px; }
     .modal-btns button {
       flex: 1;
-      padding: 12px;
+      padding: 11px;
       border-radius: 12px;
       border: none;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 13.5px;
       cursor: pointer;
     }
 
-    /* 重生系統覺醒開場專屬樣式 */
-    .awakening-box {
-      text-align: center;
-      padding: 6px 0;
-    }
-
-    .awakening-orb {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      background: var(--accent-soft);
-      border: 2px solid var(--accent);
-      margin: 0 auto 14px auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      animation: pulseOrb 2.4s infinite ease-in-out;
-    }
-
-    @keyframes pulseOrb {
-      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 var(--accent-soft); }
-      50% { transform: scale(1.06); box-shadow: 0 0 0 12px transparent; }
-    }
-
-    .awakening-ping {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--accent);
-      background: var(--accent-soft);
-      padding: 4px 12px;
-      border-radius: 999px;
-      margin-bottom: 10px;
-      letter-spacing: 0.5px;
-    }
-
-    .awakening-story {
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.6;
-      margin: 0 0 16px 0;
-    }
-
-    .theme-swatches {
+    .options-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 8px;
@@ -600,94 +873,177 @@
     }
 
     .swatch-btn {
-      padding: 10px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
+      padding: 9px 10px;
+      border-radius: 11px;
+      border: 0.5px solid var(--border);
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: space-between;
+      gap: 6px;
       background: var(--bg-sub);
       color: var(--text-main);
     }
 
-    .swatch-dot { width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0; }
+    .swatch-btn.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .swatch-left { display: flex; align-items: center; gap: 7px; }
+    .swatch-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+
+    .preview-mini {
+      font-size: 10.5px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: var(--bg-solid);
+      border: 0.5px solid var(--border);
+      color: var(--text-muted);
+    }
   </style>
 </head>
 <body>
 
-<div class="sys-toast" id="sysToast">✨ 系統提示：EXP +20</div>
+<!-- 入場雙模式動畫遮罩 -->
+<div class="intro-overlay" id="introOverlay">
+  <button class="intro-skip" onclick="finishIntro(false)">跳過</button>
+  <svg class="compass-svg" viewBox="0 0 120 120">
+    <circle cx="60" cy="60" r="52" fill="none" stroke="currentColor" stroke-width="1" stroke-opacity="0.25" class="pulse-ring"/>
+    <circle cx="60" cy="60" r="44" fill="none" stroke="currentColor" stroke-width="1.25" class="draw-path"/>
+    <polygon points="60,16 101,46 86,95 34,95 19,46" fill="none" stroke="currentColor" stroke-width="1.25" class="draw-path-delay"/>
+    <polygon points="60,16 86,95 19,46 101,46 34,95" fill="none" stroke="currentColor" stroke-width="1" stroke-opacity="0.65" class="draw-path-delay"/>
+    <circle cx="60" cy="60" r="4" fill="currentColor"/>
+  </svg>
+  <div class="intro-eyebrow" id="introEyebrow">REBOOT SYSTEM · 覺醒紀元</div>
+  <h2 class="intro-title" id="introTitle">當我重生後獲得一套系統</h2>
+  <div class="intro-typewriter" id="introTypewriter"></div>
+
+  <!-- 初次覺醒綁定表單 -->
+  <div class="intro-form" id="introFirstForm">
+    <div class="field">
+      <label>宿主代號（你的名字或暱稱）</label>
+      <input type="text" id="initNameInput" placeholder="例如：Eric" />
+    </div>
+    <div class="field">
+      <label>本世核心主線目標</label>
+      <input type="text" id="initGoalInput" placeholder="例如：每天運動30分鐘、累積7000單字" />
+    </div>
+    <div class="field">
+      <label>預設系統語音腔調（可隨時切換）</label>
+      <select id="initVoiceSelect">
+        <option value="sichuan">四川巴適老哥腔（幽默反差）</option>
+        <option value="dongbei">北方幹片老鐵腔（解說小帥風）</option>
+        <option value="butler">冷靜晨光管家（正經治癒風）</option>
+        <option value="mute">靜音模式（僅清脆提示音）</option>
+      </select>
+    </div>
+    <button style="width:100%; padding:12px; border-radius:999px; border:none; background:var(--accent); color:#fff; font-weight:700; font-size:14px; cursor:pointer; margin-top:4px;" onclick="completeFirstAwakening()">
+      喚醒系統 · 開啟這一世
+    </button>
+  </div>
+</div>
+
+<div class="sys-toast" id="sysToast">系統提示</div>
+<audio id="customAudioPlayer" loop playsinline></audio>
 
 <div class="container">
-  <!-- 頂部系統標題列 -->
+  <!-- 頂部極簡標題列 -->
   <div class="top-bar">
-    <div class="sys-brand" onclick="openAwakeningModal()">
-      <div class="sys-tag">✦ 當我重生後獲得一套系統</div>
-      <h1 class="greeting-title">宿主：<span id="userNameDisplay">未綁定</span></h1>
+    <div class="sys-brand" onclick="replayFullAwakening()">
+      <h1 class="greeting-title">當我重生後獲得一套系統</h1>
+      <div class="sys-tag">REBOOT SYSTEM · 覺醒紀元</div>
     </div>
     <div class="top-actions">
-      <button class="icon-btn" title="重看系統覺醒開場" onclick="openAwakeningModal()">⚡</button>
-      <button class="icon-btn" title="專注守衛" onclick="openGuardModal()">🛡️</button>
-      <button class="icon-btn" title="配色自訂" onclick="openThemeModal()">🎨</button>
+      <button class="icon-btn" id="musicToggleBtn" title="背景音樂與系統語音" onclick="openMusicModal()">
+        <span class="music-pulse"></span>
+        <svg class="ico" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      </button>
+      <button class="icon-btn" title="防分心結界" onclick="openGuardModal()">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </button>
+      <button class="icon-btn" title="配色與主題" onclick="openThemeModal()">
+        <svg class="ico" viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+      </button>
     </div>
   </div>
 
-  <!-- ================= 分頁 1：核心升級主軸與日常任務 ================= -->
+  <!-- ================= 分頁 1：核心升級主軸 ================= -->
   <div class="tab-page active" id="page-home">
-    <!-- 等級與五維雷達面板 -->
-    <div class="card">
-      <div class="status-top">
-        <div>
-          <span class="lv-badge" id="lvDisplay">LV.1</span>
-          <span class="lv-title" id="rankTitleDisplay">初醒覺醒者</span>
-        </div>
+    <div class="vellum-hero">
+      <div class="hero-header-row">
+        <div class="hero-lv-title"><span id="lvDisplay">LV.1</span> <span id="rankTitleDisplay">初醒覺醒者</span></div>
         <div class="exp-label" id="expTextDisplay">0 / 100 EXP</div>
+      </div>
+      <div class="chapter-sub">
+        <span id="chapterDisplay">第一章：擺脫平庸</span>
+        <span id="hostBadgeDisplay">宿主 · 未綁定</span>
       </div>
       <div class="exp-track">
         <div class="exp-fill" id="expBarFill" style="width: 0%;"></div>
       </div>
 
-      <div class="radar-layout">
+      <div class="hero-mid-grid">
         <div class="radar-box">
-          <svg viewBox="0 0 160 160" width="145" height="145" id="radarSvg"></svg>
+          <svg viewBox="0 0 190 176" width="168" height="158" id="radarSvg"></svg>
         </div>
-        <div class="stats-list">
-          <div class="stat-item">
-            <div><span class="stat-name">信</span><span class="stat-desc">心態信念</span></div>
-            <span class="stat-val" id="stat-xin">10</span>
+        <div class="resource-col">
+          <div class="res-item">
+            <div class="res-left">
+              <svg class="ico" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              <span>精力</span>
+            </div>
+            <span class="res-val" id="apDisplay">100/100</span>
           </div>
-          <div class="stat-item">
-            <div><span class="stat-name">專</span><span class="stat-desc">專注執行</span></div>
-            <span class="stat-val" id="stat-zhuan">10</span>
+          <div class="res-item">
+            <div class="res-left">
+              <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M14.5 9.5a2.5 2.5 0 0 0-5 0c0 2.5 5 2 5 4.5a2.5 2.5 0 0 1-5 0"/><line x1="12" y1="6.5" x2="12" y2="17.5"/></svg>
+              <span>金幣</span>
+            </div>
+            <span class="res-val" id="coinsDisplay">50</span>
           </div>
-          <div class="stat-item">
-            <div><span class="stat-name">律</span><span class="stat-desc">自律作息</span></div>
-            <span class="stat-val" id="stat-lv">10</span>
-          </div>
-          <div class="stat-item">
-            <div><span class="stat-name">力</span><span class="stat-desc">體能健康</span></div>
-            <span class="stat-val" id="stat-li">10</span>
-          </div>
-          <div class="stat-item">
-            <div><span class="stat-name">智</span><span class="stat-desc">知識學習</span></div>
-            <span class="stat-val" id="stat-zhi">10</span>
+          <div class="res-item">
+            <div class="res-left">
+              <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><polyline points="9 12 11 14 15 10"/></svg>
+              <span>連勝</span>
+            </div>
+            <span class="res-val" id="streakDisplay">1日</span>
           </div>
         </div>
       </div>
-      <div style="margin-top:11px; padding-top:9px; border-top:1px solid var(--border); font-size:12px; color:var(--text-muted); display:flex; justify-content:space-between;">
-        <span>🎯 本世主線：<strong style="color:var(--text-main);" id="userGoalDisplay">重塑節奏，穩步升級</strong></span>
+
+      <div class="trial-bar">
+        <div class="trial-text" id="trialTextDisplay">突破試煉：專注閉關 0/2</div>
+        <div class="trial-progress-wrap" id="trialActionWrap">
+          <div class="trial-mini-track">
+            <div class="trial-mini-fill" id="trialBarFill" style="width: 0%;"></div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- 今日系統修煉任務（結構化習慣） -->
+    <!-- 今日系統修煉任務 -->
     <div class="card">
       <div class="section-header">
-        <div class="section-title">⚔️ 每日系統修煉 (<span id="habitProgressText">0/0</span>)</div>
+        <div>
+          <h2 class="serif-heading">今日修煉 · <span id="habitProgressText">0/0</span></h2>
+          <div class="date-sub" id="todayDateSubtitle">11月18日 · 星期三</div>
+        </div>
         <button class="chip-btn primary" onclick="openHabitModal()">＋ 新增修煉</button>
       </div>
       <div id="habitList"></div>
+
+      <!-- 今日系統結算盲盒 -->
+      <div class="blindbox-banner" onclick="openBlindboxModal()">
+        <div class="blindbox-left">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          <span>開啟今日系統結算盲盒</span>
+        </div>
+        <span class="blindbox-status" id="blindboxStatusText">累積修煉解鎖 ›</span>
+      </div>
     </div>
   </div>
 
@@ -707,9 +1063,12 @@
 
     <div class="card">
       <div class="section-header">
-        <div class="section-title">📅 <span id="selectedDateTitle">今日行程</span></div>
+        <div>
+          <h2 class="serif-heading" id="selectedDateTitle">今日命運副本</h2>
+          <div class="date-sub">完成日程可推進主線劇情章節與金幣</div>
+        </div>
         <div style="display:flex; gap:6px;">
-          <button class="chip-btn" onclick="exportSelectedDateICS()">🔔 鬧鐘提醒</button>
+          <button class="chip-btn" onclick="exportSelectedDateICS()">鬧鐘提醒</button>
           <button class="chip-btn primary" onclick="openEventModal()">＋ 行程</button>
         </div>
       </div>
@@ -721,17 +1080,20 @@
   <div class="tab-page" id="page-english">
     <div class="quote-card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-        <span style="font-size:11px; font-weight:700; color:var(--accent);">✨ 每日英文名言</span>
-        <button class="chip-btn" style="padding:3px 9px; font-size:11px;" onclick="speakDailyQuote()">🔊 朗讀</button>
+        <span style="font-size:10.5px; font-weight:700; color:var(--accent); letter-spacing:1px;">DAILY QUOTE · 靈魂箴言</span>
+        <button class="chip-btn" style="padding:3px 10px; font-size:11px;" onclick="speakDailyQuote()">朗讀</button>
       </div>
       <p class="quote-en" id="quoteEnText">"Small daily improvements over time lead to stunning results."</p>
       <p class="quote-zh" id="quoteZhText">日復一日的微小進步，終將帶來驚人的成果。</p>
     </div>
 
     <div class="section-header">
-      <div class="section-title">📖 今日 5 單字 (<span id="vocabProgressText">0/5</span>)</div>
+      <div>
+        <h2 class="serif-heading">靈魂試煉塔 · 今日 5 單字 (<span id="vocabProgressText">0/5</span>)</h2>
+        <div class="date-sub">通過釋義小測驗可獲得「智 +1」與智慧結晶</div>
+      </div>
       <div style="display:flex; gap:6px;">
-        <button class="chip-btn" onclick="openBatchImportModal()">＋ 匯入單字</button>
+        <button class="chip-btn" onclick="openBatchImportModal()">＋ 匯入</button>
         <button class="chip-btn primary" onclick="nextVocabBatch()">換一組</button>
       </div>
     </div>
@@ -739,7 +1101,7 @@
 
     <div class="card" style="margin-top:16px;">
       <div class="section-header">
-        <div class="section-title">⭐ 我的生字本 (<span id="savedVocabCount">0</span>)</div>
+        <h2 class="serif-heading">我的生字本 (<span id="savedVocabCount">0</span>)</h2>
       </div>
       <div class="inline-add">
         <input type="text" id="customWordInput" placeholder="輸入想查詢並收藏的英文單字..." onkeypress="if(event.key==='Enter') addCustomWord()" />
@@ -749,25 +1111,28 @@
     </div>
   </div>
 
-  <!-- ================= 分頁 4：隨手待辦與專注計時 ================= -->
+  <!-- ================= 分頁 4：閉關專注與隨手待辦 ================= -->
   <div class="tab-page" id="page-todo">
     <div class="card">
-      <div style="display:flex; align-items:center; justify-content:space-between;">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
         <div>
-          <div style="font-size:14px; font-weight:700;">⏳ 深度專注計時 (+25 EXP)</div>
-          <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">完成一輪靜心專注，提升「專」屬性</div>
+          <h2 class="serif-heading">閉關修煉室 (+25 EXP · 專+2)</h2>
+          <div class="date-sub">倒數期間請勿離開分頁，完成累積突破試煉</div>
         </div>
         <div style="font-size:24px; font-weight:800; color:var(--accent); font-variant-numeric:tabular-nums;" id="focusTimerText">25:00</div>
-        <div style="display:flex; gap:6px;">
-          <button class="chip-btn primary" id="focusBtn" onclick="toggleFocusTimer()">開始</button>
-          <button class="chip-btn" onclick="resetFocusTimer()">重置</button>
-        </div>
+      </div>
+      <div style="display:flex; gap:8px; margin-top:12px;">
+        <button class="chip-btn primary" style="flex:1; justify-content:center; padding:8px;" id="focusBtn" onclick="toggleFocusTimer()">開始閉關 (消耗 15 精力)</button>
+        <button class="chip-btn" style="padding:8px 14px;" onclick="resetFocusTimer()">重置</button>
       </div>
     </div>
 
     <div class="card">
       <div class="section-header">
-        <div class="section-title">☑️ 隨手待辦 (+10 EXP)</div>
+        <div>
+          <h2 class="serif-heading">隨手待辦事項</h2>
+          <div class="date-sub">完成每項獲得 +10 EXP 與 10 金幣</div>
+        </div>
         <button class="chip-btn" onclick="clearDoneTodos()">清除已完成</button>
       </div>
       <div class="inline-add">
@@ -779,69 +1144,138 @@
   </div>
 </div>
 
-<!-- 底部導覽列 -->
-<div class="bottom-nav">
+<!-- 底部懸浮毛玻璃膠囊導覽列 -->
+<div class="floating-dock">
   <div class="nav-btn active" id="nav-home" onclick="switchTab('home')">
-    <span class="nav-icon">⚡</span>
-    <span>系統升級</span>
+    <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    <span>系統</span>
   </div>
   <div class="nav-btn" id="nav-calendar" onclick="switchTab('calendar')">
-    <span class="nav-icon">📅</span>
+    <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
     <span>行事曆</span>
   </div>
   <div class="nav-btn" id="nav-english" onclick="switchTab('english')">
-    <span class="nav-icon">🔤</span>
-    <span>每日英文</span>
+    <svg class="ico" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <span>英文</span>
   </div>
   <div class="nav-btn" id="nav-todo" onclick="switchTab('todo')">
-    <span class="nav-icon">☑️</span>
-    <span>待辦專注</span>
+    <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/></svg>
+    <span>專念</span>
   </div>
 </div>
 
-<!-- 彈窗 1：記憶點開場《當我重生後獲得一套系統》綁定儀式 -->
-<div class="modal-mask" id="awakeningModal">
+<!-- 彈窗 1：背景音樂與系統語音包切換 -->
+<div class="modal-mask" id="musicModal">
   <div class="modal-panel">
-    <div class="awakening-box">
-      <div class="awakening-orb">🧬</div>
-      <div class="awakening-ping">✦ 系統檢測到靈魂波動 · 綁定成功</div>
-      <h3 class="modal-title" style="font-size:20px;">《當我重生後獲得一套系統》</h3>
-      <p class="awakening-story">
-        「歡迎回來，宿主。過去的遺憾已成序章，從這一秒起，你喝下的每一口水、流下的每一滴汗、記住的每一個單字，都將轉化為實實在在的屬性與等級。」
-      </p>
+    <h3 class="modal-title">系統聲景與語音包設定</h3>
+    <div class="field">
+      <label>系統提示語音腔調（玩家可自由切換）</label>
+      <div class="options-grid">
+        <div class="swatch-btn" id="voice-sichuan" onclick="setVoicePack('sichuan')">
+          <span class="swatch-left"><span class="swatch-dot" style="background:#B85D43;"></span>四川巴適老哥</span>
+          <span class="preview-mini" onclick="event.stopPropagation(); previewVoice('sichuan')">試聽</span>
+        </div>
+        <div class="swatch-btn" id="voice-dongbei" onclick="setVoicePack('dongbei')">
+          <span class="swatch-left"><span class="swatch-dot" style="background:#C28B4E;"></span>北方幹片老鐵</span>
+          <span class="preview-mini" onclick="event.stopPropagation(); previewVoice('dongbei')">試聽</span>
+        </div>
+        <div class="swatch-btn" id="voice-butler" onclick="setVoicePack('butler')">
+          <span class="swatch-left"><span class="swatch-dot" style="background:var(--accent);"></span>冷靜晨光管家</span>
+          <span class="preview-mini" onclick="event.stopPropagation(); previewVoice('butler')">試聽</span>
+        </div>
+        <div class="swatch-btn" id="voice-mute" onclick="setVoicePack('mute')">
+          <span class="swatch-left"><span class="swatch-dot" style="background:#8E918E;"></span>靜音僅叮聲</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>常駐背景音樂氛圍</label>
+      <div class="options-grid">
+        <div class="swatch-btn" id="bgm-off" onclick="setBGMMode('off')">
+          <span class="swatch-left"><span class="swatch-dot" style="background:#999;"></span>關閉背景音</span>
+        </div>
+        <div class="swatch-btn" id="bgm-ambient" onclick="setBGMMode('ambient')">
+          <span class="swatch-left"><span class="swatch-dot" style="background:var(--accent);"></span>晨光鋼琴和弦</span>
+        </div>
+        <div class="swatch-btn" id="bgm-rain" onclick="setBGMMode('rain')">
+          <span class="swatch-left"><span class="swatch-dot" style="background:#5A829E;"></span>林間細雨白噪音</span>
+        </div>
+        <div class="swatch-btn" id="bgm-focus" onclick="setBGMMode('focus')">
+          <span class="swatch-left"><span class="swatch-dot" style="background:#B58B58;"></span>528Hz 專注頻率</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>背景音量調節</label>
+      <input type="range" id="bgmVolumeSlider" min="5" max="100" value="45" oninput="updateBGMVolume(this.value)" />
+    </div>
+
+    <div class="field">
+      <label>或貼上自訂音樂音檔網址 (.mp3 / .m4a 串流)</label>
+      <div style="display:flex; gap:6px;">
+        <input type="text" id="customAudioUrlInput" placeholder="https://..." />
+        <button class="chip-btn primary" onclick="playCustomAudioUrl()">播放</button>
+      </div>
+    </div>
+
+    <div class="modal-btns">
+      <button style="background:var(--accent); color:#fff;" onclick="closeModal('musicModal')">完成設定</button>
+    </div>
+  </div>
+</div>
+
+<!-- 彈窗 2：今日系統結算盲盒 -->
+<div class="modal-mask" id="blindboxModal">
+  <div class="modal-panel">
+    <h3 class="modal-title">今日系統結算盲盒</h3>
+    <p style="font-size:12.5px; color:var(--text-muted); line-height:1.55; margin-top:0;">
+      今日完成至少 <strong>2 項修煉</strong> 或消耗 <strong>30 金幣</strong> 即可抽取一次現實無罪惡感獎勵或系統稀有道具！
+    </p>
+    <div id="blindboxResultBox" style="background:var(--accent-soft); border:0.5px solid var(--accent); border-radius:14px; padding:14px; text-align:center; margin-bottom:12px; display:none;">
+      <div style="font-size:11px; color:var(--accent); font-weight:700;">恭喜宿主抽中</div>
+      <div id="blindboxPrizeText" style="font-family:var(--font-serif); font-size:17px; font-weight:700; margin-top:4px;"></div>
     </div>
     <div class="field">
-      <label>請輸入宿主代號（你的名字或暱稱）</label>
-      <input type="text" id="inputName" placeholder="例如：Eric" />
-    </div>
-    <div class="field">
-      <label>設定本世核心主線目標</label>
-      <input type="text" id="inputGoal" placeholder="例如：每天運動30分鐘、累積7000單字量" />
+      <label>自訂盲盒獎池（每行一項現實獎勵，可隨時修改）</label>
+      <textarea id="blindboxPoolInput" rows="4"></textarea>
     </div>
     <div class="modal-btns">
-      <button style="background:var(--accent); color:#fff; font-size:15px;" onclick="saveProfile()">⚡ 啟動系統，開始這一世</button>
+      <button style="background:var(--bg-sub); color:var(--text-main);" onclick="saveBlindboxPool()">儲存獎池</button>
+      <button style="background:var(--accent); color:#fff;" onclick="drawBlindbox()">開啟盲盒</button>
     </div>
   </div>
 </div>
 
-<!-- 彈窗 2：結構化新增日常修煉習慣 -->
+<!-- 彈窗 3：單字釋義 10 秒快問快答測驗 -->
+<div class="modal-mask" id="quizModal">
+  <div class="modal-panel">
+    <div style="font-size:11px; font-weight:700; color:var(--accent); letter-spacing:1px;">靈魂試煉塔 · 釋義驗證</div>
+    <h3 class="modal-title" id="quizWordTitle" style="font-size:22px; margin-top:4px;">word</h3>
+    <p style="font-size:12px; color:var(--text-muted); margin-top:0;">選出正確的中文釋義以獲得「智 +1」與「智慧結晶 +1」：</p>
+    <div id="quizOptionsBox"></div>
+    <div class="modal-btns">
+      <button style="background:var(--bg-sub); color:var(--text-main);" onclick="closeModal('quizModal')">稍後再測</button>
+    </div>
+  </div>
+</div>
+
+<!-- 彈窗 4：結構化新增日常修煉習慣 -->
 <div class="modal-mask" id="habitModal">
   <div class="modal-panel">
-    <h3 class="modal-title">＋ 新增每日系統修煉</h3>
+    <h3 class="modal-title">新增每日系統修煉</h3>
     <div class="cat-grid">
-      <div class="cat-chip active" id="cat-water" onclick="selectHabitCat('water')">💧 喝水</div>
-      <div class="cat-chip" id="cat-sport" onclick="selectHabitCat('sport')">🏃 運動</div>
-      <div class="cat-chip" id="cat-read" onclick="selectHabitCat('read')">📖 看書</div>
-      <div class="cat-chip" id="cat-wake" onclick="selectHabitCat('wake')">☀️ 早起</div>
-      <div class="cat-chip" id="cat-focus" onclick="selectHabitCat('focus')">🎯 專注</div>
-      <div class="cat-chip" id="cat-custom" onclick="selectHabitCat('custom')">✏️ 自訂</div>
+      <div class="cat-chip active" id="cat-water" onclick="selectHabitCat('water')">喝水補給</div>
+      <div class="cat-chip" id="cat-sport" onclick="selectHabitCat('sport')">運動鍛鍊</div>
+      <div class="cat-chip" id="cat-read" onclick="selectHabitCat('read')">看書學習</div>
+      <div class="cat-chip" id="cat-wake" onclick="selectHabitCat('wake')">早起作息</div>
+      <div class="cat-chip" id="cat-focus" onclick="selectHabitCat('focus')">深度專注</div>
+      <div class="cat-chip" id="cat-custom" onclick="selectHabitCat('custom')">自訂修煉</div>
     </div>
-
-    <!-- 動態參數設定區 -->
     <div id="habitDynamicFields"></div>
-
     <div class="field">
-      <label>完成後提升屬性（系統已自動配對，亦可微調）</label>
+      <label>完成後提升屬性</label>
       <select id="habitAttrSelect">
         <option value="li">力（體能健康）+2 · +20 EXP</option>
         <option value="zhi">智（知識學習）+2 · +20 EXP</option>
@@ -850,39 +1284,38 @@
         <option value="xin">信（心態信念）+2 · +20 EXP</option>
       </select>
     </div>
-
     <div class="modal-btns">
       <button style="background:var(--bg-sub); color:var(--text-main);" onclick="closeModal('habitModal')">取消</button>
-      <button style="background:var(--accent); color:#fff;" onclick="addStructuredHabit()">確認加入修煉</button>
+      <button style="background:var(--accent); color:#fff;" onclick="addStructuredHabit()">加入修煉</button>
     </div>
   </div>
 </div>
 
-<!-- 彈窗 3：主題配色自訂 -->
+<!-- 彈窗 5：主題配色自訂 -->
 <div class="modal-mask" id="themeModal">
   <div class="modal-panel">
-    <h3 class="modal-title">🎨 選擇或自訂系統配色</h3>
-    <div class="theme-swatches">
-      <button class="swatch-btn" onclick="applyPresetTheme('#F7F6F2', '#5F7A61', false)">
-        <span class="swatch-dot" style="background:#5F7A61;"></span>晨光鼠尾草綠
+    <h3 class="modal-title">系統手帳配色設定</h3>
+    <div class="options-grid">
+      <button class="swatch-btn" onclick="applyPresetTheme('#F6F4EF', '#4A664D', false)">
+        <span class="swatch-left"><span class="swatch-dot" style="background:#4A664D;"></span>晨光鼠尾草綠</span>
       </button>
-      <button class="swatch-btn" onclick="applyPresetTheme('#F2F5F8', '#4A7C9B', false)">
-        <span class="swatch-dot" style="background:#4A7C9B;"></span>迷霧海鹽藍
+      <button class="swatch-btn" onclick="applyPresetTheme('#F1F4F7', '#45718C', false)">
+        <span class="swatch-left"><span class="swatch-dot" style="background:#45718C;"></span>迷霧海鹽藍</span>
       </button>
-      <button class="swatch-btn" onclick="applyPresetTheme('#1C1B1A', '#D4A373', true)">
-        <span class="swatch-dot" style="background:#D4A373;"></span>暖灰奶茶夜
+      <button class="swatch-btn" onclick="applyPresetTheme('#181817', '#C99A6B', true)">
+        <span class="swatch-left"><span class="swatch-dot" style="background:#C99A6B;"></span>暖灰奶茶夜</span>
       </button>
-      <button class="swatch-btn" onclick="applyPresetTheme('#161B22', '#58A6A6', true)">
-        <span class="swatch-dot" style="background:#58A6A6;"></span>靜謐暮光藍
+      <button class="swatch-btn" onclick="applyPresetTheme('#151A20', '#549B9B', true)">
+        <span class="swatch-left"><span class="swatch-dot" style="background:#549B9B;"></span>靜謐暮光藍</span>
       </button>
     </div>
     <div class="field" style="display:flex; align-items:center; justify-content:space-between; background:var(--bg-sub); padding:10px 12px; border-radius:11px;">
-      <label style="margin:0; font-size:13px; color:var(--text-main);">自由調色盤主色</label>
-      <input type="color" id="customColorPicker" value="#5F7A61" style="width:44px; height:28px; border:none; background:none; padding:0;" onchange="applyCustomAccent(this.value)" />
+      <label style="margin:0; font-size:12.5px; color:var(--text-main);">自由調色盤強調色</label>
+      <input type="color" id="customColorPicker" value="#4A664D" style="width:42px; height:26px; border:none; background:none; padding:0;" onchange="applyCustomAccent(this.value)" />
     </div>
     <div class="field" style="display:flex; align-items:center; justify-content:space-between; background:var(--bg-sub); padding:10px 12px; border-radius:11px;">
-      <label style="margin:0; font-size:13px; color:var(--text-main);">深色護眼背景</label>
-      <input type="checkbox" id="darkModeToggle" style="width:18px; height:18px;" onchange="toggleDarkMode(this.checked)" />
+      <label style="margin:0; font-size:12.5px; color:var(--text-main);">深色護眼紙張背景</label>
+      <input type="checkbox" id="darkModeToggle" style="width:17px; height:17px;" onchange="toggleDarkMode(this.checked)" />
     </div>
     <div class="modal-btns">
       <button style="background:var(--accent); color:#fff;" onclick="closeModal('themeModal')">完成</button>
@@ -890,17 +1323,17 @@
   </div>
 </div>
 
-<!-- 彈窗 4：新增行事曆行程 -->
+<!-- 彈窗 6：新增行事曆行程 -->
 <div class="modal-mask" id="eventModal">
   <div class="modal-panel">
-    <h3 class="modal-title">新增行程（<span id="modalDateLabel"></span>）</h3>
+    <h3 class="modal-title">新增命運副本（<span id="modalDateLabel"></span>）</h3>
     <div class="field">
       <label>時間（選填）</label>
       <input type="time" id="inputEventTime" />
     </div>
     <div class="field">
-      <label>事項內容</label>
-      <input type="text" id="inputEventTitle" placeholder="例如：讀書會、健身房、繳費" />
+      <label>行程內容</label>
+      <input type="text" id="inputEventTitle" placeholder="例如：讀書會、健身房、專題報告" />
     </div>
     <div class="modal-btns">
       <button style="background:var(--bg-sub); color:var(--text-main);" onclick="closeModal('eventModal')">取消</button>
@@ -909,13 +1342,13 @@
   </div>
 </div>
 
-<!-- 彈窗 5：批量匯入單字 -->
+<!-- 彈窗 7：批量匯入單字 -->
 <div class="modal-mask" id="batchModal">
   <div class="modal-panel">
-    <h3 class="modal-title">＋ 批量匯入 7000 單字</h3>
+    <h3 class="modal-title">批量匯入 7000 單字</h3>
     <p style="font-size:12px; color:var(--text-muted); margin-top:0;">輸入或貼上多個英文單字（用逗號或換行分隔），系統會自動抓取音標、詞性與例句。</p>
     <div class="field">
-      <textarea id="batchWordsInput" rows="4" placeholder="例如：&#10;ambiguous&#10;deteriorate&#10;resilient"></textarea>
+      <textarea id="batchWordsInput" rows="4" placeholder="ambiguous&#10;deteriorate&#10;resilient"></textarea>
     </div>
     <div class="modal-btns">
       <button style="background:var(--bg-sub); color:var(--text-main);" onclick="closeModal('batchModal')">取消</button>
@@ -924,15 +1357,15 @@
   </div>
 </div>
 
-<!-- 彈窗 6：防分心守衛 -->
+<!-- 彈窗 8：防分心守衛 -->
 <div class="modal-mask" id="guardModal">
   <div class="modal-panel">
-    <h3 class="modal-title">🛡️ 系統防分心結界觸發</h3>
+    <h3 class="modal-title">系統防分心結界觸發</h3>
     <p style="font-size:13px; color:var(--text-muted); line-height:1.55;">
-      宿主正準備進入高干擾娛樂空間。現在退出並回到專注，系統將立刻獎勵 <strong>律 +2、+15 EXP</strong>！
+      宿主正準備進入高干擾娛樂空間。現在退出並回到專注，系統將立刻獎勵 <strong>律 +2、+15 EXP、+15 金幣</strong>。
     </p>
     <div class="modal-btns" style="flex-direction:column;">
-      <button style="background:var(--accent); color:#fff;" onclick="resistDistraction()">⚡ 抵抗誘惑，領取自律經驗</button>
+      <button style="background:var(--accent); color:#fff;" onclick="resistDistraction()">抵抗誘惑，領取自律獎勵</button>
       <button style="background:var(--bg-sub); color:var(--text-main);" onclick="closeModal('guardModal')">我有明確目的，暫時放行</button>
     </div>
   </div>
@@ -941,6 +1374,227 @@
 <script>
   const STORAGE_KEY = 'reborn_system_v3_1';
 
+  const CAT_SVGS = {
+    water: `<svg class="ico" viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>`,
+    sport: `<svg class="ico" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>`,
+    read: `<svg class="ico" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
+    wake: `<svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`,
+    focus: `<svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`,
+    custom: `<svg class="ico" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`
+  };
+
+  const VOICE_LINES = {
+    sichuan: {
+      lang: 'zh-CN', rate: 1.08, pitch: 1.05,
+      awake: '哎呀要得嘛，檢測到宿主靈魂波動！系統綁定成功，這輩子咱可得雄起，莫再躺平了哈！',
+      task: ['要得！宿主這波操作巴適得板，屬性直接往上漲！', '安逸得很！又完成一項修煉，離巔峰又近一步！', '可以哦宿主，照這個節奏練下去，誰看了不迷糊？'],
+      levelup: '不得了哦！宿主直接起飛，成功晉升新等級，巴適得板！',
+      guard: '你在搞啥子嘛！又想刷短視頻？趕緊退回去修煉，自律加二！',
+      box: '哎呦手氣不錯嘛！盲盒開出好東西了，安逸！'
+    },
+    dongbei: {
+      lang: 'zh-CN', rate: 1.15, pitch: 0.96,
+      awake: '哎呀媽呀，檢測到宿主靈魂波動！系統綁定妥妥的了，這輩子咱必須整出個名堂！',
+      task: ['好傢伙！這波修煉杠杠滴，經驗直接往裡灌！', '沒毛病老鐵！這執行力，誰看了都得豎大拇指！', '妥妥的！又拿下一項任務，咱這體格腦瓜子全在升級！'],
+      levelup: '臥槽不得了！恭喜宿主直接晉升新等級，這波徹底起飛！',
+      guard: '幹哈呢幹哈呢！又想刷短視頻是吧？趕緊退回去修煉，自律加二！',
+      box: '好傢伙，這手氣杠杠滴，系統盲盒直接拿下！'
+    },
+    butler: {
+      lang: 'zh-TW', rate: 0.98, pitch: 1.0,
+      awake: '檢測到宿主靈魂波動，系統已成功綁定。願你在這一世穩步前行。',
+      task: ['修煉達成，屬性與經驗值已為你記錄提升。', '做得很好，保持這份從容的節奏繼續前進。', '今日修煉進度推進，距離下一次突破更近了。'],
+      levelup: '恭喜宿主突破界限，成功晉升至新的等級境界。',
+      guard: '偵測到高干擾環境，已為你攔截分心，自律屬性提升。',
+      box: '今日結算盲盒已開啟，這是屬於你的修煉犒賞。'
+    }
+  };
+
+  // ==================== 音效、背景音與三合一語音引擎 ====================
+  let audioCtx = null;
+  let bgmInterval = null;
+  let rainNode = null;
+  let droneOsc = null;
+  let bgmMode = 'off';
+  let bgmVolume = 0.45;
+
+  function initAudioCtx() {
+    if (!audioCtx) {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new AudioContext();
+    }
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+  }
+
+  function playSystemChime(isLevelUp = false) {
+    try {
+      initAudioCtx();
+      const now = audioCtx.currentTime;
+      const notes = isLevelUp ? [523.25, 659.25, 783.99, 1046.5] : [659.25, 880];
+      notes.forEach((freq, idx) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+        gain.gain.setValueAtTime(0.001, now + idx * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.11 * bgmVolume + 0.025, now + idx * 0.08 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.08 + 0.42);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now + idx * 0.08);
+        osc.stop(now + idx * 0.08 + 0.45);
+      });
+    } catch (e) {}
+  }
+
+  function speakSystemLine(category, customPack = null) {
+    const packKey = customPack || state.voicePack || 'sichuan';
+    if (packKey === 'mute' || !('speechSynthesis' in window)) return;
+    const pack = VOICE_LINES[packKey] || VOICE_LINES.sichuan;
+    let line = pack[category];
+    if (Array.isArray(line)) line = line[Math.floor(Math.random() * line.length)];
+    if (!line) return;
+
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(line);
+    utter.lang = pack.lang;
+    utter.rate = pack.rate;
+    utter.pitch = pack.pitch;
+    const voices = window.speechSynthesis.getVoices();
+    const matched = voices.find(v => v.lang.includes(pack.lang));
+    if (matched) utter.voice = matched;
+    window.speechSynthesis.speak(utter);
+  }
+
+  function previewVoice(packKey) {
+    playSystemChime(false);
+    speakSystemLine('task', packKey);
+  }
+
+  function setVoicePack(packKey) {
+    state.voicePack = packKey;
+    document.querySelectorAll('[id^="voice-"]').forEach(el => el.classList.remove('active'));
+    const el = document.getElementById('voice-' + packKey);
+    if (el) el.classList.add('active');
+    saveState();
+  }
+
+  function stopAllBGM() {
+    if (bgmInterval) { clearInterval(bgmInterval); bgmInterval = null; }
+    if (rainNode) { try { rainNode.disconnect(); } catch (e) {} rainNode = null; }
+    if (droneOsc) { try { droneOsc.stop(); droneOsc.disconnect(); } catch (e) {} droneOsc = null; }
+    document.getElementById('customAudioPlayer').pause();
+  }
+
+  function setBGMMode(mode) {
+    bgmMode = mode;
+    stopAllBGM();
+    document.querySelectorAll('[id^="bgm-"]').forEach(b => b.classList.remove('active'));
+    const btn = document.getElementById('bgm-' + mode);
+    if (btn) btn.classList.add('active');
+
+    const topBtn = document.getElementById('musicToggleBtn');
+    if (mode === 'off') {
+      topBtn.classList.remove('playing');
+      return;
+    }
+
+    initAudioCtx();
+    topBtn.classList.add('playing');
+
+    if (mode === 'ambient') {
+      const chords = [
+        [261.63, 329.63, 392.00, 493.88],
+        [220.00, 261.63, 329.63, 392.00],
+        [174.61, 220.00, 261.63, 349.23],
+        [196.00, 246.94, 293.66, 392.00]
+      ];
+      let step = 0;
+      const playNote = () => {
+        if (bgmMode !== 'ambient') return;
+        const chord = chords[Math.floor(step / 4) % chords.length];
+        const freq = chord[step % chord.length];
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now);
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.linearRampToValueAtTime(0.085 * bgmVolume, now + 0.14);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.3);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 2.4);
+        step++;
+      };
+      playNote();
+      bgmInterval = setInterval(playNote, 1150);
+    } else if (mode === 'rain') {
+      const bufferSize = 2 * audioCtx.sampleRate;
+      const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+      let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+      for (let i = 0; i < bufferSize; i++) {
+        const white = Math.random() * 2 - 1;
+        b0 = 0.99886 * b0 + white * 0.0555179;
+        b1 = 0.99332 * b1 + white * 0.0750759;
+        b2 = 0.96900 * b2 + white * 0.1538520;
+        b3 = 0.86650 * b3 + white * 0.3104856;
+        b4 = 0.55000 * b4 + white * 0.5329522;
+        b5 = -0.7616 * b5 - white * 0.0168980;
+        output[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.038;
+        b6 = white * 0.115926;
+      }
+      const whiteNoise = audioCtx.createBufferSource();
+      whiteNoise.buffer = noiseBuffer;
+      whiteNoise.loop = true;
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 920;
+      const gain = audioCtx.createGain();
+      gain.gain.value = 0.48 * bgmVolume;
+      whiteNoise.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+      whiteNoise.start(0);
+      rainNode = gain;
+    } else if (mode === 'focus') {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = 528;
+      gain.gain.value = 0.042 * bgmVolume;
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      droneOsc = osc;
+    }
+  }
+
+  function updateBGMVolume(val) {
+    bgmVolume = val / 100;
+    document.getElementById('customAudioPlayer').volume = bgmVolume;
+    if (bgmMode !== 'off' && bgmMode !== 'custom') setBGMMode(bgmMode);
+  }
+
+  function playCustomAudioUrl() {
+    const url = document.getElementById('customAudioUrlInput').value.trim();
+    if (!url) return;
+    stopAllBGM();
+    bgmMode = 'custom';
+    const player = document.getElementById('customAudioPlayer');
+    player.src = url;
+    player.volume = bgmVolume;
+    player.play().then(() => {
+      document.getElementById('musicToggleBtn').classList.add('playing');
+      showSysToast('已開始播放自訂背景音樂');
+    }).catch(() => {
+      alert('無法播放此連結，請確認網址為直接的音訊檔案 (.mp3 / .m4a)');
+    });
+  }
+
+  // ==================== 核心資料與四環遊戲閉環 ====================
   const CORE_7000_POOL = [
     { word: "accommodate", phonetic: "/əˈkɑːmədeɪt/", pos: "v.", meaning: "容納；提供住宿；適應", forms: "名詞: accommodation｜形容詞: accommodating", example: "The hotel can accommodate up to 500 guests.", exampleZh: "這家飯店最多可容納五百位房客。" },
     { word: "inevitable", phonetic: "/ɪnˈevɪtəbl/", pos: "adj.", meaning: "不可避免的；必然發生的", forms: "副詞: inevitably｜名詞: inevitability", example: "Change is an inevitable part of life.", exampleZh: "改變是人生中不可避免的一部分。" },
@@ -961,13 +1615,15 @@
     { en: "Quiet progress is still progress. Keep going at your own pace.", zh: "安靜的進步依然是進步，照著自己的步調繼續前進吧。" }
   ];
 
-  const ATTR_LABELS = {
-    xin: '信 · 心態',
-    zhuan: '專 · 專注',
-    lv: '律 · 自律',
-    li: '力 · 體能',
-    zhi: '智 · 知識'
-  };
+  const CHAPTERS = [
+    "第一章：擺脫平庸",
+    "第二章：初露鋒芒",
+    "第三章：心流覺醒",
+    "第四章：破繭成蝶",
+    "第五章：掌控命運"
+  ];
+
+  const ATTR_SHORT = { xin: '信', zhuan: '專', lv: '律', li: '力', zhi: '智' };
 
   function getDateKey(d) {
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -980,20 +1636,33 @@
     initialized: false,
     userName: '宿主',
     userGoal: '穩步修煉，重塑人生節奏',
+    voicePack: 'sichuan',
     lastActiveDate: todayKey,
+    streakDays: 1,
     level: 1,
     exp: 0,
+    ap: 100,
+    coins: 50,
+    focusCompletedCount: 0,
+    blindboxDrawnDate: '',
+    blindboxPool: [
+      '無罪惡感喝一杯喜歡的手搖飲',
+      '暢玩 1 小時遊戲或追劇',
+      '週末早起豁免券（睡到自然醒）',
+      '吃一頓犒賞自己的好料',
+      '系統稀有道具：連勝保護符 × 1'
+    ],
     stats: { xin: 10, zhuan: 10, lv: 10, li: 10, zhi: 10 },
-    theme: { bgBase: '#F7F6F2', accent: '#5F7A61', darkMode: false },
+    theme: { bgBase: '#F6F4EF', accent: '#4A664D', darkMode: false },
     habits: [
-      { id: 'h1', icon: '☀️', title: '07:30 前準時起床', detail: '晨間作息', attr: 'lv', done: false },
-      { id: 'h2', icon: '💧', title: '喝水 2000 ml', detail: '水分補給', attr: 'li', isWater: true, currentMl: 0, targetMl: 2000, done: false },
-      { id: 'h3', icon: '🏃', title: '運動訓練 30 分鐘', detail: '體能強化', attr: 'li', done: false },
-      { id: 'h4', icon: '📖', title: '專注看書 20 分鐘', detail: '知識累積', attr: 'zhi', done: false }
+      { id: 'h1', cat: 'wake', title: '晨起靜心與呼吸', detail: '07:30', attr: 'lv', done: false },
+      { id: 'h2', cat: 'water', title: '日飲水 2000ml', detail: '水分補給', attr: 'li', isWater: true, currentMl: 0, targetMl: 2000, nextSipAt: 0, done: false },
+      { id: 'h3', cat: 'sport', title: '體能與鍛鍊', detail: '預計 30 min', attr: 'li', done: false },
+      { id: 'h4', cat: 'read', title: '專注閱讀與複習', detail: '20:00', attr: 'zhi', done: false }
     ],
     eventsByDate: {
       [todayKey]: [
-        { id: 'e1', time: '20:30', title: '複習今日 5 個 7000 單字', done: false }
+        { id: 'e1', time: '20:30', title: '通過今日 5 個 7000 單字小測驗', done: false }
       ]
     },
     todos: [],
@@ -1004,13 +1673,22 @@
   };
 
   let state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || JSON.parse(JSON.stringify(defaultState));
+  if (state.ap === undefined) state.ap = 100;
+  if (state.coins === undefined) state.coins = 50;
+  if (state.focusCompletedCount === undefined) state.focusCompletedCount = 0;
+  if (!state.voicePack) state.voicePack = 'sichuan';
+  if (!state.blindboxPool) state.blindboxPool = [...defaultState.blindboxPool];
 
-  // 跨日自動重置每日修煉進度
+  // 跨日重置與連勝結算
   if (state.lastActiveDate !== todayKey) {
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    state.streakDays = (state.lastActiveDate === getDateKey(yesterday)) ? ((state.streakDays || 1) + 1) : 1;
     state.lastActiveDate = todayKey;
+    state.ap = 100;
     state.habits.forEach(h => {
       h.done = false;
-      if (h.isWater) h.currentMl = 0;
+      if (h.isWater) { h.currentMl = 0; h.nextSipAt = 0; }
     });
   }
 
@@ -1023,47 +1701,82 @@
     renderAll();
   }
 
-  // 系統提示條
   let toastTimer = null;
   function showSysToast(msg) {
     const el = document.getElementById('sysToast');
     el.textContent = msg;
     el.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
   }
 
-  // 經驗值與屬性升級引擎
-  function gainReward(expGain, attrKey, attrGain, customReason) {
-    state.exp += expGain;
+  // 獎勵與升級結算（含連勝暴擊與語音播報）
+  function gainReward(baseExp, attrKey, attrGain, coinGain = 15, reason = '修煉達成') {
+    const mult = (state.streakDays || 1) >= 7 ? 1.5 : ((state.streakDays || 1) >= 3 ? 1.2 : 1);
+    const finalExp = Math.round(baseExp * mult);
+    state.exp += finalExp;
+    state.coins = (state.coins || 0) + coinGain;
     if (attrKey && state.stats[attrKey] !== undefined) {
       state.stats[attrKey] = Math.min(100, state.stats[attrKey] + attrGain);
     }
+
     const needExp = state.level * 100;
-    if (state.exp >= needExp) {
+    const trialTarget = state.level * 2;
+    if (state.exp >= needExp && state.focusCompletedCount >= trialTarget) {
       state.exp -= needExp;
       state.level += 1;
-      showSysToast(`🎉 系統升級！恭喜宿主晉升 LV.${state.level}！`);
+      playSystemChime(true);
+      speakSystemLine('levelup');
+      showSysToast(`境界突破！恭喜晉升 LV.${state.level}`);
+    } else if (state.exp >= needExp) {
+      playSystemChime(false);
+      speakSystemLine('task');
+      showSysToast(`經驗已滿！請完成「突破試煉」即可晉升 LV.${state.level + 1}`);
     } else {
-      const attrTxt = attrKey ? ` · ${ATTR_LABELS[attrKey].slice(0, 1)}+${attrGain}` : '';
-      showSysToast(`✨ ${customReason || '修煉完成'}：+${expGain} EXP${attrTxt}`);
+      playSystemChime(false);
+      speakSystemLine('task');
+      const attrTxt = attrKey ? ` · ${ATTR_SHORT[attrKey]}+${attrGain}` : '';
+      showSysToast(`${reason}：+${finalExp} EXP · +${coinGain} 金幣${attrTxt}`);
     }
   }
 
-  function getRankTitle(lv) {
-    if (lv < 3) return '初醒覺醒者';
-    if (lv < 6) return '自律修行者';
-    if (lv < 10) return '節奏掌控者';
-    if (lv < 15) return '高階破局者';
-    return '重生傳奇宿主';
+  function triggerBreakthrough() {
+    const needExp = state.level * 100;
+    const trialTarget = state.level * 2;
+    if (state.exp >= needExp && state.focusCompletedCount >= trialTarget) {
+      state.exp -= needExp;
+      state.level += 1;
+      state.ap = 100;
+      playSystemChime(true);
+      speakSystemLine('levelup');
+      showSysToast(`突破成功！晉升 LV.${state.level}，精力全滿！`);
+      saveState();
+    }
   }
 
-  // 五維 SVG 雷達圖繪製
+  function getDynamicRankTitle() {
+    const entries = Object.entries(state.stats);
+    entries.sort((a, b) => b[1] - a[1]);
+    const [topKey, topVal] = entries[0];
+    const minVal = entries[entries.length - 1][1];
+    if (state.level === 1 && topVal <= 12) return '初醒覺醒者';
+    if (topVal - minVal <= 3 && topVal >= 15) return '全能均衡者';
+    const map = {
+      zhi: state.level >= 5 ? '博識探索者' : '見習學者',
+      li: state.level >= 5 ? '鋼鐵體魄者' : '體能修煉者',
+      lv: state.level >= 5 ? '秩序掌控者' : '自律行者',
+      zhuan: state.level >= 5 ? '心流支配者' : '專注修行者',
+      xin: state.level >= 5 ? '堅定先驅者' : '信念覺醒者'
+    };
+    return map[topKey] || '初醒覺醒者';
+  }
+
+  // 雙環幾何五維雷達圖（含明確數值標籤）
   function renderRadarChart() {
     const svg = document.getElementById('radarSvg');
     const keys = ['xin', 'zhuan', 'lv', 'li', 'zhi'];
     const labels = ['信', '專', '律', '力', '智'];
-    const cx = 80, cy = 80, maxR = 54;
+    const cx = 95, cy = 90, maxR = 50;
 
     const getPoint = (idx, val) => {
       const angle = (Math.PI * 2 * idx) / 5 - Math.PI / 2;
@@ -1074,38 +1787,220 @@
     let gridPolys = '';
     [0.33, 0.66, 1].forEach(scale => {
       const pts = keys.map((_, i) => getPoint(i, 100 * scale).join(',')).join(' ');
-      gridPolys += `<polygon points="${pts}" fill="none" stroke="var(--text-muted)" stroke-opacity="0.22" stroke-width="1"/>`;
+      gridPolys += `<polygon points="${pts}" fill="none" stroke="var(--text-muted)" stroke-opacity="0.22" stroke-width="0.9"/>`;
     });
 
     const dataPts = keys.map((k, i) => getPoint(i, state.stats[k]).join(',')).join(' ');
     let axisLines = '';
     let labelTexts = '';
-    keys.forEach((_, i) => {
+    keys.forEach((k, i) => {
       const [ox, oy] = getPoint(i, 100);
-      const [lx, ly] = getPoint(i, 126);
-      axisLines += `<line x1="${cx}" y1="${cy}" x2="${ox}" y2="${oy}" stroke="var(--text-muted)" stroke-opacity="0.2" stroke-width="1"/>`;
-      labelTexts += `<text x="${lx}" y="${ly + 4}" text-anchor="middle" font-size="11" font-weight="800" fill="var(--text-main)">${labels[i]}</text>`;
+      const [lx, ly] = getPoint(i, 134);
+      axisLines += `<line x1="${cx}" y1="${cy}" x2="${ox}" y2="${oy}" stroke="var(--text-muted)" stroke-opacity="0.18" stroke-width="0.9"/>`;
+      const textVal = i === 3 ? `${state.stats[k]} ${labels[i]}` : `${labels[i]} ${state.stats[k]}`;
+      labelTexts += `<text x="${lx}" y="${ly + 4}" text-anchor="middle" font-size="11" font-weight="600" fill="var(--text-main)">${textVal}</text>`;
     });
 
     svg.innerHTML = `
       ${gridPolys}
       ${axisLines}
-      <polygon points="${dataPts}" fill="var(--accent)" fill-opacity="0.28" stroke="var(--accent)" stroke-width="2"/>
+      <polygon points="${dataPts}" fill="var(--accent)" fill-opacity="0.2" stroke="var(--accent)" stroke-width="1.6"/>
       ${labelTexts}
     `;
   }
 
-  // 主題套用
+  // ==================== 入場雙模式動畫控制 ====================
+  let typewriterTimer = null;
+
+  function runTypewriter(text, onDone) {
+    const el = document.getElementById('introTypewriter');
+    el.textContent = '';
+    let i = 0;
+    clearInterval(typewriterTimer);
+    typewriterTimer = setInterval(() => {
+      el.textContent += text[i];
+      i++;
+      if (i >= text.length) {
+        clearInterval(typewriterTimer);
+        if (onDone) onDone();
+      }
+    }, 38);
+  }
+
+  function initIntroSequence(forceFull = false) {
+    const overlay = document.getElementById('introOverlay');
+    const form = document.getElementById('introFirstForm');
+    overlay.classList.remove('fade-out');
+    overlay.style.display = 'flex';
+
+    if (!state.initialized || forceFull) {
+      form.classList.remove('visible');
+      document.getElementById('initNameInput').value = state.userName === '宿主' ? '' : state.userName;
+      document.getElementById('initGoalInput').value = state.userGoal;
+      document.getElementById('initVoiceSelect').value = state.voicePack || 'sichuan';
+      runTypewriter('「正在掃描宿主靈魂波動... 綁定成功。過去的遺憾已成序章，從這一秒起，重塑你的命運軌跡。」', () => {
+        form.classList.add('visible');
+      });
+    } else {
+      // 日常重開：0.85 秒極簡晨光快閃進場
+      form.style.display = 'none';
+      document.getElementById('introTypewriter').textContent = `歡迎回來，宿主【${state.userName}】｜連勝第 ${state.streakDays || 1} 日`;
+      setTimeout(() => finishIntro(false), 850);
+    }
+  }
+
+  function completeFirstAwakening() {
+    initAudioCtx();
+    state.userName = document.getElementById('initNameInput').value.trim() || '重生者';
+    state.userGoal = document.getElementById('initGoalInput').value.trim() || '穩步修煉，重塑人生節奏';
+    state.voicePack = document.getElementById('initVoiceSelect').value;
+    state.initialized = true;
+    saveState();
+    finishIntro(true);
+  }
+
+  function finishIntro(withAwakeVoice) {
+    clearInterval(typewriterTimer);
+    const overlay = document.getElementById('introOverlay');
+    overlay.classList.add('fade-out');
+    setTimeout(() => { overlay.style.display = 'none'; }, 650);
+    if (withAwakeVoice) {
+      playSystemChime(true);
+      speakSystemLine('awake');
+      showSysToast(`宿主【${state.userName}】靈魂綁定完成`);
+    }
+  }
+
+  function replayFullAwakening() {
+    document.getElementById('introFirstForm').style.display = 'block';
+    initIntroSequence(true);
+  }
+
+  // ==================== 喝水冷卻與修煉打卡 ====================
+  function addWaterSip(id) {
+    const h = state.habits.find(x => x.id === id);
+    if (!h || h.done) return;
+    const now = Date.now();
+    if (h.nextSipAt && now < h.nextSipAt) {
+      const minsLeft = Math.ceil((h.nextSipAt - now) / 60000);
+      showSysToast(`水分吸收中，請 ${minsLeft} 分鐘後再飲水補給`);
+      return;
+    }
+    h.currentMl = Math.min(h.targetMl, (h.currentMl || 0) + 250);
+    h.nextSipAt = now + 20 * 60 * 1000; // 20分鐘真實飲水節奏冷卻
+    if (h.currentMl >= h.targetMl) {
+      h.done = true;
+      gainReward(20, h.attr, 2, 20, '達成今日飲水目標');
+    } else {
+      playSystemChime(false);
+      showSysToast(`已補充 250ml（${h.currentMl}/${h.targetMl} ml）`);
+    }
+    saveState();
+  }
+
+  function toggleHabit(id) {
+    const h = state.habits.find(x => x.id === id);
+    if (!h) return;
+    if (!h.done) {
+      if ((state.ap || 0) < 10) {
+        showSysToast('精力不足（需 10 點精力），請休息或等待明日恢復');
+        return;
+      }
+      state.ap -= 10;
+      h.done = true;
+      if (h.isWater) h.currentMl = h.targetMl;
+      gainReward(20, h.attr, 2, 15, h.title);
+    } else {
+      h.done = false;
+      if (h.isWater) { h.currentMl = 0; h.nextSipAt = 0; }
+    }
+    saveState();
+  }
+
+  function deleteHabit(id) {
+    state.habits = state.habits.filter(x => x.id !== id);
+    saveState();
+  }
+
+  // ==================== 每日系統結算盲盒 ====================
+  function openBlindboxModal() {
+    document.getElementById('blindboxPoolInput').value = (state.blindboxPool || []).join('\n');
+    document.getElementById('blindboxResultBox').style.display = 'none';
+    document.getElementById('blindboxModal').classList.add('show');
+  }
+
+  function saveBlindboxPool() {
+    const lines = document.getElementById('blindboxPoolInput').value.split('\n').map(s => s.trim()).filter(Boolean);
+    if (lines.length > 0) {
+      state.blindboxPool = lines;
+      saveState();
+      showSysToast('盲盒獎池已更新');
+    }
+  }
+
+  function drawBlindbox() {
+    const doneCount = state.habits.filter(h => h.done).length;
+    if (doneCount < 2 && (state.coins || 0) < 30) {
+      showSysToast('需完成至少 2 項今日修煉或持有 30 金幣才能開啟');
+      return;
+    }
+    if (doneCount < 2) state.coins -= 30;
+    const pool = state.blindboxPool && state.blindboxPool.length > 0 ? state.blindboxPool : defaultState.blindboxPool;
+    const prize = pool[Math.floor(Math.random() * pool.length)];
+    state.blindboxDrawnDate = todayKey;
+    document.getElementById('blindboxPrizeText').textContent = prize;
+    document.getElementById('blindboxResultBox').style.display = 'block';
+    playSystemChime(true);
+    speakSystemLine('box');
+    saveState();
+  }
+
+  // ==================== 英文單字 10 秒快問快答測驗 ====================
+  let currentQuizWord = null;
+
+  function openWordQuiz(word) {
+    if (state.learnedWords.includes(word)) {
+      state.learnedWords = state.learnedWords.filter(w => w !== word);
+      saveState();
+      return;
+    }
+    const target = state.vocabPool.find(v => v.word === word);
+    if (!target) return;
+    currentQuizWord = target;
+    document.getElementById('quizWordTitle').textContent = `${target.word} ${target.phonetic || ''}`;
+
+    const distractors = CORE_7000_POOL.filter(v => v.word !== word).sort(() => 0.5 - Math.random()).slice(0, 2).map(v => v.meaning);
+    const options = [target.meaning, ...distractors].sort(() => 0.5 - Math.random());
+
+    document.getElementById('quizOptionsBox').innerHTML = options.map(opt => `
+      <button class="quiz-option" onclick="submitWordQuiz('${opt.replace(/'/g, "\\'")}')">${opt}</button>
+    `).join('');
+    document.getElementById('quizModal').classList.add('show');
+  }
+
+  function submitWordQuiz(selectedMeaning) {
+    if (!currentQuizWord) return;
+    if (selectedMeaning === currentQuizWord.meaning) {
+      state.learnedWords.push(currentQuizWord.word);
+      closeModal('quizModal');
+      gainReward(15, 'zhi', 1, 15, `通過單字試煉：${currentQuizWord.word}`);
+      saveState();
+    } else {
+      showSysToast('釋義不正確，再仔細回想一下！');
+    }
+  }
+
+  // ==================== 主題與其他分頁功能 ====================
   function applyThemeFromState() {
     const t = state.theme || defaultState.theme;
     document.documentElement.style.setProperty('--accent', t.accent);
-    document.documentElement.style.setProperty('--accent-soft', hexToRgba(t.accent, 0.14));
+    document.documentElement.style.setProperty('--accent-soft', hexToRgba(t.accent, 0.095));
     if (t.darkMode) {
       document.body.classList.add('dark-mode');
-      document.documentElement.style.setProperty('--bg-base', t.bgBase || '#1C1B1A');
+      document.documentElement.style.setProperty('--bg-base', t.bgBase || '#181817');
     } else {
       document.body.classList.remove('dark-mode');
-      document.documentElement.style.setProperty('--bg-base', t.bgBase || '#F7F6F2');
+      document.documentElement.style.setProperty('--bg-base', t.bgBase || '#F6F4EF');
     }
     document.getElementById('customColorPicker').value = t.accent;
     document.getElementById('darkModeToggle').checked = !!t.darkMode;
@@ -1119,173 +2014,81 @@
   }
 
   function applyPresetTheme(bg, accent, isDark) {
-    state.theme = { bgBase: bg, accent: accent, darkMode: isDark };
+    state.theme = { bgBase: bg, accent, darkMode: isDark };
     applyThemeFromState();
     saveState();
   }
 
-  function applyCustomAccent(hex) {
-    state.theme.accent = hex;
-    applyThemeFromState();
-    saveState();
-  }
-
+  function applyCustomAccent(hex) { state.theme.accent = hex; applyThemeFromState(); saveState(); }
   function toggleDarkMode(isDark) {
     state.theme.darkMode = isDark;
-    state.theme.bgBase = isDark ? '#1C1B1A' : '#F7F6F2';
+    state.theme.bgBase = isDark ? '#181817' : '#F6F4EF';
     applyThemeFromState();
     saveState();
   }
 
-  // 結構化習慣建立與互動
   let currentHabitCat = 'water';
-
-  function openHabitModal() {
-    selectHabitCat('water');
-    document.getElementById('habitModal').classList.add('show');
-  }
+  function openHabitModal() { selectHabitCat('water'); document.getElementById('habitModal').classList.add('show'); }
 
   function selectHabitCat(cat) {
     currentHabitCat = cat;
     document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
     document.getElementById('cat-' + cat).classList.add('active');
-
     const box = document.getElementById('habitDynamicFields');
     const attrSel = document.getElementById('habitAttrSelect');
 
     if (cat === 'water') {
       attrSel.value = 'li';
-      box.innerHTML = `
-        <div class="field">
-          <label>每日目標喝水量 (ml)</label>
-          <select id="waterTargetInput">
-            <option value="1500">1500 ml（基礎補給）</option>
-            <option value="2000" selected>2000 ml（標準健康）</option>
-            <option value="2500">2500 ml（運動加強）</option>
-            <option value="3000">3000 ml（高量目標）</option>
-          </select>
-        </div>
-      `;
+      box.innerHTML = `<div class="field"><label>每日目標喝水量 (ml)</label><select id="waterTargetInput"><option value="1500">1500 ml</option><option value="2000" selected>2000 ml</option><option value="2500">2500 ml</option><option value="3000">3000 ml</option></select></div>`;
     } else if (cat === 'sport') {
       attrSel.value = 'li';
-      box.innerHTML = `
-        <div class="field">
-          <label>運動項目</label>
-          <input type="text" id="sportTypeInput" value="重訓 / 慢跑" placeholder="例如：重訓、跑步、游泳、核心" />
-        </div>
-        <div class="field">
-          <label>運動時長（分鐘）</label>
-          <input type="number" id="sportMinsInput" value="30" min="5" max="300" />
-        </div>
-      `;
+      box.innerHTML = `<div class="field"><label>運動項目</label><input type="text" id="sportTypeInput" value="體能與鍛鍊" /></div><div class="field"><label>預計時長（分鐘）</label><input type="number" id="sportMinsInput" value="30" /></div>`;
     } else if (cat === 'read') {
       attrSel.value = 'zhi';
-      box.innerHTML = `
-        <div class="field">
-          <label>閱讀主題或書名</label>
-          <input type="text" id="readTopicInput" value="課外與專業閱讀" placeholder="例如：英文小說、專業教科書" />
-        </div>
-        <div class="field">
-          <label>閱讀目標（時間或頁數）</label>
-          <input type="text" id="readAmountInput" value="20 分鐘" placeholder="例如：20 分鐘 或 15 頁" />
-        </div>
-      `;
+      box.innerHTML = `<div class="field"><label>閱讀主題</label><input type="text" id="readTopicInput" value="專注閱讀與筆記" /></div><div class="field"><label>目標時間或頁數</label><input type="text" id="readAmountInput" value="20 min" /></div>`;
     } else if (cat === 'wake') {
       attrSel.value = 'lv';
-      box.innerHTML = `
-        <div class="field">
-          <label>目標起床時間</label>
-          <input type="time" id="wakeTimeInput" value="07:30" />
-        </div>
-      `;
+      box.innerHTML = `<div class="field"><label>目標起床時間</label><input type="time" id="wakeTimeInput" value="07:30" /></div>`;
     } else if (cat === 'focus') {
       attrSel.value = 'zhuan';
-      box.innerHTML = `
-        <div class="field">
-          <label>專注內容</label>
-          <input type="text" id="focusTopicInput" value="深度學習不滑手機" />
-        </div>
-        <div class="field">
-          <label>專注時長（分鐘）</label>
-          <input type="number" id="focusMinsInput" value="45" />
-        </div>
-      `;
+      box.innerHTML = `<div class="field"><label>專注主題</label><input type="text" id="focusTopicInput" value="深度思考" /></div><div class="field"><label>時長（分鐘）</label><input type="number" id="focusMinsInput" value="45" /></div>`;
     } else {
       attrSel.value = 'xin';
-      box.innerHTML = `
-        <div class="field">
-          <label>自訂修煉名稱與目標量</label>
-          <input type="text" id="customHabitInput" placeholder="例如：冥想 10 分鐘、練吉他 30 分鐘" />
-        </div>
-      `;
+      box.innerHTML = `<div class="field"><label>自訂修煉名稱</label><input type="text" id="customHabitInput" placeholder="例如：睡前冥想 10 分鐘" /></div>`;
     }
   }
 
   function addStructuredHabit() {
     const attr = document.getElementById('habitAttrSelect').value;
     let newHabit = null;
-
     if (currentHabitCat === 'water') {
       const ml = parseInt(document.getElementById('waterTargetInput').value, 10) || 2000;
-      newHabit = { id: 'h' + Date.now(), icon: '💧', title: `喝水 ${ml} ml`, detail: '支持分次飲水累進', attr, isWater: true, currentMl: 0, targetMl: ml, done: false };
+      newHabit = { id: 'h' + Date.now(), cat: 'water', title: `日飲水 ${ml}ml`, detail: '水分補給', attr, isWater: true, currentMl: 0, targetMl: ml, nextSipAt: 0, done: false };
     } else if (currentHabitCat === 'sport') {
-      const type = document.getElementById('sportTypeInput').value.trim() || '運動';
+      const type = document.getElementById('sportTypeInput').value.trim() || '體能與鍛鍊';
       const mins = document.getElementById('sportMinsInput').value || '30';
-      newHabit = { id: 'h' + Date.now(), icon: '🏃', title: `${type} ${mins} 分鐘`, detail: '體能修煉', attr, done: false };
+      newHabit = { id: 'h' + Date.now(), cat: 'sport', title: type, detail: `預計 ${mins} min`, attr, done: false };
     } else if (currentHabitCat === 'read') {
-      const topic = document.getElementById('readTopicInput').value.trim() || '閱讀';
-      const amt = document.getElementById('readAmountInput').value.trim() || '20 分鐘';
-      newHabit = { id: 'h' + Date.now(), icon: '📖', title: `${topic}（${amt}）`, detail: '知識吸收', attr, done: false };
+      const topic = document.getElementById('readTopicInput').value.trim() || '閱讀修煉';
+      const amt = document.getElementById('readAmountInput').value.trim() || '20 min';
+      newHabit = { id: 'h' + Date.now(), cat: 'read', title: topic, detail: amt, attr, done: false };
     } else if (currentHabitCat === 'wake') {
       const wt = document.getElementById('wakeTimeInput').value || '07:30';
-      newHabit = { id: 'h' + Date.now(), icon: '☀️', title: `${wt} 前準時起床`, detail: '晨間自律', attr, done: false };
+      newHabit = { id: 'h' + Date.now(), cat: 'wake', title: '晨起靜心與呼吸', detail: wt, attr, done: false };
     } else if (currentHabitCat === 'focus') {
       const ft = document.getElementById('focusTopicInput').value.trim() || '深度專注';
       const fm = document.getElementById('focusMinsInput').value || '45';
-      newHabit = { id: 'h' + Date.now(), icon: '🎯', title: `${ft} ${fm} 分鐘`, detail: '心流專注', attr, done: false };
+      newHabit = { id: 'h' + Date.now(), cat: 'focus', title: ft, detail: `${fm} min`, attr, done: false };
     } else {
       const ct = document.getElementById('customHabitInput').value.trim();
       if (!ct) return;
-      newHabit = { id: 'h' + Date.now(), icon: '⚡', title: ct, detail: '自訂修煉', attr, done: false };
+      newHabit = { id: 'h' + Date.now(), cat: 'custom', title: ct, detail: '日常修煉', attr, done: false };
     }
-
     state.habits.push(newHabit);
     closeModal('habitModal');
     saveState();
   }
 
-  function addWaterSip(id) {
-    const h = state.habits.find(x => x.id === id);
-    if (!h || h.done) return;
-    h.currentMl = Math.min(h.targetMl, (h.currentMl || 0) + 250);
-    if (h.currentMl >= h.targetMl) {
-      h.done = true;
-      gainReward(20, h.attr, 2, '達成今日喝水目標');
-    } else {
-      showSysToast(`💧 已補充 250ml（目前 ${h.currentMl}/${h.targetMl} ml）`);
-    }
-    saveState();
-  }
-
-  function toggleHabit(id) {
-    const h = state.habits.find(x => x.id === id);
-    if (!h) return;
-    h.done = !h.done;
-    if (h.done) {
-      if (h.isWater) h.currentMl = h.targetMl;
-      gainReward(20, h.attr, 2, h.title);
-    } else if (h.isWater) {
-      h.currentMl = 0;
-    }
-    saveState();
-  }
-
-  function deleteHabit(id) {
-    state.habits = state.habits.filter(x => x.id !== id);
-    saveState();
-  }
-
-  // 分頁切換
   function switchTab(tab) {
     document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -1293,7 +2096,6 @@
     document.getElementById('nav-' + tab).classList.add('active');
   }
 
-  // 多月份月曆
   function changeMonth(delta) {
     viewMonth += delta;
     if (viewMonth < 0) { viewMonth = 11; viewYear--; }
@@ -1301,11 +2103,7 @@
     renderCalendar();
   }
 
-  function selectDate(dateKey) {
-    selectedDateKey = dateKey;
-    renderCalendar();
-    renderDayEvents();
-  }
+  function selectDate(dateKey) { selectedDateKey = dateKey; renderCalendar(); renderDayEvents(); }
 
   function renderCalendar() {
     document.getElementById('calMonthLabel').textContent = `${viewYear}年 ${viewMonth + 1}月`;
@@ -1315,44 +2113,35 @@
     const prevMonthDays = new Date(viewYear, viewMonth, 0).getDate();
 
     let html = '';
-    for (let i = firstDay - 1; i >= 0; i--) {
-      html += `<div class="cal-day other-month">${prevMonthDays - i}</div>`;
-    }
+    for (let i = firstDay - 1; i >= 0; i--) html += `<div class="cal-day other-month">${prevMonthDays - i}</div>`;
     for (let d = 1; d <= daysInMonth; d++) {
       const dKey = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
       const hasEvents = state.eventsByDate[dKey] && state.eventsByDate[dKey].length > 0;
-      const isToday = dKey === todayKey;
-      const isSelected = dKey === selectedDateKey;
-      html += `
-        <div class="cal-day ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}" onclick="selectDate('${dKey}')">
-          <span>${d}</span>
-          ${hasEvents ? '<span class="cal-dot"></span>' : ''}
-        </div>
-      `;
+      html += `<div class="cal-day ${dKey === todayKey ? 'today' : ''} ${dKey === selectedDateKey ? 'selected' : ''}" onclick="selectDate('${dKey}')"><span>${d}</span>${hasEvents ? '<span class="cal-dot"></span>' : ''}</div>`;
     }
     grid.innerHTML = html;
   }
 
   function renderDayEvents() {
-    document.getElementById('selectedDateTitle').textContent = selectedDateKey === todayKey ? '今日行程' : `${selectedDateKey} 行程`;
+    document.getElementById('selectedDateTitle').textContent = selectedDateKey === todayKey ? '今日命運副本' : `${selectedDateKey} 行程`;
     const list = state.eventsByDate[selectedDateKey] || [];
     const container = document.getElementById('dayEventList');
-
     if (list.length === 0) {
-      container.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:13px; padding:14px 0;">這天還沒有安排行程，點右上角「＋ 行程」新增</div>`;
+      container.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:13px; padding:14px 0;">尚無行程安排</div>`;
       return;
     }
-
     container.innerHTML = list.map(ev => `
-      <div class="habit-row ${ev.done ? 'done' : ''}">
-        <div class="habit-left" onclick="toggleEvent('${ev.id}')">
-          <div class="check-circle">${ev.done ? '✓' : ''}</div>
+      <div class="clean-list-row ${ev.done ? 'done' : ''}">
+        <div class="row-left" onclick="toggleEvent('${ev.id}')">
           <div>
-            <div class="habit-title">${ev.title}</div>
-            ${ev.time ? `<div class="habit-meta"><span class="attr-pill">${ev.time}</span></div>` : ''}
+            <div class="row-title">${ev.title}</div>
+            ${ev.time ? `<div class="row-sub">${ev.time}</div>` : ''}
           </div>
         </div>
-        <button class="del-icon" onclick="deleteEvent('${ev.id}')">✕</button>
+        <div class="row-right">
+          <div class="squircle-check" onclick="toggleEvent('${ev.id}')">${ev.done ? '✓' : ''}</div>
+          <button class="del-icon" onclick="deleteEvent('${ev.id}')">✕</button>
+        </div>
       </div>
     `).join('');
   }
@@ -1376,11 +2165,10 @@
   }
 
   function toggleEvent(id) {
-    const list = state.eventsByDate[selectedDateKey] || [];
-    const item = list.find(e => e.id === id);
+    const item = (state.eventsByDate[selectedDateKey] || []).find(e => e.id === id);
     if (item) {
       item.done = !item.done;
-      if (item.done) gainReward(15, 'zhuan', 1, '完成日程安排');
+      if (item.done) gainReward(15, 'zhuan', 1, 15, '推進主線副本');
       saveState();
     }
   }
@@ -1407,7 +2195,6 @@
     a.click();
   }
 
-  // 英文學習模組
   function speakText(text) {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
@@ -1418,9 +2205,7 @@
     }
   }
 
-  function speakDailyQuote() {
-    speakText(document.getElementById('quoteEnText').textContent);
-  }
+  function speakDailyQuote() { speakText(document.getElementById('quoteEnText').textContent); }
 
   async function enrichWordFromAPI(wordObj) {
     if (wordObj.apiFetched) return;
@@ -1435,12 +2220,8 @@
         const posList = meanings.map(m => m.partOfSpeech).join(' / ');
         const syns = meanings.flatMap(m => m.synonyms || []).slice(0, 4);
         const ex = meanings.flatMap(m => m.definitions).find(d => d.example)?.example;
-        if (!wordObj.meaning || wordObj.meaning === '查詢中...') {
-          wordObj.meaning = `(${posList}) ` + meanings[0].definitions[0].definition;
-        }
-        if (syns.length > 0 && !wordObj.forms.includes('同義詞')) {
-          wordObj.forms = (wordObj.forms ? wordObj.forms + '｜' : '') + `同義詞: ${syns.join(', ')}`;
-        }
+        if (!wordObj.meaning || wordObj.meaning === '查詢中...') wordObj.meaning = `(${posList}) ` + meanings[0].definitions[0].definition;
+        if (syns.length > 0 && !wordObj.forms.includes('同義詞')) wordObj.forms = (wordObj.forms ? wordObj.forms + '｜' : '') + `同義詞: ${syns.join(', ')}`;
         if (ex && !wordObj.example) wordObj.example = ex;
       }
       wordObj.apiFetched = true;
@@ -1455,9 +2236,7 @@
 
     const start = (state.dailyBatchIndex * 5) % state.vocabPool.length;
     const batch = [];
-    for (let i = 0; i < Math.min(5, state.vocabPool.length); i++) {
-      batch.push(state.vocabPool[(start + i) % state.vocabPool.length]);
-    }
+    for (let i = 0; i < Math.min(5, state.vocabPool.length); i++) batch.push(state.vocabPool[(start + i) % state.vocabPool.length]);
 
     let learnedCount = 0;
     document.getElementById('dailyVocabList').innerHTML = batch.map(w => {
@@ -1473,13 +2252,13 @@
               <div class="vocab-phonetic">${w.pos || ''} ${w.phonetic || ''}</div>
             </div>
             <div class="vocab-actions">
-              <button class="chip-btn" onclick="speakText('${w.word}')">🔊</button>
-              <button class="chip-btn" onclick="toggleSaveWord('${w.word}')">${isSaved ? '★ 已存' : '☆ 收藏'}</button>
-              <button class="chip-btn primary" onclick="toggleLearnedWord('${w.word}')">${isLearned ? '✓ 已記住' : '記住了'}</button>
+              <button class="chip-btn" onclick="speakText('${w.word}')">發音</button>
+              <button class="chip-btn" onclick="toggleSaveWord('${w.word}')">${isSaved ? '已收藏' : '收藏'}</button>
+              <button class="chip-btn primary" onclick="openWordQuiz('${w.word}')">${isLearned ? '已通過' : '測驗記住'}</button>
             </div>
           </div>
           <div class="vocab-meaning">${w.meaning}</div>
-          ${w.forms ? `<div class="vocab-forms">🔄 ${w.forms}</div>` : ''}
+          ${w.forms ? `<div class="vocab-forms">${w.forms}</div>` : ''}
           ${w.example ? `<div class="vocab-example"><div>${w.example}</div>${w.exampleZh ? `<div style="margin-top:2px;">${w.exampleZh}</div>` : ''}</div>` : ''}
         </div>
       `;
@@ -1489,49 +2268,24 @@
     document.getElementById('savedVocabCount').textContent = state.savedWords.length;
 
     document.getElementById('savedVocabList').innerHTML = state.savedWords.length === 0
-      ? '<div style="text-align:center; color:var(--text-muted); font-size:12.5px; padding:10px;">尚未收藏生字，遇到不熟的單字按「☆ 收藏」就會存在這裡</div>'
+      ? '<div style="text-align:center; color:var(--text-muted); font-size:12.5px; padding:10px;">尚未收藏生字</div>'
       : state.savedWords.map(sw => `
-          <div class="habit-row">
-            <div class="habit-left" onclick="speakText('${sw.word}')">
-              <div>
-                <div class="habit-title">${sw.word} 🔊</div>
-                <div class="habit-meta">${sw.meaning}</div>
-              </div>
+          <div class="clean-list-row">
+            <div class="row-left" onclick="speakText('${sw.word}')">
+              <div><div class="row-title">${sw.word}</div><div class="row-sub">${sw.meaning}</div></div>
             </div>
             <button class="del-icon" onclick="removeSavedWord('${sw.word}')">✕</button>
           </div>
         `).join('');
   }
 
-  function nextVocabBatch() {
-    state.dailyBatchIndex += 1;
-    saveState();
-  }
-
-  function toggleLearnedWord(word) {
-    if (state.learnedWords.includes(word)) {
-      state.learnedWords = state.learnedWords.filter(w => w !== word);
-    } else {
-      state.learnedWords.push(word);
-      gainReward(10, 'zhi', 1, `掌握單字 ${word}`);
-    }
-    saveState();
-  }
-
+  function nextVocabBatch() { state.dailyBatchIndex += 1; saveState(); }
   function toggleSaveWord(word) {
-    if (state.savedWords.some(s => s.word === word)) {
-      state.savedWords = state.savedWords.filter(s => s.word !== word);
-    } else {
-      const found = state.vocabPool.find(v => v.word === word) || { word, meaning: '自訂收藏單字' };
-      state.savedWords.unshift(found);
-    }
+    if (state.savedWords.some(s => s.word === word)) state.savedWords = state.savedWords.filter(s => s.word !== word);
+    else state.savedWords.unshift(state.vocabPool.find(v => v.word === word) || { word, meaning: '自訂收藏單字' });
     saveState();
   }
-
-  function removeSavedWord(word) {
-    state.savedWords = state.savedWords.filter(s => s.word !== word);
-    saveState();
-  }
+  function removeSavedWord(word) { state.savedWords = state.savedWords.filter(s => s.word !== word); saveState(); }
 
   async function addCustomWord() {
     const inp = document.getElementById('customWordInput');
@@ -1545,14 +2299,9 @@
     await enrichWordFromAPI(newObj);
   }
 
-  function openBatchImportModal() {
-    document.getElementById('batchWordsInput').value = '';
-    document.getElementById('batchModal').classList.add('show');
-  }
-
+  function openBatchImportModal() { document.getElementById('batchWordsInput').value = ''; document.getElementById('batchModal').classList.add('show'); }
   function importBatchWords() {
-    const text = document.getElementById('batchWordsInput').value;
-    const words = text.split(/[\n,，\s]+/).map(w => w.trim().toLowerCase()).filter(w => /^[a-z-]+$/.test(w));
+    const words = document.getElementById('batchWordsInput').value.split(/[\n,，\s]+/).map(w => w.trim().toLowerCase()).filter(w => /^[a-z-]+$/.test(w));
     if (words.length === 0) return;
     words.reverse().forEach(w => {
       if (!state.vocabPool.some(item => item.word === w)) {
@@ -1564,7 +2313,66 @@
     saveState();
   }
 
-  // 待辦與專注計時
+  // 閉關專注（防離開分頁偵測）
+  let focusSecs = 25 * 60;
+  let focusTimer = null;
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && focusTimer) {
+      clearInterval(focusTimer);
+      focusTimer = null;
+      focusSecs = 25 * 60;
+      updateFocusDisplay();
+      document.getElementById('focusBtn').textContent = '開始閉關 (消耗 15 精力)';
+      showSysToast('閉關期間離開介面，專注中斷！');
+    }
+  });
+
+  function updateFocusDisplay() {
+    const m = String(Math.floor(focusSecs / 60)).padStart(2, '0');
+    const s = String(focusSecs % 60).padStart(2, '0');
+    document.getElementById('focusTimerText').textContent = `${m}:${s}`;
+  }
+
+  function toggleFocusTimer() {
+    const btn = document.getElementById('focusBtn');
+    if (focusTimer) {
+      clearInterval(focusTimer);
+      focusTimer = null;
+      btn.textContent = '繼續閉關';
+    } else {
+      if ((state.ap || 0) < 15 && focusSecs === 25 * 60) {
+        showSysToast('精力不足 15 點，無法開啟閉關');
+        return;
+      }
+      if (focusSecs === 25 * 60) { state.ap -= 15; saveState(); }
+      initAudioCtx();
+      btn.textContent = '暫停閉關';
+      focusTimer = setInterval(() => {
+        focusSecs--;
+        updateFocusDisplay();
+        if (focusSecs <= 0) {
+          clearInterval(focusTimer);
+          focusTimer = null;
+          btn.textContent = '開始閉關 (消耗 15 精力)';
+          focusSecs = 25 * 60;
+          updateFocusDisplay();
+          state.focusCompletedCount = (state.focusCompletedCount || 0) + 1;
+          gainReward(25, 'zhuan', 2, 25, '完成 25 分鐘閉關修煉');
+          saveState();
+        }
+      }, 1000);
+    }
+  }
+
+  function resetFocusTimer() {
+    clearInterval(focusTimer);
+    focusTimer = null;
+    focusSecs = 25 * 60;
+    document.getElementById('focusBtn').textContent = '開始閉關 (消耗 15 精力)';
+    updateFocusDisplay();
+  }
+
   function addTodo() {
     const inp = document.getElementById('todoInput');
     const title = inp.value.trim();
@@ -1578,82 +2386,27 @@
     const t = state.todos.find(x => x.id === id);
     if (t) {
       t.done = !t.done;
-      if (t.done) gainReward(10, 'zhuan', 1, '完成待辦');
+      if (t.done) gainReward(10, 'zhuan', 1, 10, '完成隨手待辦');
       saveState();
     }
   }
 
-  function deleteTodo(id) {
-    state.todos = state.todos.filter(x => x.id !== id);
-    saveState();
-  }
+  function deleteTodo(id) { state.todos = state.todos.filter(x => x.id !== id); saveState(); }
+  function clearDoneTodos() { state.todos = state.todos.filter(x => !x.done); saveState(); }
 
-  function clearDoneTodos() {
-    state.todos = state.todos.filter(x => !x.done);
-    saveState();
-  }
-
-  let focusSecs = 25 * 60;
-  let focusTimer = null;
-
-  function updateFocusDisplay() {
-    const m = String(Math.floor(focusSecs / 60)).padStart(2, '0');
-    const s = String(focusSecs % 60).padStart(2, '0');
-    document.getElementById('focusTimerText').textContent = `${m}:${s}`;
-  }
-
-  function toggleFocusTimer() {
-    const btn = document.getElementById('focusBtn');
-    if (focusTimer) {
-      clearInterval(focusTimer);
-      focusTimer = null;
-      btn.textContent = '繼續';
-    } else {
-      btn.textContent = '暫停';
-      focusTimer = setInterval(() => {
-        focusSecs--;
-        updateFocusDisplay();
-        if (focusSecs <= 0) {
-          clearInterval(focusTimer);
-          focusTimer = null;
-          btn.textContent = '開始';
-          focusSecs = 25 * 60;
-          updateFocusDisplay();
-          gainReward(25, 'zhuan', 2, '完成25分鐘專注修煉');
-          saveState();
-        }
-      }, 1000);
-    }
-  }
-
-  function resetFocusTimer() {
-    clearInterval(focusTimer);
-    focusTimer = null;
-    focusSecs = 25 * 60;
-    document.getElementById('focusBtn').textContent = '開始';
-    updateFocusDisplay();
-  }
-
-  // 防分心守衛與覺醒彈窗
   function resistDistraction() {
     closeModal('guardModal');
-    gainReward(15, 'lv', 2, '成功抵抗分心誘惑');
+    gainReward(15, 'lv', 2, 15, '成功抵抗分心誘惑');
+    speakSystemLine('guard');
     saveState();
   }
 
-  function openAwakeningModal() {
-    document.getElementById('inputName').value = state.userName === '宿主' ? '' : state.userName;
-    document.getElementById('inputGoal').value = state.userGoal;
-    document.getElementById('awakeningModal').classList.add('show');
-  }
-
-  function saveProfile() {
-    state.userName = document.getElementById('inputName').value.trim() || '重生者';
-    state.userGoal = document.getElementById('inputGoal').value.trim() || '穩步修煉，重塑人生節奏';
-    state.initialized = true;
-    closeModal('awakeningModal');
-    showSysToast(`⚡ 宿主【${state.userName}】已成功綁定系統！`);
-    saveState();
+  function openMusicModal() {
+    setVoicePack(state.voicePack || 'sichuan');
+    document.querySelectorAll('[id^="bgm-"]').forEach(b => b.classList.remove('active'));
+    const btn = document.getElementById('bgm-' + bgmMode);
+    if (btn) btn.classList.add('active');
+    document.getElementById('musicModal').classList.add('show');
   }
 
   function openThemeModal() { document.getElementById('themeModal').classList.add('show'); }
@@ -1661,41 +2414,67 @@
   function closeModal(id) { document.getElementById(id).classList.remove('show'); }
 
   function renderAll() {
-    document.getElementById('userNameDisplay').textContent = state.userName;
-    document.getElementById('userGoalDisplay').textContent = state.userGoal;
+    const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+    document.getElementById('todayDateSubtitle').textContent = `${today.getMonth() + 1}月${today.getDate()}日 · ${weekdays[today.getDay()]}`;
+
     document.getElementById('lvDisplay').textContent = `LV.${state.level}`;
-    document.getElementById('rankTitleDisplay').textContent = getRankTitle(state.level);
+    document.getElementById('rankTitleDisplay').textContent = getDynamicRankTitle();
+    document.getElementById('chapterDisplay').textContent = CHAPTERS[Math.min(CHAPTERS.length - 1, Math.floor((state.level - 1) / 2))];
+    document.getElementById('hostBadgeDisplay').textContent = `宿主 · ${state.userName}`;
 
     const needExp = state.level * 100;
     document.getElementById('expTextDisplay').textContent = `${state.exp} / ${needExp} EXP`;
     document.getElementById('expBarFill').style.width = `${Math.min(100, (state.exp / needExp) * 100)}%`;
 
-    ['xin', 'zhuan', 'lv', 'li', 'zhi'].forEach(k => {
-      document.getElementById('stat-' + k).textContent = state.stats[k];
-    });
+    document.getElementById('apDisplay').textContent = `${state.ap}/100`;
+    document.getElementById('coinsDisplay').textContent = `${state.coins}`;
+    document.getElementById('streakDisplay').textContent = `${state.streakDays || 1}日`;
+
+    // 境界突破試煉進度
+    const trialTarget = state.level * 2;
+    const trialCurr = Math.min(trialTarget, state.focusCompletedCount || 0);
+    document.getElementById('trialTextDisplay').textContent = `突破試煉：專注閉關 ${trialCurr}/${trialTarget}`;
+    const actionWrap = document.getElementById('trialActionWrap');
+    if (state.exp >= needExp && trialCurr >= trialTarget) {
+      actionWrap.innerHTML = `<button class="breakthrough-btn" onclick="triggerBreakthrough()">立即突破</button>`;
+    } else {
+      const pct = Math.min(100, (trialCurr / trialTarget) * 100);
+      actionWrap.innerHTML = `<div class="trial-mini-track"><div class="trial-mini-fill" style="width:${pct}%;"></div></div>`;
+    }
+
     renderRadarChart();
 
     const doneHabits = state.habits.filter(h => h.done).length;
     document.getElementById('habitProgressText').textContent = `${doneHabits}/${state.habits.length}`;
 
+    const boxStatus = document.getElementById('blindboxStatusText');
+    if (state.blindboxDrawnDate === todayKey) boxStatus.textContent = '今日已領取 ›';
+    else if (doneHabits >= 2 || (state.coins || 0) >= 30) boxStatus.textContent = '可領取 ›';
+    else boxStatus.textContent = '修煉 2 項解鎖 ›';
+
+    const now = Date.now();
     document.getElementById('habitList').innerHTML = state.habits.length === 0
       ? '<div style="text-align:center; color:var(--text-muted); font-size:13px; padding:14px;">還沒有修煉項目，點右上角「＋ 新增修煉」開始</div>'
-      : state.habits.map(h => `
-          <div class="habit-row ${h.done ? 'done' : ''}">
-            <div class="habit-left" onclick="toggleHabit('${h.id}')">
-              <div class="check-circle">${h.done ? '✓' : ''}</div>
-              <div>
-                <div class="habit-title">${h.icon || '⚡'} ${h.title}</div>
-                <div class="habit-meta">
-                  <span class="attr-pill">${ATTR_LABELS[h.attr] || '力 · 體能'}</span>
-                  <span>${h.isWater ? `進度 ${h.currentMl || 0}/${h.targetMl} ml` : h.detail}</span>
+      : state.habits.map(h => {
+          const inCooldown = h.isWater && !h.done && h.nextSipAt && now < h.nextSipAt;
+          const minsLeft = inCooldown ? Math.ceil((h.nextSipAt - now) / 60000) : 0;
+          return `
+            <div class="clean-list-row ${h.done ? 'done' : ''}">
+              <div class="row-left" onclick="toggleHabit('${h.id}')">
+                <div class="cat-icon-wrap">${CAT_SVGS[h.cat] || CAT_SVGS.custom}</div>
+                <div>
+                  <div class="row-title">${h.title}</div>
+                  <div class="row-sub">${h.isWater ? `已飲 ${h.currentMl || 0}ml` : h.detail}</div>
                 </div>
               </div>
+              <div class="row-right">
+                ${h.isWater && !h.done ? `<button class="step-pill ${inCooldown ? 'cooldown' : ''}" onclick="addWaterSip('${h.id}')">${inCooldown ? `${minsLeft}m` : '+250ml'}</button>` : ''}
+                <div class="squircle-check" onclick="toggleHabit('${h.id}')">${h.done ? '✓' : ''}</div>
+                <button class="del-icon" onclick="deleteHabit('${h.id}')">✕</button>
+              </div>
             </div>
-            ${h.isWater && !h.done ? `<button class="step-btn" onclick="addWaterSip('${h.id}')">+250ml</button>` : ''}
-            <button class="del-icon" onclick="deleteHabit('${h.id}')">✕</button>
-          </div>
-        `).join('');
+          `;
+        }).join('');
 
     renderCalendar();
     renderDayEvents();
@@ -1704,12 +2483,12 @@
     document.getElementById('todoList').innerHTML = state.todos.length === 0
       ? '<div style="text-align:center; color:var(--text-muted); font-size:13px; padding:14px;">目前沒有隨手待辦</div>'
       : state.todos.map(t => `
-          <div class="habit-row ${t.done ? 'done' : ''}">
-            <div class="habit-left" onclick="toggleTodo('${t.id}')">
-              <div class="check-circle">${t.done ? '✓' : ''}</div>
-              <div class="habit-title">${t.title}</div>
+          <div class="clean-list-row ${t.done ? 'done' : ''}">
+            <div class="row-left" onclick="toggleTodo('${t.id}')"><div class="row-title">${t.title}</div></div>
+            <div class="row-right">
+              <div class="squircle-check" onclick="toggleTodo('${t.id}')">${t.done ? '✓' : ''}</div>
+              <button class="del-icon" onclick="deleteTodo('${t.id}')">✕</button>
             </div>
-            <button class="del-icon" onclick="deleteTodo('${t.id}')">✕</button>
           </div>
         `).join('');
   }
@@ -1718,9 +2497,10 @@
   renderAll();
 
   if (window.location.search.includes('guard=1')) {
+    document.getElementById('introOverlay').style.display = 'none';
     openGuardModal();
-  } else if (!state.initialized) {
-    setTimeout(openAwakeningModal, 300);
+  } else {
+    initIntroSequence(false);
   }
 </script>
 </body>
