@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="REBOOT" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%230D0D0F'/%3E%3Ccircle cx='90' cy='90' r='58' fill='none' stroke='%23FF6B00' stroke-width='12'/%3E%3Cpath d='M90 48 L112 96 L90 86 L68 96 Z' fill='%23FF8C38'/%3E%3Ccircle cx='90' cy='116' r='8' fill='%23FF6B00'/%3E%3C/svg%3E" />
+  <title>REBOOT · 個人自律與日程重啟系統</title>
+  <style>
+    :root {
+      --bg-base: #0D0D0F;
+      --bg-card: #16161A;
+      --bg-card-elevated: #1E1E24;
+      --orange-main: #FF6B00;
+      --orange-light: #FF8C38;
+      --orange-dim: rgba(255, 107, 0, 0.16);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --text-primary: #F4F4F6;
+      --text-secondary: #9A9AA6;
+      --danger: #EF4444;
+      --warning: #F59E0B;
+      --success: #10B981;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    input, textarea, select { user-select: text; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-base);
+      background-image: radial-gradient(circle at 50% -10%, rgba(255, 107, 0, 0.22) 0%, #0D0D0F 55%);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      min-height: 100vh;
+      padding-top: env(safe-area-inset-top, 20px);
+      padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 86px);
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 16px 18px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .pill-group { display: flex; gap: 8px; align-items: center; }
+
+    .pill {
+      background: var(--bg-card-elevated);
+      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .pill.orange {
+      background: var(--orange-dim);
+      border-color: rgba(255, 107, 0, 0.4);
+      color: var(--orange-light);
+    }
+
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--bg-card-elevated);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .header-hero { text-align: center; margin-bottom: 14px; }
+
+    .header-hero h1 {
+      font-size: 22px;
+      font-weight: 800;
+      margin: 0 0 4px 0;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .header-hero .goal-subtitle {
+      font-size: 13px;
+      color: var(--orange-light);
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .reminder-banner {
+      background: linear-gradient(90deg, rgba(245, 158, 11, 0.16), rgba(255, 107, 0, 0.12));
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: 14px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .reminder-banner.all-done {
+      background: rgba(16, 185, 129, 0.12);
+      border-color: rgba(16, 185, 129, 0.35);
+    }
+
+    .reminder-text { font-size: 12px; line-height: 1.4; color: var(--text-primary); }
+
+    .reminder-badge {
+      background: var(--warning);
+      color: #000;
+      font-weight: 800;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .reminder-banner.all-done .reminder-badge { background: var(--success); color: #000; }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .level-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .lv-badge {
+      background: linear-gradient(135deg, var(--orange-main), #FF9233);
+      color: #fff;
+      font-weight: 800;
+      font-size: 13px;
+      padding: 5px 10px;
+      border-radius: 10px;
+      margin-right: 10px;
+    }
+
+    .xp-bar-bg {
+      height: 8px;
+      background: #25252D;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .xp-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--orange-main), var(--orange-light));
+      border-radius: 999px;
+      transition: width 0.35s ease;
+    }
+
+    .radar-wrap { display: flex; flex-direction: column; align-items: center; padding: 4px 0; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .stat-box {
+      background: var(--bg-card-elevated);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 10px 4px;
+      text-align: center;
+    }
+
+    .stat-box .label { font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; }
+    .stat-box .val { font-size: 17px; font-weight: 800; color: var(--text-primary); }
+
+    /* 番茄鐘計時器樣式 */
+    .timer-display {
+      font-size: 38px;
+      font-weight: 800;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 2px;
+      margin: 10px 0;
+      color: var(--orange-light);
+    }
+
+    .timer-presets {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .preset-chip {
+      background: var(--bg-card-elevated);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .preset-chip.active {
+      background: var(--orange-dim);
+      border-color: var(--orange-main);
+      color: var(--orange-light);
+    }
+
+    .timer-controls {
+      display: flex;
+      gap: 10px;
+    }
+
+    .timer-controls button {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    /* 戰績統計列 */
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+    }
+
+    .metric-item .m-val { font-size: 16px; font-weight: 800; color: var(--orange-light); }
+    .metric-item .m-lbl { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+    .tab-view { display: none; }
+    .tab-view.active { display: block; }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .section-title { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+
+    .small-btn {
+      background: var(--bg-card-elevated);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .item-card {
+      background: var(--bg-card-elevated);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .item-card.completed { opacity: 0.55; border-color: rgba(16, 185, 129, 0.3); }
+    .item-card.overdue { border-color: rgba(239, 68, 68, 0.5); background: rgba(239, 68, 68, 0.06); }
+
+    .item-left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+
+    .check-circle {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid var(--orange-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      cursor: pointer;
+      font-size: 13px;
+      color: #fff;
+    }
+
+    .item-card.completed .check-circle { background: var(--success); border-color: var(--success); }
+    .item-info { flex: 1; min-width: 0; }
+    .item-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; word-break: break-word; }
+    .item-card.completed .item-title { text-decoration: line-through; color: var(--text-secondary); }
+
+    .item-meta {
+      font-size: 11px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tag { background: rgba(255, 255, 255, 0.06); padding: 2px 6px; border-radius: 5px; font-size: 10px; }
+    .tag.time { background: var(--orange-dim); color: var(--orange-light); font-weight: 700; }
+    .tag.overdue-tag { background: rgba(239, 68, 68, 0.2); color: #FCA5A5; font-weight: 700; }
+
+    .item-actions { display: flex; align-items: center; gap: 4px; }
+    .act-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 14px;
+      cursor: pointer;
+      padding: 4px 6px;
+    }
+    .act-btn.del { color: var(--danger); }
+
+    .quick-add-row { display: flex; gap: 8px; margin-bottom: 12px; }
+    .quick-add-row input {
+      flex: 1;
+      background: var(--bg-card-elevated);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: var(--text-primary);
+      font-size: 13px;
+      outline: none;
+    }
+    .quick-add-row button {
+      background: var(--orange-main);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 0 14px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(22, 22, 26, 0.94);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0 calc(env(safe-area-inset-bottom, 8px) + 6px);
+      z-index: 50;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 12px;
+      position: relative;
+    }
+
+    .nav-item.active { color: var(--orange-main); }
+    .nav-icon { font-size: 19px; }
+    .nav-dot {
+      position: absolute;
+      top: 2px;
+      right: 10px;
+      width: 7px;
+      height: 7px;
+      background: var(--danger);
+      border-radius: 50%;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 100;
+    }
+
+    .modal-backdrop.show { display: flex; }
+
+    .modal-box {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    .modal-title { font-size: 18px; font-weight: 800; margin: 0 0 6px 0; }
+    .modal-desc { font-size: 13px; color: var(--text-secondary); margin: 0 0 16px 0; line-height: 1.5; }
+
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 5px; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      background: var(--bg-card-elevated);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: var(--text-primary);
+      font-size: 14px;
+      outline: none;
+    }
+
+    .modal-actions { display: flex; gap: 10px; margin-top: 16px; }
+    .modal-actions button {
+      flex: 1;
+      padding: 11px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-secondary { background: var(--bg-card-elevated); color: var(--text-primary); }
+    .btn-primary { background: var(--orange-main); color: #fff; }
+    .btn-success { background: var(--success); color: #000; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="top-bar">
+    <div class="pill-group">
+      <div class="pill orange" onclick="openProfileModal()">
+        第 <span id="dayCount">1</span> 天 / 目標 <span id="targetDays">66</span> 天 ✏️
+      </div>
+      <div class="pill">🔥 <span id="streakCount">0</span>天</div>
+    </div>
+    <div class="pill-group">
+      <button class="icon-btn" title="專注守衛攔截測試" onclick="openGuardModal()">🛡️</button>
+      <button class="icon-btn" title="個人檔案與備份設定" onclick="openProfileModal()">⚙️</button>
+    </div>
+  </div>
+
+  <div class="header-hero">
+    <h1 onclick="openProfileModal()"><span id="displayUserName">挑戰者</span>的<span id="displayPlanName">重啟計畫</span> ✏️</h1>
+    <p class="goal-subtitle" id="displayGoalText">🎯 核心目標：建立規律作息與高度自律</p>
+  </div>
+
+  <div class="reminder-banner" id="reminderBanner" onclick="jumpToNextUnfinished()">
+    <div class="reminder-text" id="reminderText">正在檢查今日待辦與日程進度...</div>
+    <div class="reminder-badge" id="reminderBadge">查看</div>
+  </div>
+
+  <!-- 分頁 1：總覽與習慣養成 -->
+  <div class="tab-view active" id="tab-dashboard">
+    <div class="card">
+      <div class="level-row">
+        <div style="display:flex; align-items:center;">
+          <span class="lv-badge">LV.<span id="userLevel">1</span></span>
+          <div>
+            <div style="font-size:14px; font-weight:700;" id="levelTitle">覺醒初心者</div>
+            <div style="font-size:11px; color:var(--text-secondary);">每 100 EXP 提升一級</div>
+          </div>
+        </div>
+        <div style="font-size:12px; font-weight:700; color:var(--orange-light);">
+          <span id="userExp">0</span> / 100 EXP
+        </div>
+      </div>
+      <div class="xp-bar-bg">
+        <div class="xp-bar-fill" id="xpBarFill" style="width: 0%;"></div>
+      </div>
+      <div class="metrics-row">
+        <div class="metric-item"><div class="m-val" id="metricDone">0</div><div class="m-lbl">累計完成任務</div></div>
+        <div class="metric-item"><div class="m-val" id="metricResist">0</div><div class="m-lbl">抵抗分心次數</div></div>
+        <div class="metric-item"><div class="m-val" id="metricFocus">0m</div><div class="m-lbl">累計專注時長</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="radar-wrap">
+        <svg id="radarSvg" width="220" height="200" viewBox="0 0 220 200"></svg>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-box"><div class="label">信</div><div class="val" id="stat-xin">50</div></div>
+        <div class="stat-box"><div class="label">專</div><div class="val" id="stat-zhuan">50</div></div>
+        <div class="stat-box"><div class="label">律</div><div class="val" id="stat-lv">50</div></div>
+        <div class="stat-box"><div class="label">力</div><div class="val" id="stat-li">50</div></div>
+        <div class="stat-box"><div class="label">智</div><div class="val" id="stat-zhi">50</div></div>
+      </div>
+    </div>
+
+    <!-- 內建專注番茄鐘 -->
+    <div class="card">
+      <div class="section-header" style="margin-bottom:4px;">
+        <div class="section-title">⏳ 深度專注計時器</div>
+        <span style="font-size:11px; color:var(--text-secondary);">完成獲得 專+2・+25 EXP</span>
+      </div>
+      <div class="timer-display" id="timerDisplay">25:00</div>
+      <div class="timer-presets">
+        <span class="preset-chip" onclick="setTimerPreset(15, this)">15 分鐘</span>
+        <span class="preset-chip active" onclick="setTimerPreset(25, this)">25 分鐘</span>
+        <span class="preset-chip" onclick="setTimerPreset(45, this)">45 分鐘</span>
+      </div>
+      <div class="timer-controls">
+        <button class="btn-primary" id="timerToggleBtn" onclick="toggleTimer()">▶ 開始專注</button>
+        <button class="btn-secondary" onclick="resetTimer()">重置</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-header">
+        <div class="section-title">🔥 每日固定微習慣 (<span id="habitProgress">0/0</span>)</div>
+        <button class="small-btn" onclick="openHabitModal()">＋ 新增習慣</button>
+      </div>
+      <div id="habitList"></div>
+    </div>
+  </div>
+
+  <!-- 分頁 2：每日時間軸日程表 -->
+  <div class="tab-view" id="tab-schedule">
+    <div class="card">
+      <div class="section-header">
+        <div class="section-title">📅 今日時間日程表</div>
+        <div style="display:flex; gap:6px;">
+          <button class="small-btn" onclick="exportCalendarICS()">🔔 匯出鬧鐘</button>
+          <button class="small-btn" style="background:var(--orange-main); border:none;" onclick="openScheduleModal()">＋ 排程</button>
+        </div>
+      </div>
+      <p style="font-size:12px; color:var(--text-secondary); margin-top:0; margin-bottom:12px;">
+        規劃每天各時段要做的事，點擊「✏️」可隨時修改時間與內容，逾時未做會自動標示提醒。
+      </p>
+      <div id="scheduleList"></div>
+    </div>
+  </div>
+
+  <!-- 分頁 3：待辦事項與未完成清單 -->
+  <div class="tab-view" id="tab-todo">
+    <div class="card">
+      <div class="section-header">
+        <div class="section-title">✅ 臨時待辦事項清單</div>
+        <button class="small-btn" onclick="clearCompletedTodos()">清除已完成</button>
+      </div>
+      <div class="quick-add-row">
+        <input type="text" id="quickTodoInput" placeholder="輸入待辦事項（例如：繳費、買日用品）..." onkeypress="if(event.key==='Enter') addQuickTodo()" />
+        <button onclick="addQuickTodo()">新增</button>
+      </div>
+      <div id="todoList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 底部導覽列 -->
+<div class="bottom-nav">
+  <div class="nav-item active" id="nav-dashboard" onclick="switchTab('dashboard')">
+    <span class="nav-icon">🧭</span>
+    <span>總覽與習慣</span>
+  </div>
+  <div class="nav-item" id="nav-schedule" onclick="switchTab('schedule')">
+    <span class="nav-icon">📅</span>
+    <span>每日日程表</span>
+    <span class="nav-dot" id="dot-schedule" style="display:none;"></span>
+  </div>
+  <div class="nav-item" id="nav-todo" onclick="switchTab('todo')">
+    <span class="nav-icon">☑️</span>
+    <span>待辦事項</span>
+    <span class="nav-dot" id="dot-todo" style="display:none;"></span>
+  </div>
+</div>
+
+<!-- 彈窗 1：首次引導 / 修改名字、目標與備份 -->
+<div class="modal-backdrop" id="profileModal">
+  <div class="modal-box">
+    <h3 class="modal-title">🚀 打造你的專屬重啟計畫</h3>
+    <p class="modal-desc">設定你的名字、計畫主題與核心目標，隨時都能回來修改。</p>
+    <div class="form-group">
+      <label>你的名字或暱稱</label>
+      <input type="text" id="inputUserName" placeholder="例如：Alex、小陳" />
+    </div>
+    <div class="form-group">
+      <label>計畫名稱</label>
+      <input type="text" id="inputPlanName" placeholder="例如：66天重啟計畫、考研衝刺" />
+    </div>
+    <div class="form-group">
+      <label>現階段最想達成的核心目標</label>
+      <input type="text" id="inputGoalText" placeholder="例如：戒掉熬夜滑手機，每天運動 30 分鐘" />
+    </div>
+    <div class="form-group">
+      <label>挑戰總天數</label>
+      <input type="number" id="inputTargetDays" value="66" min="1" max="365" />
+    </div>
+    <div class="form-group" style="border-top:1px solid var(--border-color); padding-top:12px; margin-top:14px;">
+      <label>💾 進度備份 / 還原（換手機時可複製存檔碼）</label>
+      <div style="display:flex; gap:8px;">
+        <button type="button" class="small-btn" style="flex:1; padding:8px;" onclick="exportBackupCode()">複製備份碼</button>
+        <button type="button" class="small-btn" style="flex:1; padding:8px;" onclick="importBackupCode()">貼上還原</button>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('profileModal')">取消</button>
+      <button class="btn-primary" onclick="saveProfile()">儲存設定</button>
+    </div>
+  </div>
+</div>
+
+<!-- 彈窗 2：新增 / 編輯每日微習慣 -->
+<div class="modal-backdrop" id="habitModal">
+  <div class="modal-box">
+    <h3 class="modal-title" id="habitModalTitle">＋ 新增每日固定習慣</h3>
+    <input type="hidden" id="editHabitId" value="" />
+    <div class="form-group">
+      <label>習慣名稱</label>
+      <input type="text" id="inputHabitTitle" placeholder="例如：早上 7:30 起床、喝水 2000ml" />
+    </div>
+    <div class="form-group">
+      <label>提升屬性</label>
+      <select id="inputHabitStat">
+        <option value="lv">律（自律與作息）</option>
+        <option value="li">力（體能與健康）</option>
+        <option value="zhi">智（閱讀與學習）</option>
+        <option value="zhuan">專（專注與效率）</option>
+        <option value="xin">信（心態與信念）</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('habitModal')">取消</button>
+      <button class="btn-primary" onclick="saveHabit()">儲存習慣</button>
+    </div>
+  </div>
+</div>
+
+<!-- 彈窗 3：新增 / 編輯每日時間日程 -->
+<div class="modal-backdrop" id="scheduleModal">
+  <div class="modal-box">
+    <h3 class="modal-title" id="scheduleModalTitle">📅 新增每日時間排程</h3>
+    <input type="hidden" id="editSchedId" value="" />
+    <div class="form-group">
+      <label>執行時間（24小時制）</label>
+      <input type="time" id="inputSchedTime" value="08:00" />
+    </div>
+    <div class="form-group">
+      <label>這個時間要做什麼？</label>
+      <input type="text" id="inputSchedTitle" placeholder="例如：整理今日工作清單、健身房訓練" />
+    </div>
+    <div class="form-group">
+      <label>備註或地點（選填）</label>
+      <input type="text" id="inputSchedNote" placeholder="例如：不帶手機進書房" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('scheduleModal')">取消</button>
+      <button class="btn-primary" onclick="saveSchedule()">儲存排程</button>
+    </div>
+  </div>
+</div>
+
+<!-- 彈窗 4：防分心靈魂拷問守衛 -->
+<div class="modal-backdrop" id="guardModal">
+  <div class="modal-box" style="border-color: rgba(255, 107, 0, 0.5);">
+    <h3 class="modal-title" style="color: var(--orange-light);">🛑 專注守衛攔截中</h3>
+    <p class="modal-desc">等一下！你現在為什麼要點開娛樂或社交軟體？你的核心目標是：<br><strong id="guardGoalPreview" style="color:#fff;"></strong></p>
+    <div class="form-group">
+      <label>如果真的有正事，請寫下明確目的：</label>
+      <input type="text" id="guardReasonInput" placeholder="例如：回覆重要訊息（只用 3 分鐘）" />
+    </div>
+    <div class="modal-actions" style="flex-direction: column;">
+      <button class="btn-success" onclick="resistSuccess()">🛡️ 我是無意識手滑，立刻放棄！（律 +2、EXP +15）</button>
+      <button class="btn-secondary" onclick="closeModal('guardModal')">我有明確目的，暫時放行</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const STORAGE_KEY = 'reboot_public_app_v2';
+
+  const defaultState = {
+    initialized: false,
+    userName: '挑戰者',
+    planName: '重啟計畫',
+    goalText: '建立規律作息，每天進步 1%',
+    targetDays: 66,
+    dayCount: 1,
+    streak: 0,
+    lastDate: new Date().toDateString(),
+    exp: 0,
+    level: 1,
+    totalDoneCount: 0,
+    resistCount: 0,
+    focusMinutes: 0,
+    stats: { xin: 50, zhuan: 50, lv: 50, li: 50, zhi: 50 },
+    habits: [
+      { id: 'h1', title: '☀️ 準時起床不賴床', stat: 'lv', done: false },
+      { id: 'h2', title: '💧 喝足 2000ml 白開水', stat: 'li', done: false },
+      { id: 'h3', title: '🏃 每日運動 20 分鐘', stat: 'li', done: false },
+      { id: 'h4', title: '📖 靜心閱讀或學習 15 分鐘', stat: 'zhi', done: false }
+    ],
+    schedules: [
+      { id: 's1', time: '07:30', title: '起床喝溫水＋伸展 5 分鐘', note: '先別急著滑手機', done: false },
+      { id: 's2', time: '14:00', title: '深度專注處理核心任務', note: '開啟飛航或勿擾模式', done: false },
+      { id: 's3', time: '22:00', title: '睡前復盤與閱讀', note: '準備就寢', done: false }
+    ],
+    todos: [
+      { id: 't1', title: '設定好自己的個人名字與計畫目標', done: false }
+    ]
+  };
+
+  let state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || JSON.parse(JSON.stringify(defaultState));
+
+  const todayStr = new Date().toDateString();
+  if (state.lastDate !== todayStr) {
+    const anyDoneYesterday = state.habits.some(h => h.done) || state.schedules.some(s => s.done);
+    state.streak = anyDoneYesterday ? state.streak + 1 : 0;
+    state.dayCount += 1;
+    state.habits.forEach(h => h.done = false);
+    state.schedules.forEach(s => s.done = false);
+    state.lastDate = todayStr;
+    saveState();
+  }
+
+  function saveState() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    renderAll();
+  }
+
+  function switchTab(tabName) {
+    document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + tabName).classList.add('active');
+    document.getElementById('nav-' + tabName).classList.add('active');
+  }
+
+  function gainReward(expGain, statKey, statGain = 1) {
+    state.exp += expGain;
+    while (state.exp >= 100) {
+      state.exp -= 100;
+      state.level += 1;
+    }
+    if (statKey && state.stats[statKey] !== undefined) {
+      state.stats[statKey] = Math.min(100, state.stats[statKey] + statGain);
+    }
+  }
+
+  function toggleHabit(id) {
+    const item = state.habits.find(h => h.id === id);
+    if (!item) return;
+    item.done = !item.done;
+    if (item.done) {
+      state.totalDoneCount = (state.totalDoneCount || 0) + 1;
+      gainReward(20, item.stat, 1);
+    }
+    saveState();
+  }
+
+  function toggleSchedule(id) {
+    const item = state.schedules.find(s => s.id === id);
+    if (!item) return;
+    item.done = !item.done;
+    if (item.done) {
+      state.totalDoneCount = (state.totalDoneCount || 0) + 1;
+      gainReward(15, 'zhuan', 1);
+    }
+    saveState();
+  }
+
+  function toggleTodo(id) {
+    const item = state.todos.find(t => t.id === id);
+    if (!item) return;
+    item.done = !item.done;
+    if (item.done) {
+      state.totalDoneCount = (state.totalDoneCount || 0) + 1;
+      gainReward(10, 'xin', 1);
+    }
+    saveState();
+  }
+
+  // 新增或編輯習慣
+  function openHabitModal(id = '') {
+    document.getElementById('editHabitId').value = id;
+    if (id) {
+      const h = state.habits.find(item => item.id === id);
+      document.getElementById('habitModalTitle').textContent = '✏️ 編輯每日習慣';
+      document.getElementById('inputHabitTitle').value = h.title;
+      document.getElementById('inputHabitStat').value = h.stat;
+    } else {
+      document.getElementById('habitModalTitle').textContent = '＋ 新增每日固定習慣';
+      document.getElementById('inputHabitTitle').value = '';
+      document.getElementById('inputHabitStat').value = 'lv';
+    }
+    document.getElementById('habitModal').classList.add('show');
+  }
+
+  function saveHabit() {
+    const id = document.getElementById('editHabitId').value;
+    const title = document.getElementById('inputHabitTitle').value.trim();
+    const stat = document.getElementById('inputHabitStat').value;
+    if (!title) return;
+    if (id) {
+      const h = state.habits.find(item => item.id === id);
+      if (h) { h.title = title; h.stat = stat; }
+    } else {
+      state.habits.push({ id: 'h' + Date.now(), title, stat, done: false });
+    }
+    closeModal('habitModal');
+    saveState();
+  }
+
+  function deleteHabit(id) {
+    state.habits = state.habits.filter(h => h.id !== id);
+    saveState();
+  }
+
+  // 新增或編輯日程
+  function openScheduleModal(id = '') {
+    document.getElementById('editSchedId').value = id;
+    if (id) {
+      const s = state.schedules.find(item => item.id === id);
+      document.getElementById('scheduleModalTitle').textContent = '✏️ 編輯時間排程';
+      document.getElementById('inputSchedTime').value = s.time;
+      document.getElementById('inputSchedTitle').value = s.title;
+      document.getElementById('inputSchedNote').value = s.note || '';
+    } else {
+      document.getElementById('scheduleModalTitle').textContent = '📅 新增每日時間排程';
+      document.getElementById('inputSchedTime').value = '08:00';
+      document.getElementById('inputSchedTitle').value = '';
+      document.getElementById('inputSchedNote').value = '';
+    }
+    document.getElementById('scheduleModal').classList.add('show');
+  }
+
+  function saveSchedule() {
+    const id = document.getElementById('editSchedId').value;
+    const time = document.getElementById('inputSchedTime').value || '09:00';
+    const title = document.getElementById('inputSchedTitle').value.trim();
+    const note = document.getElementById('inputSchedNote').value.trim();
+    if (!title) return;
+    if (id) {
+      const s = state.schedules.find(item => item.id === id);
+      if (s) { s.time = time; s.title = title; s.note = note; }
+    } else {
+      state.schedules.push({ id: 's' + Date.now(), time, title, note, done: false });
+    }
+    state.schedules.sort((a, b) => a.time.localeCompare(b.time));
+    closeModal('scheduleModal');
+    saveState();
+  }
+
+  function deleteSchedule(id) {
+    state.schedules = state.schedules.filter(s => s.id !== id);
+    saveState();
+  }
+
+  function addQuickTodo() {
+    const input = document.getElementById('quickTodoInput');
+    const title = input.value.trim();
+    if (!title) return;
+    state.todos.unshift({ id: 't' + Date.now(), title, done: false });
+    input.value = '';
+    saveState();
+  }
+
+  function deleteTodo(id) {
+    state.todos = state.todos.filter(t => t.id !== id);
+    saveState();
+  }
+
+  function clearCompletedTodos() {
+    state.todos = state.todos.filter(t => !t.done);
+    saveState();
+  }
+
+  // 番茄鐘邏輯
+  let timerPresetMins = 25;
+  let timerSecondsLeft = 25 * 60;
+  let timerInterval = null;
+
+  function updateTimerUI() {
+    const m = String(Math.floor(timerSecondsLeft / 60)).padStart(2, '0');
+    const s = String(timerSecondsLeft % 60).padStart(2, '0');
+    document.getElementById('timerDisplay').textContent = `${m}:${s}`;
+  }
+
+  function setTimerPreset(mins, el) {
+    if (timerInterval) return;
+    timerPresetMins = mins;
+    timerSecondsLeft = mins * 60;
+    document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    updateTimerUI();
+  }
+
+  function toggleTimer() {
+    const btn = document.getElementById('timerToggleBtn');
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      btn.textContent = '▶ 繼續專注';
+    } else {
+      btn.textContent = '⏸ 暫停計時';
+      timerInterval = setInterval(() => {
+        timerSecondsLeft--;
+        updateTimerUI();
+        if (timerSecondsLeft <= 0) {
+          clearInterval(timerInterval);
+          timerInterval = null;
+          btn.textContent = '▶ 開始專注';
+          state.focusMinutes = (state.focusMinutes || 0) + timerPresetMins;
+          gainReward(25, 'zhuan', 2);
+          timerSecondsLeft = timerPresetMins * 60;
+          updateTimerUI();
+          saveState();
+          alert(`🎉 專注 ${timerPresetMins} 分鐘完成！獲得 專 +2、+25 EXP`);
+        }
+      }, 1000);
+    }
+  }
+
+  function resetTimer() {
+    clearInterval(timerInterval);
+    timerInterval = null;
+    timerSecondsLeft = timerPresetMins * 60;
+    document.getElementById('timerToggleBtn').textContent = '▶ 開始專注';
+    updateTimerUI();
+  }
+
+  function exportCalendarICS() {
+    if (state.schedules.length === 0) {
+      alert('目前日程表是空的，請先新增排程！');
+      return;
+    }
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    const dateStr = `${yyyy}${mm}${dd}`;
+
+    let ics = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//REBOOT App//TW\n";
+    state.schedules.forEach(s => {
+      const [hh, min] = s.time.split(':');
+      const start = `${dateStr}T${hh}${min}00`;
+      ics += "BEGIN:VEVENT\n";
+      ics += `SUMMARY:⏰ ${s.title}\n`;
+      ics += `DESCRIPTION:${s.note || state.planName}\n`;
+      ics += `DTSTART:${start}\n`;
+      ics += `DURATION:PT30M\n`;
+      ics += "BEGIN:VALARM\nTRIGGER:-PT0M\nACTION:DISPLAY\nDESCRIPTION:Reminder\nEND:VALARM\n";
+      ics += "END:VEVENT\n";
+    });
+    ics += "END:VCALENDAR";
+
+    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'daily_schedule.ics';
+    a.click();
+  }
+
+  function openProfileModal() {
+    document.getElementById('inputUserName').value = state.userName;
+    document.getElementById('inputPlanName').value = state.planName;
+    document.getElementById('inputGoalText').value = state.goalText;
+    document.getElementById('inputTargetDays').value = state.targetDays;
+    document.getElementById('profileModal').classList.add('show');
+  }
+
+  function saveProfile() {
+    state.userName = document.getElementById('inputUserName').value.trim() || '挑戰者';
+    state.planName = document.getElementById('inputPlanName').value.trim() || '重啟計畫';
+    state.goalText = document.getElementById('inputGoalText').value.trim() || '建立規律作息與高度自律';
+    state.targetDays = parseInt(document.getElementById('inputTargetDays').value) || 66;
+    state.initialized = true;
+    closeModal('profileModal');
+    saveState();
+  }
+
+  function exportBackupCode() {
+    const code = btoa(encodeURIComponent(JSON.stringify(state)));
+    navigator.clipboard.writeText(code).then(() => {
+      alert('✅ 備份碼已複製到剪貼簿！可貼到備忘錄保存。');
+    }).catch(() => {
+      prompt('請手動全選複製以下備份碼：', code);
+    });
+  }
+
+  function importBackupCode() {
+    const code = prompt('請貼上你先前儲存的備份碼：');
+    if (!code) return;
+    try {
+      const parsed = JSON.parse(decodeURIComponent(atob(code.trim())));
+      if (parsed && parsed.stats) {
+        state = parsed;
+        saveState();
+        closeModal('profileModal');
+        alert('✅ 進度已成功還原！');
+      }
+    } catch (e) {
+      alert('❌ 備份碼格式不正確，請確認有完整複製。');
+    }
+  }
+
+  function openGuardModal() {
+    document.getElementById('guardGoalPreview').textContent = state.goalText;
+    document.getElementById('guardModal').classList.add('show');
+  }
+  function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+  function resistSuccess() {
+    state.resistCount = (state.resistCount || 0) + 1;
+    gainReward(15, 'lv', 2);
+    closeModal('guardModal');
+    saveState();
+  }
+
+  function jumpToNextUnfinished() {
+    const unsched = state.schedules.find(s => !s.done);
+    if (unsched) { switchTab('schedule'); return; }
+    const untodo = state.todos.find(t => !t.done);
+    if (untodo) { switchTab('todo'); return; }
+    switchTab('dashboard');
+  }
+
+  function renderRadar() {
+    const svg = document.getElementById('radarSvg');
+    const cx = 110, cy = 100, r = 68;
+    const labels = ['身體', '心智', '休息', '燃料', '連接', '目的'];
+    const s = state.stats;
+    const vals = [
+      s.li / 100,
+      s.zhi / 100,
+      s.lv / 100,
+      ((s.li + s.lv) / 2) / 100,
+      s.xin / 100,
+      s.zhuan / 100
+    ];
+
+    let html = '';
+    [0.33, 0.66, 1].forEach(scale => {
+      let pts = [];
+      for (let i = 0; i < 6; i++) {
+        const ang = (Math.PI / 3) * i - Math.PI / 2;
+        pts.push(`${cx + r * scale * Math.cos(ang)},${cy + r * scale * Math.sin(ang)}`);
+      }
+      html += `<polygon points="${pts.join(' ')}" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1" />`;
+    });
+
+    let dataPts = [];
+    for (let i = 0; i < 6; i++) {
+      const ang = (Math.PI / 3) * i - Math.PI / 2;
+      const valR = Math.max(0.2, vals[i]) * r;
+      const x = cx + valR * Math.cos(ang);
+      const y = cy + valR * Math.sin(ang);
+      dataPts.push(`${x},${y}`);
+
+      const lx = cx + (r + 20) * Math.cos(ang);
+      const ly = cy + (r + 20) * Math.sin(ang) + 4;
+      html += `<text x="${lx}" y="${ly}" fill="#9A9AA6" font-size="11" text-anchor="middle">${labels[i]}</text>`;
+    }
+    html += `<polygon points="${dataPts.join(' ')}" fill="rgba(255,107,0,0.28)" stroke="#FF6B00" stroke-width="2" />`;
+    dataPts.forEach(pt => {
+      const [px, py] = pt.split(',');
+      html += `<circle cx="${px}" cy="${py}" r="3.5" fill="#FF8C38" />`;
+    });
+
+    svg.innerHTML = html;
+  }
+
+  function renderAll() {
+    document.getElementById('displayUserName').textContent = state.userName;
+    document.getElementById('displayPlanName').textContent = state.planName;
+    document.getElementById('displayGoalText').textContent = '🎯 核心目標：' + state.goalText;
+    document.getElementById('dayCount').textContent = state.dayCount;
+    document.getElementById('targetDays').textContent = state.targetDays;
+    document.getElementById('streakCount').textContent = state.streak;
+
+    document.getElementById('userLevel').textContent = state.level;
+    document.getElementById('userExp').textContent = state.exp;
+    document.getElementById('xpBarFill').style.width = state.exp + '%';
+    const titles = ['覺醒初心者', '自律實踐者', '專注掌控者', '習慣大師', '重啟領航員'];
+    document.getElementById('levelTitle').textContent = titles[Math.min(titles.length - 1, Math.floor((state.level - 1) / 2))];
+
+    document.getElementById('metricDone').textContent = state.totalDoneCount || 0;
+    document.getElementById('metricResist').textContent = state.resistCount || 0;
+    document.getElementById('metricFocus').textContent = (state.focusMinutes || 0) + 'm';
+
+    document.getElementById('stat-xin').textContent = state.stats.xin;
+    document.getElementById('stat-zhuan').textContent = state.stats.zhuan;
+    document.getElementById('stat-lv').textContent = state.stats.lv;
+    document.getElementById('stat-li').textContent = state.stats.li;
+    document.getElementById('stat-zhi').textContent = state.stats.zhi;
+
+    const habitList = document.getElementById('habitList');
+    const statNames = { xin: '信', zhuan: '專', lv: '律', li: '力', zhi: '智' };
+    habitList.innerHTML = state.habits.map(h => `
+      <div class="item-card ${h.done ? 'completed' : ''}">
+        <div class="item-left" onclick="toggleHabit('${h.id}')">
+          <div class="check-circle">${h.done ? '✓' : ''}</div>
+          <div class="item-info">
+            <div class="item-title">${h.title}</div>
+            <div class="item-meta"><span class="tag">${statNames[h.stat]} +1</span><span class="tag">+20 EXP</span></div>
+          </div>
+        </div>
+        <div class="item-actions">
+          <button class="act-btn" onclick="openHabitModal('${h.id}')">✏️</button>
+          <button class="act-btn del" onclick="deleteHabit('${h.id}')">✕</button>
+        </div>
+      </div>
+    `).join('');
+    const doneHabits = state.habits.filter(h => h.done).length;
+    document.getElementById('habitProgress').textContent = `${doneHabits}/${state.habits.length}`;
+
+    const now = new Date();
+    const curMinutes = now.getHours() * 60 + now.getMinutes();
+    const scheduleList = document.getElementById('scheduleList');
+    scheduleList.innerHTML = state.schedules.length === 0
+      ? '<div style="text-align:center; color:var(--text-secondary); font-size:13px; padding:16px;">尚未建立今日日程，點擊右上角「＋ 排程」開始規劃吧！</div>'
+      : state.schedules.map(s => {
+          const [hh, mm] = s.time.split(':').map(Number);
+          const schedMin = hh * 60 + mm;
+          const isOverdue = !s.done && curMinutes > schedMin;
+          return `
+            <div class="item-card ${s.done ? 'completed' : ''} ${isOverdue ? 'overdue' : ''}">
+              <div class="item-left" onclick="toggleSchedule('${s.id}')">
+                <div class="check-circle">${s.done ? '✓' : ''}</div>
+                <div class="item-info">
+                  <div class="item-title">${s.title}</div>
+                  <div class="item-meta">
+                    <span class="tag time">⏰ ${s.time}</span>
+                    ${isOverdue ? '<span class="tag overdue-tag">已過時間・尚未完成</span>' : ''}
+                    ${s.note ? `<span>${s.note}</span>` : ''}
+                  </div>
+                </div>
+              </div>
+              <div class="item-actions">
+                <button class="act-btn" onclick="openScheduleModal('${s.id}')">✏️</button>
+                <button class="act-btn del" onclick="deleteSchedule('${s.id}')">✕</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+    const todoList = document.getElementById('todoList');
+    todoList.innerHTML = state.todos.length === 0
+      ? '<div style="text-align:center; color:var(--text-secondary); font-size:13px; padding:16px;">目前沒有待辦事項，太棒了！</div>'
+      : state.todos.map(t => `
+          <div class="item-card ${t.done ? 'completed' : ''}">
+            <div class="item-left" onclick="toggleTodo('${t.id}')">
+              <div class="check-circle">${t.done ? '✓' : ''}</div>
+              <div class="item-info">
+                <div class="item-title">${t.title}</div>
+                <div class="item-meta"><span class="tag">待辦事項</span><span class="tag">+10 EXP</span></div>
+              </div>
+            </div>
+            <button class="act-btn del" onclick="deleteTodo('${t.id}')">✕</button>
+          </div>
+        `).join('');
+
+    const unHabits = state.habits.filter(h => !h.done).length;
+    const unScheds = state.schedules.filter(s => !s.done).length;
+    const unTodos = state.todos.filter(t => !t.done).length;
+    const totalUnfinished = unHabits + unScheds + unTodos;
+
+    document.getElementById('dot-schedule').style.display = unScheds > 0 ? 'block' : 'none';
+    document.getElementById('dot-todo').style.display = unTodos > 0 ? 'block' : 'none';
+
+    const banner = document.getElementById('reminderBanner');
+    const rText = document.getElementById('reminderText');
+    const rBadge = document.getElementById('reminderBadge');
+
+    if (totalUnfinished === 0) {
+      banner.classList.add('all-done');
+      rText.innerHTML = '🎉 <strong>今日所有日程、習慣與待辦皆已清空！</strong>';
+      rBadge.textContent = '完美達成';
+    } else {
+      banner.classList.remove('all-done');
+      const nextSched = state.schedules.find(s => !s.done);
+      const hint = nextSched ? `下一項排程：<strong>${nextSched.time} ${nextSched.title}</strong>` : `還有 ${unHabits} 項習慣、${unTodos} 項待辦未完成`;
+      rText.innerHTML = `🔔 還有 <strong>${totalUnfinished} 件事</strong>沒做（${hint}）`;
+      rBadge.textContent = '前往處理';
+    }
+
+    renderRadar();
+  }
+
+  renderAll();
+
+  if (!state.initialized) {
+    setTimeout(() => {
+      openProfileModal();
+    }, 350);
+  }
+</script>
+</body>
+</html>
