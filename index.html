@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="REBOOT" />
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23F7F6F2'/%3E%3Ccircle cx='90' cy='90' r='54' fill='none' stroke='%235F7A61' stroke-width='12'/%3E%3Ccircle cx='90' cy='90' r='16' fill='%235F7A61'/%3E%3C/svg%3E" />
-  <title>REBOOT · 日常節奏與英語學習</title>
+  <meta name="apple-mobile-web-app-title" content="重生系統" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23F7F6F2'/%3E%3Cpolygon points='90,28 148,62 148,118 90,152 32,118 32,62' fill='none' stroke='%235F7A61' stroke-width='10'/%3E%3Ccircle cx='90' cy='90' r='16' fill='%235F7A61'/%3E%3C/svg%3E" />
+  <title>當我重生後獲得一套系統</title>
   <style>
     :root {
       --bg-base: #F7F6F2;
@@ -18,8 +18,6 @@
       --text-main: #2C2E2B;
       --text-muted: #787A75;
       --border: rgba(44, 46, 43, 0.08);
-      --danger: #D96B6B;
-      --success: #5F7A61;
       --shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
     }
 
@@ -49,7 +47,7 @@
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang TC", "Microsoft JhengHei", sans-serif;
       min-height: 100vh;
       padding-top: env(safe-area-inset-top, 16px);
-      padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 82px);
+      padding-bottom: calc(env(safe-area-inset-bottom, 16px) + 84px);
       transition: background-color 0.25s ease, color 0.25s ease;
     }
 
@@ -59,34 +57,59 @@
       padding: 14px 18px;
     }
 
-    /* 頂部極簡列 */
+    /* 系統浮動通知（升級/獲得經驗） */
+    .sys-toast {
+      position: fixed;
+      top: calc(env(safe-area-inset-top, 12px) + 12px);
+      left: 50%;
+      transform: translateX(-50%) translateY(-120%);
+      background: var(--bg-card);
+      border: 1.5px solid var(--accent);
+      color: var(--text-main);
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+      z-index: 300;
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      white-space: nowrap;
+    }
+
+    .sys-toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* 頂部系統標題列 */
     .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
-    .greeting-box { cursor: pointer; }
+    .sys-brand {
+      cursor: pointer;
+    }
+
+    .sys-tag {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+    }
 
     .greeting-title {
-      font-size: 20px;
-      font-weight: 700;
-      margin: 0;
-      letter-spacing: 0.3px;
+      font-size: 18px;
+      font-weight: 800;
+      margin: 2px 0 0 0;
     }
 
-    .greeting-sub {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin: 3px 0 0 0;
-    }
-
-    .top-actions { display: flex; gap: 8px; }
+    .top-actions { display: flex; gap: 7px; }
 
     .icon-btn {
-      width: 36px;
-      height: 36px;
+      width: 35px;
+      height: 35px;
       border-radius: 50%;
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -94,38 +117,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
+      font-size: 15px;
       cursor: pointer;
       box-shadow: var(--shadow);
     }
 
-    /* 溫和提醒膠囊 */
-    .soft-notice {
-      background: var(--accent-soft);
-      border-radius: 14px;
-      padding: 10px 14px;
-      margin-bottom: 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      font-size: 12.5px;
-      cursor: pointer;
-    }
-
-    .soft-notice strong { color: var(--accent); }
-
-    .notice-pill {
-      background: var(--accent);
-      color: #fff;
-      font-size: 11px;
-      font-weight: 600;
-      padding: 3px 9px;
-      border-radius: 999px;
-      white-space: nowrap;
-    }
-
-    /* 卡片通用 */
+    /* 卡片與區塊 */
     .card {
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -166,6 +163,205 @@
       color: #fff;
     }
 
+    /* 核心升級面板（LV + EXP + 五維雷達圖） */
+    .status-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 8px;
+    }
+
+    .lv-badge {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .lv-title {
+      font-size: 12px;
+      font-weight: 700;
+      background: var(--accent-soft);
+      color: var(--accent);
+      padding: 3px 9px;
+      border-radius: 999px;
+      margin-left: 8px;
+    }
+
+    .exp-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .exp-track {
+      height: 8px;
+      background: var(--bg-sub);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .exp-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+
+    .radar-layout {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .radar-box {
+      width: 145px;
+      height: 145px;
+      flex-shrink: 0;
+    }
+
+    .stats-list {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-sub);
+      padding: 5px 10px;
+      border-radius: 9px;
+      font-size: 12px;
+    }
+
+    .stat-name { font-weight: 700; }
+    .stat-desc { color: var(--text-muted); font-size: 11px; margin-left: 4px; }
+    .stat-val { font-weight: 800; color: var(--accent); }
+
+    /* 結構化習慣卡片 */
+    .habit-row {
+      background: var(--bg-sub);
+      border-radius: 14px;
+      padding: 12px 13px;
+      margin-bottom: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .habit-row.done {
+      opacity: 0.58;
+    }
+
+    .habit-left {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      flex: 1;
+      min-width: 0;
+      cursor: pointer;
+    }
+
+    .check-circle {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 13px;
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .habit-row.done .check-circle {
+      background: var(--accent);
+    }
+
+    .habit-title {
+      font-size: 14px;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
+    .habit-row.done .habit-title {
+      text-decoration: line-through;
+    }
+
+    .habit-meta {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 3px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .attr-pill {
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 700;
+      padding: 1px 7px;
+      border-radius: 6px;
+      font-size: 11px;
+    }
+
+    .step-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 5px 9px;
+      border-radius: 9px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .del-icon {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 14px;
+      padding: 4px;
+      cursor: pointer;
+    }
+
+    /* 習慣分類選擇格 */
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .cat-chip {
+      background: var(--bg-sub);
+      border: 1.5px solid transparent;
+      border-radius: 12px;
+      padding: 9px 6px;
+      text-align: center;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .cat-chip.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
     /* 多月份月曆 */
     .cal-nav {
       display: flex;
@@ -174,10 +370,7 @@
       margin-bottom: 12px;
     }
 
-    .cal-month-label {
-      font-size: 15px;
-      font-weight: 700;
-    }
+    .cal-month-label { font-size: 15px; font-weight: 700; }
 
     .cal-arrow {
       background: var(--bg-sub);
@@ -215,116 +408,13 @@
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
-      position: relative;
-      transition: all 0.15s ease;
     }
 
     .cal-day.other-month { color: var(--text-muted); opacity: 0.4; }
     .cal-day.today { border: 1.5px solid var(--accent); }
-    .cal-day.selected {
-      background: var(--accent);
-      color: #fff;
-    }
-
-    .cal-dot {
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      background: var(--accent);
-      margin-top: 2px;
-    }
-
+    .cal-day.selected { background: var(--accent); color: #fff; }
+    .cal-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); margin-top: 2px; }
     .cal-day.selected .cal-dot { background: #fff; }
-
-    /* 清單項目 */
-    .item-row {
-      background: var(--bg-sub);
-      border-radius: 13px;
-      padding: 11px 13px;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .item-row.done { opacity: 0.52; }
-
-    .item-left {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      flex: 1;
-      min-width: 0;
-      cursor: pointer;
-    }
-
-    .check-box {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      border: 2px solid var(--accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      font-size: 12px;
-      color: #fff;
-    }
-
-    .item-row.done .check-box {
-      background: var(--accent);
-    }
-
-    .item-title {
-      font-size: 14px;
-      font-weight: 600;
-      word-break: break-word;
-    }
-
-    .item-row.done .item-title { text-decoration: line-through; }
-
-    .item-sub {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    .time-badge {
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-weight: 700;
-      padding: 1px 6px;
-      border-radius: 5px;
-      margin-right: 5px;
-    }
-
-    .del-icon {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 14px;
-      padding: 4px;
-      cursor: pointer;
-    }
-
-    /* 快速輸入列 */
-    .inline-add {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .inline-add input {
-      flex: 1;
-      background: var(--bg-sub);
-      border: 1px solid var(--border);
-      border-radius: 11px;
-      padding: 9px 12px;
-      color: var(--text-main);
-      font-size: 13px;
-      outline: none;
-    }
 
     /* 英文名言與單字卡 */
     .quote-card {
@@ -342,11 +432,7 @@
       margin: 0 0 6px 0;
     }
 
-    .quote-zh {
-      font-size: 12.5px;
-      color: var(--text-muted);
-      margin: 0;
-    }
+    .quote-zh { font-size: 12.5px; color: var(--text-muted); margin: 0; }
 
     .vocab-card {
       background: var(--bg-card);
@@ -357,70 +443,25 @@
       box-shadow: var(--shadow);
     }
 
-    .vocab-card.learned {
-      opacity: 0.65;
-      border-color: var(--accent);
-    }
-
-    .vocab-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 6px;
-    }
-
-    .vocab-word {
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--accent);
-      margin: 0;
-    }
-
-    .vocab-phonetic {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
+    .vocab-card.learned { opacity: 0.65; border-color: var(--accent); }
+    .vocab-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+    .vocab-word { font-size: 20px; font-weight: 800; color: var(--accent); margin: 0; }
+    .vocab-phonetic { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
     .vocab-actions { display: flex; gap: 6px; }
+    .vocab-meaning { font-size: 14px; font-weight: 600; margin: 8px 0; line-height: 1.4; }
+    .vocab-forms { font-size: 12px; background: var(--bg-sub); padding: 7px 10px; border-radius: 9px; margin-bottom: 8px; line-height: 1.45; }
+    .vocab-example { font-size: 12.5px; color: var(--text-muted); line-height: 1.45; border-left: 2.5px solid var(--accent); padding-left: 9px; }
 
-    .vocab-meaning {
-      font-size: 14px;
-      font-weight: 600;
-      margin: 8px 0;
-      line-height: 1.4;
-    }
-
-    .vocab-forms {
-      font-size: 12px;
+    .inline-add { display: flex; gap: 8px; margin-bottom: 12px; }
+    .inline-add input {
+      flex: 1;
       background: var(--bg-sub);
-      padding: 7px 10px;
-      border-radius: 9px;
-      margin-bottom: 8px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 9px 12px;
       color: var(--text-main);
-      line-height: 1.45;
-    }
-
-    .vocab-example {
-      font-size: 12.5px;
-      color: var(--text-muted);
-      line-height: 1.45;
-      border-left: 2.5px solid var(--accent);
-      padding-left: 9px;
-    }
-
-    /* 專注計時器 */
-    .focus-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .focus-time {
-      font-size: 26px;
-      font-weight: 800;
-      color: var(--accent);
-      font-variant-numeric: tabular-nums;
+      font-size: 13px;
+      outline: none;
     }
 
     /* 分頁與底部導覽 */
@@ -449,18 +490,18 @@
       font-size: 11px;
       font-weight: 600;
       cursor: pointer;
-      padding: 4px 14px;
+      padding: 4px 10px;
     }
 
     .nav-btn.active { color: var(--accent); }
-    .nav-icon { font-size: 19px; }
+    .nav-icon { font-size: 18px; }
 
     /* 彈窗 */
     .modal-mask {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.45);
-      backdrop-filter: blur(4px);
+      background: rgba(0, 0, 0, 0.48);
+      backdrop-filter: blur(5px);
       display: none;
       align-items: center;
       justify-content: center;
@@ -472,28 +513,83 @@
 
     .modal-panel {
       background: var(--bg-card);
-      border-radius: 20px;
+      border-radius: 22px;
       width: 100%;
-      max-width: 400px;
-      padding: 20px;
-      max-height: 85vh;
+      max-width: 410px;
+      padding: 22px;
+      max-height: 88vh;
       overflow-y: auto;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.2);
     }
 
-    .modal-title { font-size: 17px; font-weight: 700; margin: 0 0 12px 0; }
+    .modal-title { font-size: 18px; font-weight: 800; margin: 0 0 10px 0; }
 
     .field { margin-bottom: 12px; }
-    .field label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; }
-    .field input, .field textarea {
+    .field label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; font-weight: 600; }
+    .field input, .field textarea, .field select {
       width: 100%;
       background: var(--bg-sub);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: 11px;
       padding: 10px 12px;
       color: var(--text-main);
       font-size: 14px;
       outline: none;
+    }
+
+    .modal-btns { display: flex; gap: 10px; margin-top: 16px; }
+    .modal-btns button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    /* 重生系統覺醒開場專屬樣式 */
+    .awakening-box {
+      text-align: center;
+      padding: 6px 0;
+    }
+
+    .awakening-orb {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      border: 2px solid var(--accent);
+      margin: 0 auto 14px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      animation: pulseOrb 2.4s infinite ease-in-out;
+    }
+
+    @keyframes pulseOrb {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 var(--accent-soft); }
+      50% { transform: scale(1.06); box-shadow: 0 0 0 12px transparent; }
+    }
+
+    .awakening-ping {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    .awakening-story {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin: 0 0 16px 0;
     }
 
     .theme-swatches {
@@ -518,43 +614,85 @@
     }
 
     .swatch-dot { width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0; }
-
-    .modal-btns { display: flex; gap: 10px; margin-top: 16px; }
-    .modal-btns button {
-      flex: 1;
-      padding: 11px;
-      border-radius: 11px;
-      border: none;
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
 
+<div class="sys-toast" id="sysToast">✨ 系統提示：EXP +20</div>
+
 <div class="container">
-  <!-- 頂部極簡列 -->
+  <!-- 頂部系統標題列 -->
   <div class="top-bar">
-    <div class="greeting-box" onclick="openProfileModal()">
-      <h1 class="greeting-title">你好，<span id="userNameDisplay">朋友</span></h1>
-      <p class="greeting-sub" id="userGoalDisplay">保持平靜，按自己的步調前進</p>
+    <div class="sys-brand" onclick="openAwakeningModal()">
+      <div class="sys-tag">✦ 當我重生後獲得一套系統</div>
+      <h1 class="greeting-title">宿主：<span id="userNameDisplay">未綁定</span></h1>
     </div>
     <div class="top-actions">
+      <button class="icon-btn" title="重看系統覺醒開場" onclick="openAwakeningModal()">⚡</button>
       <button class="icon-btn" title="專注守衛" onclick="openGuardModal()">🛡️</button>
-      <button class="icon-btn" title="主題與個人設定" onclick="openThemeModal()">🎨</button>
+      <button class="icon-btn" title="配色自訂" onclick="openThemeModal()">🎨</button>
     </div>
   </div>
 
-  <!-- 溫和提醒膠囊 -->
-  <div class="soft-notice" onclick="jumpToToday()">
-    <div id="noticeText">正在整理今日行程與學習進度...</div>
-    <span class="notice-pill" id="noticeBadge">今日</span>
+  <!-- ================= 分頁 1：核心升級主軸與日常任務 ================= -->
+  <div class="tab-page active" id="page-home">
+    <!-- 等級與五維雷達面板 -->
+    <div class="card">
+      <div class="status-top">
+        <div>
+          <span class="lv-badge" id="lvDisplay">LV.1</span>
+          <span class="lv-title" id="rankTitleDisplay">初醒覺醒者</span>
+        </div>
+        <div class="exp-label" id="expTextDisplay">0 / 100 EXP</div>
+      </div>
+      <div class="exp-track">
+        <div class="exp-fill" id="expBarFill" style="width: 0%;"></div>
+      </div>
+
+      <div class="radar-layout">
+        <div class="radar-box">
+          <svg viewBox="0 0 160 160" width="145" height="145" id="radarSvg"></svg>
+        </div>
+        <div class="stats-list">
+          <div class="stat-item">
+            <div><span class="stat-name">信</span><span class="stat-desc">心態信念</span></div>
+            <span class="stat-val" id="stat-xin">10</span>
+          </div>
+          <div class="stat-item">
+            <div><span class="stat-name">專</span><span class="stat-desc">專注執行</span></div>
+            <span class="stat-val" id="stat-zhuan">10</span>
+          </div>
+          <div class="stat-item">
+            <div><span class="stat-name">律</span><span class="stat-desc">自律作息</span></div>
+            <span class="stat-val" id="stat-lv">10</span>
+          </div>
+          <div class="stat-item">
+            <div><span class="stat-name">力</span><span class="stat-desc">體能健康</span></div>
+            <span class="stat-val" id="stat-li">10</span>
+          </div>
+          <div class="stat-item">
+            <div><span class="stat-name">智</span><span class="stat-desc">知識學習</span></div>
+            <span class="stat-val" id="stat-zhi">10</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:11px; padding-top:9px; border-top:1px solid var(--border); font-size:12px; color:var(--text-muted); display:flex; justify-content:space-between;">
+        <span>🎯 本世主線：<strong style="color:var(--text-main);" id="userGoalDisplay">重塑節奏，穩步升級</strong></span>
+      </div>
+    </div>
+
+    <!-- 今日系統修煉任務（結構化習慣） -->
+    <div class="card">
+      <div class="section-header">
+        <div class="section-title">⚔️ 每日系統修煉 (<span id="habitProgressText">0/0</span>)</div>
+        <button class="chip-btn primary" onclick="openHabitModal()">＋ 新增修煉</button>
+      </div>
+      <div id="habitList"></div>
+    </div>
   </div>
 
-  <!-- ================= 分頁 1：多月份行事曆與日程 ================= -->
-  <div class="tab-page active" id="page-calendar">
-    <!-- 跨月份月曆 -->
+  <!-- ================= 分頁 2：多月份行事曆 ================= -->
+  <div class="tab-page" id="page-calendar">
     <div class="card">
       <div class="cal-nav">
         <button class="cal-arrow" onclick="changeMonth(-1)">‹</button>
@@ -567,7 +705,6 @@
       <div class="cal-grid" id="calGrid"></div>
     </div>
 
-    <!-- 選定日期的行程與待辦 -->
     <div class="card">
       <div class="section-header">
         <div class="section-title">📅 <span id="selectedDateTitle">今日行程</span></div>
@@ -578,26 +715,10 @@
       </div>
       <div id="dayEventList"></div>
     </div>
-
-    <!-- 精簡專注計時器 -->
-    <div class="card">
-      <div class="focus-row">
-        <div>
-          <div style="font-size:13px; font-weight:700;">⏳ 靜心專注計時</div>
-          <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">25 分鐘無干擾番茄鐘</div>
-        </div>
-        <div class="focus-time" id="focusTimerText">25:00</div>
-        <div style="display:flex; gap:6px;">
-          <button class="chip-btn primary" id="focusBtn" onclick="toggleFocusTimer()">開始</button>
-          <button class="chip-btn" onclick="resetFocusTimer()">重置</button>
-        </div>
-      </div>
-    </div>
   </div>
 
-  <!-- ================= 分頁 2：獨立 7000 單字與名言學習 ================= -->
+  <!-- ================= 分頁 3：獨立每日英文 7000 單 ================= -->
   <div class="tab-page" id="page-english">
-    <!-- 每日一句英文名言 -->
     <div class="quote-card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
         <span style="font-size:11px; font-weight:700; color:var(--accent);">✨ 每日英文名言</span>
@@ -607,9 +728,8 @@
       <p class="quote-zh" id="quoteZhText">日復一日的微小進步，終將帶來驚人的成果。</p>
     </div>
 
-    <!-- 每日 5 個 7000 單字 -->
     <div class="section-header">
-      <div class="section-title">📖 今日精選 5 單字 (<span id="vocabProgressText">0/5</span>)</div>
+      <div class="section-title">📖 今日 5 單字 (<span id="vocabProgressText">0/5</span>)</div>
       <div style="display:flex; gap:6px;">
         <button class="chip-btn" onclick="openBatchImportModal()">＋ 匯入單字</button>
         <button class="chip-btn primary" onclick="nextVocabBatch()">換一組</button>
@@ -617,7 +737,6 @@
     </div>
     <div id="dailyVocabList"></div>
 
-    <!-- 個人生字收藏本 -->
     <div class="card" style="margin-top:16px;">
       <div class="section-header">
         <div class="section-title">⭐ 我的生字本 (<span id="savedVocabCount">0</span>)</div>
@@ -630,11 +749,25 @@
     </div>
   </div>
 
-  <!-- ================= 分頁 3：日常隨手待辦與習慣 ================= -->
+  <!-- ================= 分頁 4：隨手待辦與專注計時 ================= -->
   <div class="tab-page" id="page-todo">
     <div class="card">
+      <div style="display:flex; align-items:center; justify-content:space-between;">
+        <div>
+          <div style="font-size:14px; font-weight:700;">⏳ 深度專注計時 (+25 EXP)</div>
+          <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">完成一輪靜心專注，提升「專」屬性</div>
+        </div>
+        <div style="font-size:24px; font-weight:800; color:var(--accent); font-variant-numeric:tabular-nums;" id="focusTimerText">25:00</div>
+        <div style="display:flex; gap:6px;">
+          <button class="chip-btn primary" id="focusBtn" onclick="toggleFocusTimer()">開始</button>
+          <button class="chip-btn" onclick="resetFocusTimer()">重置</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
       <div class="section-header">
-        <div class="section-title">☑️ 隨手待辦清單</div>
+        <div class="section-title">☑️ 隨手待辦 (+10 EXP)</div>
         <button class="chip-btn" onclick="clearDoneTodos()">清除已完成</button>
       </div>
       <div class="inline-add">
@@ -646,9 +779,13 @@
   </div>
 </div>
 
-<!-- 底部極簡導覽 -->
+<!-- 底部導覽列 -->
 <div class="bottom-nav">
-  <div class="nav-btn active" id="nav-calendar" onclick="switchTab('calendar')">
+  <div class="nav-btn active" id="nav-home" onclick="switchTab('home')">
+    <span class="nav-icon">⚡</span>
+    <span>系統升級</span>
+  </div>
+  <div class="nav-btn" id="nav-calendar" onclick="switchTab('calendar')">
     <span class="nav-icon">📅</span>
     <span>行事曆</span>
   </div>
@@ -658,33 +795,73 @@
   </div>
   <div class="nav-btn" id="nav-todo" onclick="switchTab('todo')">
     <span class="nav-icon">☑️</span>
-    <span>待辦清單</span>
+    <span>待辦專注</span>
   </div>
 </div>
 
-<!-- 彈窗 1：首次設定 / 修改名字與目標 -->
-<div class="modal-mask" id="profileModal">
+<!-- 彈窗 1：記憶點開場《當我重生後獲得一套系統》綁定儀式 -->
+<div class="modal-mask" id="awakeningModal">
   <div class="modal-panel">
-    <h3 class="modal-title">設定你的專屬空間</h3>
+    <div class="awakening-box">
+      <div class="awakening-orb">🧬</div>
+      <div class="awakening-ping">✦ 系統檢測到靈魂波動 · 綁定成功</div>
+      <h3 class="modal-title" style="font-size:20px;">《當我重生後獲得一套系統》</h3>
+      <p class="awakening-story">
+        「歡迎回來，宿主。過去的遺憾已成序章，從這一秒起，你喝下的每一口水、流下的每一滴汗、記住的每一個單字，都將轉化為實實在在的屬性與等級。」
+      </p>
+    </div>
     <div class="field">
-      <label>你的名字或暱稱</label>
+      <label>請輸入宿主代號（你的名字或暱稱）</label>
       <input type="text" id="inputName" placeholder="例如：Eric" />
     </div>
     <div class="field">
-      <label>近期想專注的方向（一句話即可）</label>
-      <input type="text" id="inputGoal" placeholder="例如：規律作息、每天累積 5 個英文單字" />
+      <label>設定本世核心主線目標</label>
+      <input type="text" id="inputGoal" placeholder="例如：每天運動30分鐘、累積7000單字量" />
     </div>
     <div class="modal-btns">
-      <button style="background:var(--bg-sub); color:var(--text-main);" onclick="closeModal('profileModal')">取消</button>
-      <button style="background:var(--accent); color:#fff;" onclick="saveProfile()">完成</button>
+      <button style="background:var(--accent); color:#fff; font-size:15px;" onclick="saveProfile()">⚡ 啟動系統，開始這一世</button>
     </div>
   </div>
 </div>
 
-<!-- 彈窗 2：主題配色自訂 -->
+<!-- 彈窗 2：結構化新增日常修煉習慣 -->
+<div class="modal-mask" id="habitModal">
+  <div class="modal-panel">
+    <h3 class="modal-title">＋ 新增每日系統修煉</h3>
+    <div class="cat-grid">
+      <div class="cat-chip active" id="cat-water" onclick="selectHabitCat('water')">💧 喝水</div>
+      <div class="cat-chip" id="cat-sport" onclick="selectHabitCat('sport')">🏃 運動</div>
+      <div class="cat-chip" id="cat-read" onclick="selectHabitCat('read')">📖 看書</div>
+      <div class="cat-chip" id="cat-wake" onclick="selectHabitCat('wake')">☀️ 早起</div>
+      <div class="cat-chip" id="cat-focus" onclick="selectHabitCat('focus')">🎯 專注</div>
+      <div class="cat-chip" id="cat-custom" onclick="selectHabitCat('custom')">✏️ 自訂</div>
+    </div>
+
+    <!-- 動態參數設定區 -->
+    <div id="habitDynamicFields"></div>
+
+    <div class="field">
+      <label>完成後提升屬性（系統已自動配對，亦可微調）</label>
+      <select id="habitAttrSelect">
+        <option value="li">力（體能健康）+2 · +20 EXP</option>
+        <option value="zhi">智（知識學習）+2 · +20 EXP</option>
+        <option value="lv">律（自律作息）+2 · +20 EXP</option>
+        <option value="zhuan">專（專注執行）+2 · +20 EXP</option>
+        <option value="xin">信（心態信念）+2 · +20 EXP</option>
+      </select>
+    </div>
+
+    <div class="modal-btns">
+      <button style="background:var(--bg-sub); color:var(--text-main);" onclick="closeModal('habitModal')">取消</button>
+      <button style="background:var(--accent); color:#fff;" onclick="addStructuredHabit()">確認加入修煉</button>
+    </div>
+  </div>
+</div>
+
+<!-- 彈窗 3：主題配色自訂 -->
 <div class="modal-mask" id="themeModal">
   <div class="modal-panel">
-    <h3 class="modal-title">🎨 選擇或自訂介面顏色</h3>
+    <h3 class="modal-title">🎨 選擇或自訂系統配色</h3>
     <div class="theme-swatches">
       <button class="swatch-btn" onclick="applyPresetTheme('#F7F6F2', '#5F7A61', false)">
         <span class="swatch-dot" style="background:#5F7A61;"></span>晨光鼠尾草綠
@@ -700,7 +877,7 @@
       </button>
     </div>
     <div class="field" style="display:flex; align-items:center; justify-content:space-between; background:var(--bg-sub); padding:10px 12px; border-radius:11px;">
-      <label style="margin:0; font-size:13px; color:var(--text-main);">自訂強調主色</label>
+      <label style="margin:0; font-size:13px; color:var(--text-main);">自由調色盤主色</label>
       <input type="color" id="customColorPicker" value="#5F7A61" style="width:44px; height:28px; border:none; background:none; padding:0;" onchange="applyCustomAccent(this.value)" />
     </div>
     <div class="field" style="display:flex; align-items:center; justify-content:space-between; background:var(--bg-sub); padding:10px 12px; border-radius:11px;">
@@ -708,22 +885,22 @@
       <input type="checkbox" id="darkModeToggle" style="width:18px; height:18px;" onchange="toggleDarkMode(this.checked)" />
     </div>
     <div class="modal-btns">
-      <button style="background:var(--accent); color:#fff;" onclick="closeModal('themeModal')">套用並關閉</button>
+      <button style="background:var(--accent); color:#fff;" onclick="closeModal('themeModal')">完成</button>
     </div>
   </div>
 </div>
 
-<!-- 彈窗 3：新增指定日期行程 -->
+<!-- 彈窗 4：新增行事曆行程 -->
 <div class="modal-mask" id="eventModal">
   <div class="modal-panel">
     <h3 class="modal-title">新增行程（<span id="modalDateLabel"></span>）</h3>
     <div class="field">
-      <label>時間（選填，留空則為全天事項）</label>
+      <label>時間（選填）</label>
       <input type="time" id="inputEventTime" />
     </div>
     <div class="field">
       <label>事項內容</label>
-      <input type="text" id="inputEventTitle" placeholder="例如：讀書會、運動、繳費" />
+      <input type="text" id="inputEventTitle" placeholder="例如：讀書會、健身房、繳費" />
     </div>
     <div class="modal-btns">
       <button style="background:var(--bg-sub); color:var(--text-main);" onclick="closeModal('eventModal')">取消</button>
@@ -732,11 +909,11 @@
   </div>
 </div>
 
-<!-- 彈窗 4：批量匯入英文單字 -->
+<!-- 彈窗 5：批量匯入單字 -->
 <div class="modal-mask" id="batchModal">
   <div class="modal-panel">
     <h3 class="modal-title">＋ 批量匯入 7000 單字</h3>
-    <p style="font-size:12px; color:var(--text-muted); margin-top:0;">輸入或貼上多個英文單字（用逗號或換行分隔），系統會自動為你抓取音標、詞性與例句。</p>
+    <p style="font-size:12px; color:var(--text-muted); margin-top:0;">輸入或貼上多個英文單字（用逗號或換行分隔），系統會自動抓取音標、詞性與例句。</p>
     <div class="field">
       <textarea id="batchWordsInput" rows="4" placeholder="例如：&#10;ambiguous&#10;deteriorate&#10;resilient"></textarea>
     </div>
@@ -747,53 +924,53 @@
   </div>
 </div>
 
-<!-- 彈窗 5：防分心守衛攔截 -->
+<!-- 彈窗 6：防分心守衛 -->
 <div class="modal-mask" id="guardModal">
   <div class="modal-panel">
-    <h3 class="modal-title">🌿 稍微停下來想一想</h3>
-    <p style="font-size:13px; color:var(--text-muted); line-height:1.5;">你現在正準備打開社交或娛樂軟體。先確認一下，這是你現在真正想做的事嗎？</p>
+    <h3 class="modal-title">🛡️ 系統防分心結界觸發</h3>
+    <p style="font-size:13px; color:var(--text-muted); line-height:1.55;">
+      宿主正準備進入高干擾娛樂空間。現在退出並回到專注，系統將立刻獎勵 <strong>律 +2、+15 EXP</strong>！
+    </p>
     <div class="modal-btns" style="flex-direction:column;">
-      <button style="background:var(--accent); color:#fff;" onclick="closeModal('guardModal')">我是無意識點開的，回到專注</button>
-      <button style="background:var(--bg-sub); color:var(--text-main);" onclick="closeModal('guardModal')">我有明確目的，暫時使用</button>
+      <button style="background:var(--accent); color:#fff;" onclick="resistDistraction()">⚡ 抵抗誘惑，領取自律經驗</button>
+      <button style="background:var(--bg-sub); color:var(--text-main);" onclick="closeModal('guardModal')">我有明確目的，暫時放行</button>
     </div>
   </div>
 </div>
 
 <script>
-  const STORAGE_KEY = 'reboot_gentle_v3';
+  const STORAGE_KEY = 'reborn_system_v3_1';
 
-  // 內建中高階 7000 單核心字庫（含詞態變化、用法與雙語例句，離線亦可完整顯示）
   const CORE_7000_POOL = [
-    { word: "accommodate", phonetic: "/əˈkɑːmədeɪt/", pos: "v.", meaning: "容納；提供住宿；適應", forms: "名詞: accommodation (住宿/調節)｜形容詞: accommodating (樂於助人的)", example: "The hotel can accommodate up to 500 guests.", exampleZh: "這家飯店最多可容納五百位房客。" },
-    { word: "inevitable", phonetic: "/ɪnˈevɪtəbl/", pos: "adj.", meaning: "不可避免的；必然發生的", forms: "副詞: inevitably (不可避免地)｜名詞: inevitability (必然性)", example: "Change is an inevitable part of life.", exampleZh: "改變是人生中不可避免的一部分。" },
-    { word: "deteriorate", phonetic: "/dɪˈtɪriəreɪt/", pos: "v.", meaning: "惡化；變壞；退化", forms: "名詞: deterioration (惡化/退化)", example: "Air quality in the city has deteriorated rapidly.", exampleZh: "這座城市的空氣品質迅速惡化。" },
-    { word: "sophisticated", phonetic: "/səˈfɪstɪkeɪtɪd/", pos: "adj.", meaning: "精密的；世故的；高雅的", forms: "名詞: sophistication (老練/精密)｜動詞: sophisticate", example: "They use sophisticated software to analyze market trends.", exampleZh: "他們使用精密的軟體來分析市場趨勢。" },
-    { word: "vulnerable", phonetic: "/ˈvʌlnərəbl/", pos: "adj.", meaning: "脆弱的；易受傷害的", forms: "名詞: vulnerability (脆弱性)｜副詞: vulnerably", example: "Young seedlings are vulnerable to frost.", exampleZh: "幼苗很容易受到霜害。" },
-    { word: "ambiguous", phonetic: "/æmˈbɪɡjuəs/", pos: "adj.", meaning: "模稜兩可的；含糊不清的", forms: "名詞: ambiguity (歧義/含糊)｜副詞: ambiguously", example: "His reply to my question was somewhat ambiguous.", exampleZh: "他對我問題的回答有些含糊不清。" },
-    { word: "comprehensive", phonetic: "/ˌkɑːmprɪˈhensɪv/", pos: "adj.", meaning: "全面的；綜合的；詳盡的", forms: "動詞: comprehend (理解)｜名詞: comprehension (理解力)", example: "We offer a comprehensive guide to healthy living.", exampleZh: "我們提供一份健康生活的全面指南。" },
-    { word: "fluctuate", phonetic: "/ˈflʌktʃueɪt/", pos: "v.", meaning: "波動；起伏；漲落", forms: "名詞: fluctuation (波動/起伏)", example: "Vegetable prices fluctuate according to the season.", exampleZh: "蔬菜價格會隨季節波動。" },
-    { word: "resilient", phonetic: "/rɪˈzɪliənt/", pos: "adj.", meaning: "有彈性的；能迅速恢復的；適應力強的", forms: "名詞: resilience (韌性/恢復力)", example: "Children are often more resilient than adults realize.", exampleZh: "孩子們往往比大人想像的更有韌性。" },
-    { word: "scrutinize", phonetic: "/ˈskruːtənaɪz/", pos: "v.", meaning: "仔細審查；細看", forms: "名詞: scrutiny (詳細審查)", example: "The auditor scrutinized every financial record.", exampleZh: "審計員仔細審查了每一筆財務紀錄。" },
-    { word: "contemplate", phonetic: "/ˈkɑːntəmpleɪt/", pos: "v.", meaning: "沉思；凝視；打算", forms: "名詞: contemplation (沉思)｜形容詞: contemplative", example: "She stood quietly, contemplating her next move.", exampleZh: "她靜靜地站著，思索著下一步該怎麼走。" },
-    { word: "diminish", phonetic: "/dɪˈmɪnɪʃ/", pos: "v.", meaning: "減少；減弱；貶低", forms: "形容詞: diminished (減弱的)", example: "Nothing could diminish her enthusiasm for learning.", exampleZh: "沒有什麼能減弱她對學習的熱情。" },
-    { word: "elaborate", phonetic: "/ɪˈlæbərət/", pos: "adj. / v.", meaning: "精巧的；詳盡說明", forms: "名詞: elaboration (詳述)｜副詞: elaborately", example: "Could you elaborate on your proposal?", exampleZh: "你能詳細說明一下你的提案嗎？" },
-    { word: "legitimate", phonetic: "/lɪˈdʒɪtɪmət/", pos: "adj.", meaning: "合法的；正當的；合理的", forms: "名詞: legitimacy (合法性)｜動詞: legitimize", example: "He raised a legitimate concern about the schedule.", exampleZh: "他對時程表提出了一個合理的擔憂。" },
-    { word: "perseverance", phonetic: "/ˌpɜːrsəˈvɪrəns/", pos: "n.", meaning: "毅力；堅持不懈", forms: "動詞: persevere (堅持)｜形容詞: persevering", example: "Success requires patience and perseverance.", exampleZh: "成功需要耐心與毅力。" }
+    { word: "accommodate", phonetic: "/əˈkɑːmədeɪt/", pos: "v.", meaning: "容納；提供住宿；適應", forms: "名詞: accommodation｜形容詞: accommodating", example: "The hotel can accommodate up to 500 guests.", exampleZh: "這家飯店最多可容納五百位房客。" },
+    { word: "inevitable", phonetic: "/ɪnˈevɪtəbl/", pos: "adj.", meaning: "不可避免的；必然發生的", forms: "副詞: inevitably｜名詞: inevitability", example: "Change is an inevitable part of life.", exampleZh: "改變是人生中不可避免的一部分。" },
+    { word: "deteriorate", phonetic: "/dɪˈtɪriəreɪt/", pos: "v.", meaning: "惡化；變壞；退化", forms: "名詞: deterioration", example: "Air quality in the city has deteriorated rapidly.", exampleZh: "這座城市的空氣品質迅速惡化。" },
+    { word: "sophisticated", phonetic: "/səˈfɪstɪkeɪtɪd/", pos: "adj.", meaning: "精密的；世故的；高雅的", forms: "名詞: sophistication｜動詞: sophisticate", example: "They use sophisticated software to analyze market trends.", exampleZh: "他們使用精密的軟體來分析市場趨勢。" },
+    { word: "vulnerable", phonetic: "/ˈvʌlnərəbl/", pos: "adj.", meaning: "脆弱的；易受傷害的", forms: "名詞: vulnerability｜副詞: vulnerably", example: "Young seedlings are vulnerable to frost.", exampleZh: "幼苗很容易受到霜害。" },
+    { word: "ambiguous", phonetic: "/æmˈbɪɡjuəs/", pos: "adj.", meaning: "模稜兩可的；含糊不清的", forms: "名詞: ambiguity｜副詞: ambiguously", example: "His reply to my question was somewhat ambiguous.", exampleZh: "他對我問題的回答有些含糊不清。" },
+    { word: "comprehensive", phonetic: "/ˌkɑːmprɪˈhensɪv/", pos: "adj.", meaning: "全面的；綜合的；詳盡的", forms: "動詞: comprehend｜名詞: comprehension", example: "We offer a comprehensive guide to healthy living.", exampleZh: "我們提供一份健康生活的全面指南。" },
+    { word: "fluctuate", phonetic: "/ˈflʌktʃueɪt/", pos: "v.", meaning: "波動；起伏；漲落", forms: "名詞: fluctuation", example: "Vegetable prices fluctuate according to the season.", exampleZh: "蔬菜價格會隨季節波動。" },
+    { word: "resilient", phonetic: "/rɪˈzɪliənt/", pos: "adj.", meaning: "有彈性的；能迅速恢復的；適應力強的", forms: "名詞: resilience", example: "Children are often more resilient than adults realize.", exampleZh: "孩子們往往比大人想像的更有韌性。" },
+    { word: "scrutinize", phonetic: "/ˈskruːtənaɪz/", pos: "v.", meaning: "仔細審查；細看", forms: "名詞: scrutiny", example: "The auditor scrutinized every financial record.", exampleZh: "審計員仔細審查了每一筆財務紀錄。" }
   ];
 
   const DAILY_QUOTES = [
     { en: "Small daily improvements over time lead to stunning results.", zh: "日復一日的微小進步，終將帶來驚人的成果。" },
     { en: "Discipline is choosing between what you want now and what you want most.", zh: "自律是在「你現在想要的」與「你最想要的」之間做出選擇。" },
     { en: "You do not rise to the level of your goals. You fall to the level of your systems.", zh: "你不會提升到目標的高度，而是會落到你日常系統的水準。" },
-    { en: "Quiet progress is still progress. Keep going at your own pace.", zh: "安靜的進步依然是進步，照著自己的步調繼續前進吧。" },
-    { en: "Focus on being productive instead of busy.", zh: "專注於真正有產出，而不只是讓自己看起來很忙碌。" }
+    { en: "Quiet progress is still progress. Keep going at your own pace.", zh: "安靜的進步依然是進步，照著自己的步調繼續前進吧。" }
   ];
 
-  function getDateKey(dateObj) {
-    const y = dateObj.getFullYear();
-    const m = String(dateObj.getMonth() + 1).padStart(2, '0');
-    const d = String(dateObj.getDate()).padStart(2, '0');
-    return `${y}-${m}-${d}`;
+  const ATTR_LABELS = {
+    xin: '信 · 心態',
+    zhuan: '專 · 專注',
+    lv: '律 · 自律',
+    li: '力 · 體能',
+    zhi: '智 · 知識'
+  };
+
+  function getDateKey(d) {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   }
 
   const today = new Date();
@@ -801,22 +978,25 @@
 
   const defaultState = {
     initialized: false,
-    userName: '朋友',
-    userGoal: '保持平靜，按自己的步調前進',
-    theme: {
-      bgBase: '#F7F6F2',
-      accent: '#5F7A61',
-      darkMode: false
-    },
+    userName: '宿主',
+    userGoal: '穩步修煉，重塑人生節奏',
+    lastActiveDate: todayKey,
+    level: 1,
+    exp: 0,
+    stats: { xin: 10, zhuan: 10, lv: 10, li: 10, zhi: 10 },
+    theme: { bgBase: '#F7F6F2', accent: '#5F7A61', darkMode: false },
+    habits: [
+      { id: 'h1', icon: '☀️', title: '07:30 前準時起床', detail: '晨間作息', attr: 'lv', done: false },
+      { id: 'h2', icon: '💧', title: '喝水 2000 ml', detail: '水分補給', attr: 'li', isWater: true, currentMl: 0, targetMl: 2000, done: false },
+      { id: 'h3', icon: '🏃', title: '運動訓練 30 分鐘', detail: '體能強化', attr: 'li', done: false },
+      { id: 'h4', icon: '📖', title: '專注看書 20 分鐘', detail: '知識累積', attr: 'zhi', done: false }
+    ],
     eventsByDate: {
       [todayKey]: [
-        { id: 'e1', time: '08:30', title: '早晨喝水與靜心規劃', done: false },
-        { id: 'e2', time: '20:00', title: '學習今日 5 個英文單字', done: false }
+        { id: 'e1', time: '20:30', title: '複習今日 5 個 7000 單字', done: false }
       ]
     },
-    todos: [
-      { id: 't1', title: '點右上角設定自己的名字與目標', done: false }
-    ],
+    todos: [],
     vocabPool: [...CORE_7000_POOL],
     dailyBatchIndex: 0,
     learnedWords: [],
@@ -824,6 +1004,16 @@
   };
 
   let state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || JSON.parse(JSON.stringify(defaultState));
+
+  // 跨日自動重置每日修煉進度
+  if (state.lastActiveDate !== todayKey) {
+    state.lastActiveDate = todayKey;
+    state.habits.forEach(h => {
+      h.done = false;
+      if (h.isWater) h.currentMl = 0;
+    });
+  }
+
   let viewYear = today.getFullYear();
   let viewMonth = today.getMonth();
   let selectedDateKey = todayKey;
@@ -831,6 +1021,78 @@
   function saveState() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     renderAll();
+  }
+
+  // 系統提示條
+  let toastTimer = null;
+  function showSysToast(msg) {
+    const el = document.getElementById('sysToast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+  }
+
+  // 經驗值與屬性升級引擎
+  function gainReward(expGain, attrKey, attrGain, customReason) {
+    state.exp += expGain;
+    if (attrKey && state.stats[attrKey] !== undefined) {
+      state.stats[attrKey] = Math.min(100, state.stats[attrKey] + attrGain);
+    }
+    const needExp = state.level * 100;
+    if (state.exp >= needExp) {
+      state.exp -= needExp;
+      state.level += 1;
+      showSysToast(`🎉 系統升級！恭喜宿主晉升 LV.${state.level}！`);
+    } else {
+      const attrTxt = attrKey ? ` · ${ATTR_LABELS[attrKey].slice(0, 1)}+${attrGain}` : '';
+      showSysToast(`✨ ${customReason || '修煉完成'}：+${expGain} EXP${attrTxt}`);
+    }
+  }
+
+  function getRankTitle(lv) {
+    if (lv < 3) return '初醒覺醒者';
+    if (lv < 6) return '自律修行者';
+    if (lv < 10) return '節奏掌控者';
+    if (lv < 15) return '高階破局者';
+    return '重生傳奇宿主';
+  }
+
+  // 五維 SVG 雷達圖繪製
+  function renderRadarChart() {
+    const svg = document.getElementById('radarSvg');
+    const keys = ['xin', 'zhuan', 'lv', 'li', 'zhi'];
+    const labels = ['信', '專', '律', '力', '智'];
+    const cx = 80, cy = 80, maxR = 54;
+
+    const getPoint = (idx, val) => {
+      const angle = (Math.PI * 2 * idx) / 5 - Math.PI / 2;
+      const r = (Math.min(100, Math.max(10, val)) / 100) * maxR;
+      return [cx + r * Math.cos(angle), cy + r * Math.sin(angle)];
+    };
+
+    let gridPolys = '';
+    [0.33, 0.66, 1].forEach(scale => {
+      const pts = keys.map((_, i) => getPoint(i, 100 * scale).join(',')).join(' ');
+      gridPolys += `<polygon points="${pts}" fill="none" stroke="var(--text-muted)" stroke-opacity="0.22" stroke-width="1"/>`;
+    });
+
+    const dataPts = keys.map((k, i) => getPoint(i, state.stats[k]).join(',')).join(' ');
+    let axisLines = '';
+    let labelTexts = '';
+    keys.forEach((_, i) => {
+      const [ox, oy] = getPoint(i, 100);
+      const [lx, ly] = getPoint(i, 126);
+      axisLines += `<line x1="${cx}" y1="${cy}" x2="${ox}" y2="${oy}" stroke="var(--text-muted)" stroke-opacity="0.2" stroke-width="1"/>`;
+      labelTexts += `<text x="${lx}" y="${ly + 4}" text-anchor="middle" font-size="11" font-weight="800" fill="var(--text-main)">${labels[i]}</text>`;
+    });
+
+    svg.innerHTML = `
+      ${gridPolys}
+      ${axisLines}
+      <polygon points="${dataPts}" fill="var(--accent)" fill-opacity="0.28" stroke="var(--accent)" stroke-width="2"/>
+      ${labelTexts}
+    `;
   }
 
   // 主題套用
@@ -875,6 +1137,154 @@
     saveState();
   }
 
+  // 結構化習慣建立與互動
+  let currentHabitCat = 'water';
+
+  function openHabitModal() {
+    selectHabitCat('water');
+    document.getElementById('habitModal').classList.add('show');
+  }
+
+  function selectHabitCat(cat) {
+    currentHabitCat = cat;
+    document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+    document.getElementById('cat-' + cat).classList.add('active');
+
+    const box = document.getElementById('habitDynamicFields');
+    const attrSel = document.getElementById('habitAttrSelect');
+
+    if (cat === 'water') {
+      attrSel.value = 'li';
+      box.innerHTML = `
+        <div class="field">
+          <label>每日目標喝水量 (ml)</label>
+          <select id="waterTargetInput">
+            <option value="1500">1500 ml（基礎補給）</option>
+            <option value="2000" selected>2000 ml（標準健康）</option>
+            <option value="2500">2500 ml（運動加強）</option>
+            <option value="3000">3000 ml（高量目標）</option>
+          </select>
+        </div>
+      `;
+    } else if (cat === 'sport') {
+      attrSel.value = 'li';
+      box.innerHTML = `
+        <div class="field">
+          <label>運動項目</label>
+          <input type="text" id="sportTypeInput" value="重訓 / 慢跑" placeholder="例如：重訓、跑步、游泳、核心" />
+        </div>
+        <div class="field">
+          <label>運動時長（分鐘）</label>
+          <input type="number" id="sportMinsInput" value="30" min="5" max="300" />
+        </div>
+      `;
+    } else if (cat === 'read') {
+      attrSel.value = 'zhi';
+      box.innerHTML = `
+        <div class="field">
+          <label>閱讀主題或書名</label>
+          <input type="text" id="readTopicInput" value="課外與專業閱讀" placeholder="例如：英文小說、專業教科書" />
+        </div>
+        <div class="field">
+          <label>閱讀目標（時間或頁數）</label>
+          <input type="text" id="readAmountInput" value="20 分鐘" placeholder="例如：20 分鐘 或 15 頁" />
+        </div>
+      `;
+    } else if (cat === 'wake') {
+      attrSel.value = 'lv';
+      box.innerHTML = `
+        <div class="field">
+          <label>目標起床時間</label>
+          <input type="time" id="wakeTimeInput" value="07:30" />
+        </div>
+      `;
+    } else if (cat === 'focus') {
+      attrSel.value = 'zhuan';
+      box.innerHTML = `
+        <div class="field">
+          <label>專注內容</label>
+          <input type="text" id="focusTopicInput" value="深度學習不滑手機" />
+        </div>
+        <div class="field">
+          <label>專注時長（分鐘）</label>
+          <input type="number" id="focusMinsInput" value="45" />
+        </div>
+      `;
+    } else {
+      attrSel.value = 'xin';
+      box.innerHTML = `
+        <div class="field">
+          <label>自訂修煉名稱與目標量</label>
+          <input type="text" id="customHabitInput" placeholder="例如：冥想 10 分鐘、練吉他 30 分鐘" />
+        </div>
+      `;
+    }
+  }
+
+  function addStructuredHabit() {
+    const attr = document.getElementById('habitAttrSelect').value;
+    let newHabit = null;
+
+    if (currentHabitCat === 'water') {
+      const ml = parseInt(document.getElementById('waterTargetInput').value, 10) || 2000;
+      newHabit = { id: 'h' + Date.now(), icon: '💧', title: `喝水 ${ml} ml`, detail: '支持分次飲水累進', attr, isWater: true, currentMl: 0, targetMl: ml, done: false };
+    } else if (currentHabitCat === 'sport') {
+      const type = document.getElementById('sportTypeInput').value.trim() || '運動';
+      const mins = document.getElementById('sportMinsInput').value || '30';
+      newHabit = { id: 'h' + Date.now(), icon: '🏃', title: `${type} ${mins} 分鐘`, detail: '體能修煉', attr, done: false };
+    } else if (currentHabitCat === 'read') {
+      const topic = document.getElementById('readTopicInput').value.trim() || '閱讀';
+      const amt = document.getElementById('readAmountInput').value.trim() || '20 分鐘';
+      newHabit = { id: 'h' + Date.now(), icon: '📖', title: `${topic}（${amt}）`, detail: '知識吸收', attr, done: false };
+    } else if (currentHabitCat === 'wake') {
+      const wt = document.getElementById('wakeTimeInput').value || '07:30';
+      newHabit = { id: 'h' + Date.now(), icon: '☀️', title: `${wt} 前準時起床`, detail: '晨間自律', attr, done: false };
+    } else if (currentHabitCat === 'focus') {
+      const ft = document.getElementById('focusTopicInput').value.trim() || '深度專注';
+      const fm = document.getElementById('focusMinsInput').value || '45';
+      newHabit = { id: 'h' + Date.now(), icon: '🎯', title: `${ft} ${fm} 分鐘`, detail: '心流專注', attr, done: false };
+    } else {
+      const ct = document.getElementById('customHabitInput').value.trim();
+      if (!ct) return;
+      newHabit = { id: 'h' + Date.now(), icon: '⚡', title: ct, detail: '自訂修煉', attr, done: false };
+    }
+
+    state.habits.push(newHabit);
+    closeModal('habitModal');
+    saveState();
+  }
+
+  function addWaterSip(id) {
+    const h = state.habits.find(x => x.id === id);
+    if (!h || h.done) return;
+    h.currentMl = Math.min(h.targetMl, (h.currentMl || 0) + 250);
+    if (h.currentMl >= h.targetMl) {
+      h.done = true;
+      gainReward(20, h.attr, 2, '達成今日喝水目標');
+    } else {
+      showSysToast(`💧 已補充 250ml（目前 ${h.currentMl}/${h.targetMl} ml）`);
+    }
+    saveState();
+  }
+
+  function toggleHabit(id) {
+    const h = state.habits.find(x => x.id === id);
+    if (!h) return;
+    h.done = !h.done;
+    if (h.done) {
+      if (h.isWater) h.currentMl = h.targetMl;
+      gainReward(20, h.attr, 2, h.title);
+    } else if (h.isWater) {
+      h.currentMl = 0;
+    }
+    saveState();
+  }
+
+  function deleteHabit(id) {
+    state.habits = state.habits.filter(x => x.id !== id);
+    saveState();
+  }
+
   // 分頁切換
   function switchTab(tab) {
     document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
@@ -883,7 +1293,7 @@
     document.getElementById('nav-' + tab).classList.add('active');
   }
 
-  // 月曆渲染與操作
+  // 多月份月曆
   function changeMonth(delta) {
     viewMonth += delta;
     if (viewMonth < 0) { viewMonth = 11; viewYear--; }
@@ -893,15 +1303,6 @@
 
   function selectDate(dateKey) {
     selectedDateKey = dateKey;
-    renderCalendar();
-    renderDayEvents();
-  }
-
-  function jumpToToday() {
-    viewYear = today.getFullYear();
-    viewMonth = today.getMonth();
-    selectedDateKey = todayKey;
-    switchTab('calendar');
     renderCalendar();
     renderDayEvents();
   }
@@ -933,23 +1334,22 @@
   }
 
   function renderDayEvents() {
-    const label = selectedDateKey === todayKey ? '今日行程' : `${selectedDateKey} 行程`;
-    document.getElementById('selectedDateTitle').textContent = label;
+    document.getElementById('selectedDateTitle').textContent = selectedDateKey === todayKey ? '今日行程' : `${selectedDateKey} 行程`;
     const list = state.eventsByDate[selectedDateKey] || [];
     const container = document.getElementById('dayEventList');
 
     if (list.length === 0) {
-      container.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:13px; padding:14px 0;">這天還沒有安排行程，按右上角「＋ 行程」新增</div>`;
+      container.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:13px; padding:14px 0;">這天還沒有安排行程，點右上角「＋ 行程」新增</div>`;
       return;
     }
 
     container.innerHTML = list.map(ev => `
-      <div class="item-row ${ev.done ? 'done' : ''}">
-        <div class="item-left" onclick="toggleEvent('${ev.id}')">
-          <div class="check-box">${ev.done ? '✓' : ''}</div>
+      <div class="habit-row ${ev.done ? 'done' : ''}">
+        <div class="habit-left" onclick="toggleEvent('${ev.id}')">
+          <div class="check-circle">${ev.done ? '✓' : ''}</div>
           <div>
-            <div class="item-title">${ev.title}</div>
-            ${ev.time ? `<div class="item-sub"><span class="time-badge">${ev.time}</span></div>` : ''}
+            <div class="habit-title">${ev.title}</div>
+            ${ev.time ? `<div class="habit-meta"><span class="attr-pill">${ev.time}</span></div>` : ''}
           </div>
         </div>
         <button class="del-icon" onclick="deleteEvent('${ev.id}')">✕</button>
@@ -978,7 +1378,11 @@
   function toggleEvent(id) {
     const list = state.eventsByDate[selectedDateKey] || [];
     const item = list.find(e => e.id === id);
-    if (item) { item.done = !item.done; saveState(); }
+    if (item) {
+      item.done = !item.done;
+      if (item.done) gainReward(15, 'zhuan', 1, '完成日程安排');
+      saveState();
+    }
   }
 
   function deleteEvent(id) {
@@ -986,15 +1390,11 @@
     saveState();
   }
 
-  // 匯出選定日期行事曆鬧鐘 (.ics)
   function exportSelectedDateICS() {
     const list = state.eventsByDate[selectedDateKey] || [];
-    if (list.length === 0) {
-      alert('這一天還沒有行程可以匯出提醒喔！');
-      return;
-    }
+    if (list.length === 0) { alert('這一天還沒有行程可以匯出提醒喔！'); return; }
     const cleanDate = selectedDateKey.replace(/-/g, '');
-    let ics = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//REBOOT//TW\n";
+    let ics = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//REBORN-SYSTEM//TW\n";
     list.forEach(ev => {
       const t = ev.time ? ev.time.replace(':', '') + '00' : '090000';
       ics += `BEGIN:VEVENT\nSUMMARY:${ev.title}\nDTSTART:${cleanDate}T${t}\nDURATION:PT30M\nBEGIN:VALARM\nTRIGGER:-PT0M\nACTION:DISPLAY\nDESCRIPTION:Reminder\nEND:VALARM\nEND:VEVENT\n`;
@@ -1007,32 +1407,7 @@
     a.click();
   }
 
-  // 隨手待辦
-  function addTodo() {
-    const inp = document.getElementById('todoInput');
-    const title = inp.value.trim();
-    if (!title) return;
-    state.todos.unshift({ id: 'td' + Date.now(), title, done: false });
-    inp.value = '';
-    saveState();
-  }
-
-  function toggleTodo(id) {
-    const t = state.todos.find(x => x.id === id);
-    if (t) { t.done = !t.done; saveState(); }
-  }
-
-  function deleteTodo(id) {
-    state.todos = state.todos.filter(x => x.id !== id);
-    saveState();
-  }
-
-  function clearDoneTodos() {
-    state.todos = state.todos.filter(x => !x.done);
-    saveState();
-  }
-
-  // 英文語音朗讀
+  // 英文學習模組
   function speakText(text) {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
@@ -1047,7 +1422,6 @@
     speakText(document.getElementById('quoteEnText').textContent);
   }
 
-  // 串接開源字典 API 自動補充單字細節
   async function enrichWordFromAPI(wordObj) {
     if (wordObj.apiFetched) return;
     try {
@@ -1067,9 +1441,7 @@
         if (syns.length > 0 && !wordObj.forms.includes('同義詞')) {
           wordObj.forms = (wordObj.forms ? wordObj.forms + '｜' : '') + `同義詞: ${syns.join(', ')}`;
         }
-        if (ex && !wordObj.example) {
-          wordObj.example = ex;
-        }
+        if (ex && !wordObj.example) wordObj.example = ex;
       }
       wordObj.apiFetched = true;
       saveState();
@@ -1088,8 +1460,7 @@
     }
 
     let learnedCount = 0;
-    const listEl = document.getElementById('dailyVocabList');
-    listEl.innerHTML = batch.map(w => {
+    document.getElementById('dailyVocabList').innerHTML = batch.map(w => {
       if (!w.apiFetched) enrichWordFromAPI(w);
       const isLearned = state.learnedWords.includes(w.word);
       const isSaved = state.savedWords.some(s => s.word === w.word);
@@ -1117,15 +1488,14 @@
     document.getElementById('vocabProgressText').textContent = `${learnedCount}/${batch.length}`;
     document.getElementById('savedVocabCount').textContent = state.savedWords.length;
 
-    const savedEl = document.getElementById('savedVocabList');
-    savedEl.innerHTML = state.savedWords.length === 0
-      ? '<div style="text-align:center; color:var(--text-muted); font-size:12.5px; padding:10px;">尚未收藏生字，看到不熟的字按「☆ 收藏」就會存在這裡</div>'
+    document.getElementById('savedVocabList').innerHTML = state.savedWords.length === 0
+      ? '<div style="text-align:center; color:var(--text-muted); font-size:12.5px; padding:10px;">尚未收藏生字，遇到不熟的單字按「☆ 收藏」就會存在這裡</div>'
       : state.savedWords.map(sw => `
-          <div class="item-row">
-            <div class="item-left" onclick="speakText('${sw.word}')">
+          <div class="habit-row">
+            <div class="habit-left" onclick="speakText('${sw.word}')">
               <div>
-                <div class="item-title">${sw.word} <span style="font-size:11px; color:var(--text-muted); font-weight:400;">🔊</span></div>
-                <div class="item-sub">${sw.meaning}</div>
+                <div class="habit-title">${sw.word} 🔊</div>
+                <div class="habit-meta">${sw.meaning}</div>
               </div>
             </div>
             <button class="del-icon" onclick="removeSavedWord('${sw.word}')">✕</button>
@@ -1143,13 +1513,13 @@
       state.learnedWords = state.learnedWords.filter(w => w !== word);
     } else {
       state.learnedWords.push(word);
+      gainReward(10, 'zhi', 1, `掌握單字 ${word}`);
     }
     saveState();
   }
 
   function toggleSaveWord(word) {
-    const exists = state.savedWords.some(s => s.word === word);
-    if (exists) {
+    if (state.savedWords.some(s => s.word === word)) {
       state.savedWords = state.savedWords.filter(s => s.word !== word);
     } else {
       const found = state.vocabPool.find(v => v.word === word) || { word, meaning: '自訂收藏單字' };
@@ -1194,7 +1564,35 @@
     saveState();
   }
 
-  // 專注計時器
+  // 待辦與專注計時
+  function addTodo() {
+    const inp = document.getElementById('todoInput');
+    const title = inp.value.trim();
+    if (!title) return;
+    state.todos.unshift({ id: 'td' + Date.now(), title, done: false });
+    inp.value = '';
+    saveState();
+  }
+
+  function toggleTodo(id) {
+    const t = state.todos.find(x => x.id === id);
+    if (t) {
+      t.done = !t.done;
+      if (t.done) gainReward(10, 'zhuan', 1, '完成待辦');
+      saveState();
+    }
+  }
+
+  function deleteTodo(id) {
+    state.todos = state.todos.filter(x => x.id !== id);
+    saveState();
+  }
+
+  function clearDoneTodos() {
+    state.todos = state.todos.filter(x => !x.done);
+    saveState();
+  }
+
   let focusSecs = 25 * 60;
   let focusTimer = null;
 
@@ -1221,7 +1619,8 @@
           btn.textContent = '開始';
           focusSecs = 25 * 60;
           updateFocusDisplay();
-          alert('🌿 25 分鐘靜心專注完成！');
+          gainReward(25, 'zhuan', 2, '完成25分鐘專注修煉');
+          saveState();
         }
       }, 1000);
     }
@@ -1235,18 +1634,25 @@
     updateFocusDisplay();
   }
 
-  // 個人設定與彈窗
-  function openProfileModal() {
-    document.getElementById('inputName').value = state.userName;
+  // 防分心守衛與覺醒彈窗
+  function resistDistraction() {
+    closeModal('guardModal');
+    gainReward(15, 'lv', 2, '成功抵抗分心誘惑');
+    saveState();
+  }
+
+  function openAwakeningModal() {
+    document.getElementById('inputName').value = state.userName === '宿主' ? '' : state.userName;
     document.getElementById('inputGoal').value = state.userGoal;
-    document.getElementById('profileModal').classList.add('show');
+    document.getElementById('awakeningModal').classList.add('show');
   }
 
   function saveProfile() {
-    state.userName = document.getElementById('inputName').value.trim() || '朋友';
-    state.userGoal = document.getElementById('inputGoal').value.trim() || '保持平靜，按自己的步調前進';
+    state.userName = document.getElementById('inputName').value.trim() || '重生者';
+    state.userGoal = document.getElementById('inputGoal').value.trim() || '穩步修煉，重塑人生節奏';
     state.initialized = true;
-    closeModal('profileModal');
+    closeModal('awakeningModal');
+    showSysToast(`⚡ 宿主【${state.userName}】已成功綁定系統！`);
     saveState();
   }
 
@@ -1257,33 +1663,51 @@
   function renderAll() {
     document.getElementById('userNameDisplay').textContent = state.userName;
     document.getElementById('userGoalDisplay').textContent = state.userGoal;
+    document.getElementById('lvDisplay').textContent = `LV.${state.level}`;
+    document.getElementById('rankTitleDisplay').textContent = getRankTitle(state.level);
 
-    const todayEvents = (state.eventsByDate[todayKey] || []).filter(e => !e.done);
-    const openTodos = state.todos.filter(t => !t.done);
-    const totalLeft = todayEvents.length + openTodos.length;
+    const needExp = state.level * 100;
+    document.getElementById('expTextDisplay').textContent = `${state.exp} / ${needExp} EXP`;
+    document.getElementById('expBarFill').style.width = `${Math.min(100, (state.exp / needExp) * 100)}%`;
 
-    if (totalLeft === 0) {
-      document.getElementById('noticeText').innerHTML = '✨ 今日行程與待辦都已安頓好了';
-      document.getElementById('noticeBadge').textContent = '完成';
-    } else {
-      const nextEv = todayEvents[0];
-      const desc = nextEv ? `下一個安排：<strong>${nextEv.time || '全天'} ${nextEv.title}</strong>` : `還有 ${openTodos.length} 項隨手待辦`;
-      document.getElementById('noticeText').innerHTML = `今天還有 <strong>${totalLeft} 件事</strong>（${desc}）`;
-      document.getElementById('noticeBadge').textContent = '查看';
-    }
+    ['xin', 'zhuan', 'lv', 'li', 'zhi'].forEach(k => {
+      document.getElementById('stat-' + k).textContent = state.stats[k];
+    });
+    renderRadarChart();
+
+    const doneHabits = state.habits.filter(h => h.done).length;
+    document.getElementById('habitProgressText').textContent = `${doneHabits}/${state.habits.length}`;
+
+    document.getElementById('habitList').innerHTML = state.habits.length === 0
+      ? '<div style="text-align:center; color:var(--text-muted); font-size:13px; padding:14px;">還沒有修煉項目，點右上角「＋ 新增修煉」開始</div>'
+      : state.habits.map(h => `
+          <div class="habit-row ${h.done ? 'done' : ''}">
+            <div class="habit-left" onclick="toggleHabit('${h.id}')">
+              <div class="check-circle">${h.done ? '✓' : ''}</div>
+              <div>
+                <div class="habit-title">${h.icon || '⚡'} ${h.title}</div>
+                <div class="habit-meta">
+                  <span class="attr-pill">${ATTR_LABELS[h.attr] || '力 · 體能'}</span>
+                  <span>${h.isWater ? `進度 ${h.currentMl || 0}/${h.targetMl} ml` : h.detail}</span>
+                </div>
+              </div>
+            </div>
+            ${h.isWater && !h.done ? `<button class="step-btn" onclick="addWaterSip('${h.id}')">+250ml</button>` : ''}
+            <button class="del-icon" onclick="deleteHabit('${h.id}')">✕</button>
+          </div>
+        `).join('');
 
     renderCalendar();
     renderDayEvents();
     renderEnglishSection();
 
-    const todoEl = document.getElementById('todoList');
-    todoEl.innerHTML = state.todos.length === 0
-      ? '<div style="text-align:center; color:var(--text-muted); font-size:13px; padding:14px;">目前沒有待辦事項</div>'
+    document.getElementById('todoList').innerHTML = state.todos.length === 0
+      ? '<div style="text-align:center; color:var(--text-muted); font-size:13px; padding:14px;">目前沒有隨手待辦</div>'
       : state.todos.map(t => `
-          <div class="item-row ${t.done ? 'done' : ''}">
-            <div class="item-left" onclick="toggleTodo('${t.id}')">
-              <div class="check-box">${t.done ? '✓' : ''}</div>
-              <div class="item-title">${t.title}</div>
+          <div class="habit-row ${t.done ? 'done' : ''}">
+            <div class="habit-left" onclick="toggleTodo('${t.id}')">
+              <div class="check-circle">${t.done ? '✓' : ''}</div>
+              <div class="habit-title">${t.title}</div>
             </div>
             <button class="del-icon" onclick="deleteTodo('${t.id}')">✕</button>
           </div>
@@ -1296,7 +1720,7 @@
   if (window.location.search.includes('guard=1')) {
     openGuardModal();
   } else if (!state.initialized) {
-    setTimeout(openProfileModal, 350);
+    setTimeout(openAwakeningModal, 300);
   }
 </script>
 </body>
