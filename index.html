@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="重生系統" />
-  <title>當我重生後獲得一套系統 v4.6.1</title>
+  <title>當我重生後獲得一套系統 v4.6.3</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+TC:wght@500;600;700&display=swap" rel="stylesheet">
@@ -137,8 +137,8 @@
     .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
     .brand-title { font-family: var(--font-serif); font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
     .ver-pill { font-family: var(--font-mono); font-size: 10px; padding: 2px 6px; border: 1px solid var(--border-strong); border-radius: 999px; color: var(--ink-muted); background: var(--bg-card); }
-    .top-actions { display: flex; align-items: center; gap: 8px; }
-    .icon-btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--ink); border-radius: 10px; padding: 6px 10px; font-size: 12px; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+    .top-actions { display: flex; align-items: center; gap: 6px; }
+    .icon-btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--ink); border-radius: 10px; padding: 6px 9px; font-size: 11px; display: inline-flex; align-items: center; gap: 3px; cursor: pointer; }
     .icon-btn:active { transform: scale(0.96); background: var(--bg-subtle); }
 
     /* Card */
@@ -191,11 +191,12 @@
     .page-view { display: none; }
     .page-view.active { display: block; }
 
+    /* Expanded Spacious Lawn Sanctuary Arena */
     .sanctuary-arena {
       position: relative;
       width: 100%;
-      height: 210px;
-      border-radius: 12px;
+      height: 380px;
+      border-radius: 14px;
       border: 1px solid var(--border);
       background: linear-gradient(180deg, var(--bg-paper) 0%, var(--bg-subtle) 100%);
       overflow: hidden;
@@ -203,15 +204,15 @@
       margin-bottom: 10px;
     }
     .sanctuary-arena.has-water {
-      background: linear-gradient(90deg, var(--bg-paper) 0%, var(--bg-paper) 60%, var(--bg-water) 62%, var(--bg-water) 100%);
+      background: linear-gradient(90deg, var(--bg-paper) 0%, var(--bg-paper) 55%, var(--bg-water) 57%, var(--bg-water) 100%);
     }
     .arena-bg-svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
     .pet-entity {
       position: absolute;
-      width: 54px;
-      height: 54px;
-      margin-left: -27px;
-      margin-top: -27px;
+      width: 60px;
+      height: 60px;
+      margin-left: -30px;
+      margin-top: -30px;
       cursor: grab;
       z-index: 10;
       transition: left 1.5s ease, top 1.5s ease;
@@ -220,11 +221,11 @@
     .pet-body-anim { width: 100%; height: 100%; animation: petBreathe 3s ease-in-out infinite; }
     @keyframes petBreathe {
       0%, 100% { transform: translateY(0) scaleY(1); }
-      50% { transform: translateY(-2px) scaleY(1.03); }
+      50% { transform: translateY(-3px) scaleY(1.04); }
     }
     .pet-bubble {
       position: absolute;
-      bottom: 52px;
+      bottom: 58px;
       left: 50%;
       transform: translateX(-50%);
       background: var(--bg-card);
@@ -264,8 +265,6 @@
 
     .tag-pill { font-size: 10px; padding: 1px 6px; border-radius: 999px; border: 1px solid var(--border-strong); color: var(--ink-muted); background: var(--bg-card); }
     .tag-pill.freq-basic { border-color: var(--sage); color: var(--sage-dark); background: var(--sage-light); }
-    .tag-pill.freq-core { border-color: #B8A992; color: #6B5B45; background: #F3EFE8; }
-    .tag-pill.freq-rare { border-color: #C4BFC9; color: #655E6E; background: #F2F0F5; }
 
     /* Hydration & Vocab */
     .water-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
@@ -294,8 +293,6 @@
     .cal-day.empty { background: transparent; cursor: default; }
     .cal-day.today { border-color: var(--sage); font-weight: 700; color: var(--sage-dark); }
     .cal-day.selected { background: var(--sage); color: #fff; }
-    .cal-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent-warm); margin-top: 2px; }
-    .cal-day.selected .cal-dot { background: #fff; }
 
     /* Bottom Nav */
     .bottom-nav {
@@ -345,25 +342,25 @@
     <header class="top-bar">
       <div class="brand-title">
         <span>重生系統</span>
-        <span class="ver-pill">v4.6.1</span>
+        <span class="ver-pill">v4.6.3</span>
       </div>
       <div class="top-actions">
-        <button class="icon-btn" onclick="cycleTheme()" title="切換主題色">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10"/></svg>
+        <button class="icon-btn" onclick="openShieldModal()" title="防沉迷護盾">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>護盾</span>
+        </button>
+        <button class="icon-btn" onclick="cycleTheme()" title="主題色">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10"/></svg>
           <span id="theme-badge-label">主題色</span>
         </button>
-        <button class="icon-btn" onclick="openBlindBox()" title="每日盲盒">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>
-          <span>盲盒</span>
-        </button>
-        <button class="icon-btn" onclick="openVoiceModal()" title="小精靈語音">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+        <button class="icon-btn" onclick="openVoiceModal()" title="語音">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
           <span id="voice-badge-label">語音</span>
         </button>
       </div>
     </header>
 
-    <!-- ==================== MAIN PAGE VIEW CONTAINER ==================== -->
+    <!-- ==================== MAIN PAGE VIEW ==================== -->
     <div id="view-home" class="page-view active">
       <!-- Status Card -->
       <section class="card">
@@ -372,7 +369,7 @@
             <span class="stat-label">境界等級</span>
             <span class="stat-val sage" id="stat-lv">LV.1</span>
           </div>
-          <div class="stat-box" onclick="switchMainTab('home'); openSanctuaryModal('pets')">
+          <div class="stat-box" onclick="switchPageView('sanctuary'); openSanctuaryModal('pets')">
             <span class="stat-label">持有金幣 ▾</span>
             <span class="stat-val gold" id="stat-gold">40</span>
           </div>
@@ -408,7 +405,7 @@
           </div>
           <div>
             <div style="font-family:var(--font-serif); font-weight:700; font-size:14px;" id="house-name-display">Lv.1 林間草編小窩</div>
-            <div style="font-size:11px; color:var(--ink-muted);">點擊進入雙棲生態庭院與 15 靈寵圖鑑 →</div>
+            <div style="font-size:11px; color:var(--ink-muted);">進入寬敞大草皮雙棲庭院與 15 靈寵圖鑑 →</div>
           </div>
         </div>
         <div class="tag-pill freq-basic" id="active-pet-count-pill">出場 0 隻</div>
@@ -492,7 +489,7 @@
       </section>
     </div>
 
-    <!-- ==================== INDEPENDENT SANCTUARY PAGE VIEW ==================== -->
+    <!-- ==================== INDEPENDENT SANCTUARY PAGE VIEW (SPACIOUS LAWN) ==================== -->
     <div id="view-sanctuary" class="page-view">
       <section class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
@@ -501,13 +498,14 @@
           <button class="btn btn-sm btn-primary" onclick="openSanctuaryModal('pets')">靈寵與商店</button>
         </div>
 
+        <!-- Expanded Large Lawn Arena -->
         <div id="sanctuary-arena" class="sanctuary-arena">
-          <svg id="arena-bg-svg" class="arena-bg-svg" viewBox="0 0 400 210" preserveAspectRatio="none"></svg>
+          <svg id="arena-bg-svg" class="arena-bg-svg" viewBox="0 0 400 380" preserveAspectRatio="none"></svg>
           <div id="pet-layer"></div>
         </div>
 
-        <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--ink-muted);">
-          <span>飽食度：<strong class="mono" id="pet-hunger-text">80%</strong> · 庭院出場 <strong class="mono" id="active-pet-count">0</strong> 隻</span>
+        <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--ink-muted); margin-top:6px;">
+          <span>飽食度：<strong class="mono" id="pet-hunger-text">80%</strong> · 大草皮出場 <strong class="mono" id="active-pet-count">0</strong> 隻</span>
           <span class="mono" id="daily-gold-cap-text">今日金幣 0/120</span>
         </div>
       </section>
@@ -669,20 +667,30 @@
     </div>
   </div>
 
-  <!-- ==================== MODAL: BLIND BOX ==================== -->
-  <div id="blindbox-modal" class="modal-backdrop" onclick="if(event.target===this) closeModal('blindbox-modal')">
+  <!-- ==================== MODAL: ANTI-DISTRACTION SHIELD ==================== -->
+  <div id="shield-modal" class="modal-backdrop" onclick="if(event.target===this) closeModal('shield-modal')">
     <div class="modal-sheet" style="text-align:center;">
       <div class="modal-header">
-        <div class="card-title">每日氣運盲盒</div>
-        <button class="btn btn-sm" onclick="closeModal('blindbox-modal')">✕</button>
+        <div class="card-title">防手滑／戒斷社群護盾</div>
+        <button class="btn btn-sm" onclick="closeModal('shield-modal')">✕</button>
       </div>
-      <div style="padding:18px 8px;">
-        <div id="blindbox-result-text" style="font-size:14px; font-weight:600; margin-bottom:16px;">
-          每日可開啟一次氣運盲盒，隨機獲得金幣、經驗或精力補貼！
-        </div>
-        <button class="btn btn-primary" id="blindbox-action-btn" style="width:100%; padding:10px;" onclick="handleBlindBoxAction()">
-          開啟今日氣運盲盒
+      <div style="padding:10px 0;">
+        <div style="font-size:13px; font-weight:600; color:var(--accent-danger); margin-bottom:8px;">靈魂拷問：你今天滑 IG / TikTok 浪費了多少時間？</div>
+        <p style="font-size:12px; color:var(--ink-muted); margin-bottom:14px; text-align:left; line-height:1.6;">
+          偵測到你可能正準備無意識打開社群軟體。深呼吸 5 秒，把注意力拉回 60 天重生計畫！
+        </p>
+        <div id="shield-timer" class="mono" style="font-size:28px; font-weight:700; margin-bottom:14px; color:var(--sage-dark);">05</div>
+        <button class="btn btn-primary" id="shield-claim-btn" style="width:100%; margin-bottom:10px;" disabled onclick="claimShieldReward()">
+          成功忍住！領取 +5 金幣 ＋ +10 毅力
         </button>
+        <details style="text-align:left; font-size:11px; color:var(--ink-muted); background:var(--bg-paper); padding:8px; border-radius:8px; border:1px solid var(--border);">
+          <summary style="cursor:pointer; font-weight:600;">iPhone 捷徑自動化綁定教學 ▾</summary>
+          <p style="margin-top:6px; line-height:1.5;">
+            1. 打開 iPhone「捷徑」App → 點「自動化」→ 點右上角「＋」。<br>
+            2. 選擇「App」→ 勾選 Instagram / TikTok 等軟體，選擇「已被打開」立即執行。<br>
+            3. 加入動作「打開 URL」填入本網址，每次開社群就會強制彈回重生系統！
+          </p>
+        </details>
       </div>
     </div>
   </div>
@@ -797,7 +805,7 @@
         { id: 'h3', text: '今日無含糖手搖飲・清淡飲食', done: false, attr: 'vit' },
         { id: 'h4', text: '睡前放下手機靜心 15 分鐘', done: false, attr: 'cha' }
       ],
-      todos: [{ id: 't1', text: '去靈寵棲息閣看看小動物', done: false }],
+      todos: [{ id: 't1', text: '去靈寵棲息閣看看大草皮小動物', done: false }],
       waterMl: 0, workoutTier: 'basic', workoutIndex: 0, workoutDone: false,
       vocabMode: 'all', vocabOffset: 0, customWords: [],
       houseLv: 1, ownedFurniture: [], ownedPets: [], activePets: [],
@@ -817,7 +825,6 @@
         if (!raw) return JSON.parse(JSON.stringify(DEFAULT_STATE));
         const parsed = JSON.parse(raw);
         const merged = Object.assign({}, JSON.parse(JSON.stringify(DEFAULT_STATE)), parsed);
-        // Compatibility fix for old habits
         if (merged.habits) {
           merged.habits = merged.habits.map((h, idx) => ({
             id: h.id || ('h' + idx),
@@ -921,6 +928,34 @@
       speakLine('test');
     }
 
+    /* ==================== SHIELD MODAL ==================== */
+    let shieldTimerInt = null;
+    function openShieldModal() {
+      document.getElementById('shield-modal').classList.add('open');
+      let sec = 5;
+      const btn = document.getElementById('shield-claim-btn');
+      const timeBox = document.getElementById('shield-timer');
+      btn.disabled = true;
+      timeBox.textContent = `05`;
+      clearInterval(shieldTimerInt);
+      shieldTimerInt = setInterval(() => {
+        sec--;
+        timeBox.textContent = `0${sec}`;
+        if (sec <= 0) {
+          clearInterval(shieldTimerInt);
+          btn.disabled = false;
+          timeBox.textContent = '已冷靜';
+        }
+      }, 1000);
+    }
+    function claimShieldReward() {
+      pushUndo('已領取防沉迷戒斷獎勵');
+      addRewards({ exp: 10, gold: 5, attr: 'wil', attrVal: 1 });
+      saveState(); renderAll(); speakLine('done');
+      closeModal('shield-modal');
+      alert('太棒了！成功克制欲望，獲得 +5 金幣與 +10 毅力！');
+    }
+
     /* ==================== 3-SECOND UNDO ==================== */
     function pushUndo(label) {
       undoSnapshot = JSON.stringify(state);
@@ -962,7 +997,7 @@
     /* ==================== POLYGON RADAR CHART ==================== */
     function renderRadarChart() {
       const box = document.getElementById('radar-chart-box');
-      const maxVal = 30; // Scale max for attributes
+      const maxVal = 30;
       const attrs = [
         { key: 'str', label: '力', val: state.attrs.str },
         { key: 'int', label: '智', val: state.attrs.int },
@@ -974,7 +1009,6 @@
       const cx = 70, cy = 70, r = 48;
       let svgContent = '';
 
-      // Background webs (3 rings)
       [0.33, 0.66, 1].forEach(scale => {
         let pts = '';
         attrs.forEach((_, i) => {
@@ -986,7 +1020,6 @@
         svgContent += `<polygon points="${pts}" fill="none" stroke="var(--border)" stroke-width="1" stroke-dasharray="2 2"/>`;
       });
 
-      // Axes lines & labels
       attrs.forEach((attr, i) => {
         const angle = (Math.PI * 2 / 5) * i - Math.PI / 2;
         const px = cx + r * Math.cos(angle);
@@ -998,7 +1031,6 @@
         svgContent += `<text x="${lx}" y="${ly}" font-size="10" font-family="sans-serif" fill="var(--ink)" text-anchor="middle" dominant-baseline="central">${attr.label}${attr.val}</text>`;
       });
 
-      // Data polygon
       let dataPts = '';
       attrs.forEach((attr, i) => {
         const angle = (Math.PI * 2 / 5) * i - Math.PI / 2;
@@ -1012,27 +1044,27 @@
       box.innerHTML = `<svg viewBox="0 0 140 140">${svgContent}</svg>`;
     }
 
-    /* ==================== PET SVGs & SANCTUARY ==================== */
+    /* ==================== PET SVGs & SPACIOUS LAWN SANCTUARY ==================== */
     function getPetSvg(id) {
       const stroke = 'var(--ink)';
       const sage = 'var(--sage)';
       const warm = 'var(--accent-warm)';
       const svgs = {
-        hamster: `<svg viewBox="0 0 64 64"><circle cx="20" cy="20" r="7" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><circle cx="44" cy="20" r="7" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="38" rx="18" ry="16" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><circle cx="25" cy="34" r="2" fill="${stroke}"/><circle cx="39" cy="34" r="2" fill="${stroke}"/><path d="M29 40 Q32 43 35 40" fill="none" stroke="${stroke}" stroke-width="1.6"/><path d="M22 42 Q32 50 42 42" fill="none" stroke="${sage}" stroke-width="1.2"/></svg>`,
-        cat: `<svg viewBox="0 0 64 64"><path d="M18 26 L14 12 L26 19 Z" fill="var(--bg-subtle)" stroke="${stroke}" stroke-width="1.6"/><path d="M46 26 L50 12 L38 19 Z" fill="var(--bg-subtle)" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="38" rx="18" ry="16" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><path d="M32 22 V28 M28 24 V26 M36 24 V26" stroke="${warm}" stroke-width="1.5"/><circle cx="24" cy="35" r="2" fill="${stroke}"/><circle cx="40" cy="35" r="2" fill="${stroke}"/><path d="M29 41 Q32 44 35 41" fill="none" stroke="${stroke}" stroke-width="1.6"/></svg>`,
-        bunny: `<svg viewBox="0 0 64 64"><ellipse cx="23" cy="16" rx="4.5" ry="13" transform="rotate(-15 23 16)" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="41" cy="16" rx="4.5" ry="13" transform="rotate(15 41 16)" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="40" rx="17" ry="15" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><circle cx="25" cy="38" r="2" fill="${stroke}"/><circle cx="39" cy="38" r="2" fill="${stroke}"/><path d="M31 42 L32 43 L33 42" fill="none" stroke="${stroke}" stroke-width="1.6"/></svg>`,
-        shiba: `<svg viewBox="0 0 64 64"><path d="M18 25 L16 12 L28 19 Z" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><path d="M46 25 L48 12 L36 19 Z" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="38" rx="18" ry="16" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="44" rx="11" ry="9" fill="var(--bg-card)"/><circle cx="25" cy="34" r="2" fill="${stroke}"/><circle cx="39" cy="34" r="2" fill="${stroke}"/><circle cx="32" cy="39" r="2.5" fill="${stroke}"/></svg>`,
+        hamster: `<svg viewBox="0 0 64 64"><circle cx="20" cy="20" r="7" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><circle cx="44" cy="20" r="7" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="38" rx="18" ry="16" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><circle cx="25" cy="34" r="2" fill="${stroke}"/><circle cx="39" cy="34" r="2" fill="${stroke}"/><path d="M29 40 Q32 43 35 40" fill="none" stroke="${stroke}" stroke-width="1.6"/></svg>`,
+        cat: `<svg viewBox="0 0 64 64"><path d="M18 26 L14 12 L26 19 Z" fill="var(--bg-subtle)" stroke="${stroke}" stroke-width="1.6"/><path d="M46 26 L50 12 L38 19 Z" fill="var(--bg-subtle)" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="38" rx="18" ry="16" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><circle cx="24" cy="35" r="2" fill="${stroke}"/><circle cx="40" cy="35" r="2" fill="${stroke}"/><path d="M29 41 Q32 44 35 41" fill="none" stroke="${stroke}" stroke-width="1.6"/></svg>`,
+        bunny: `<svg viewBox="0 0 64 64"><ellipse cx="23" cy="16" rx="4.5" ry="13" transform="rotate(-15 23 16)" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="41" cy="16" rx="4.5" ry="13" transform="rotate(15 41 16)" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="40" rx="17" ry="15" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><circle cx="25" cy="38" r="2" fill="${stroke}"/><circle cx="39" cy="38" r="2" fill="${stroke}"/></svg>`,
+        shiba: `<svg viewBox="0 0 64 64"><path d="M18 25 L16 12 L28 19 Z" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><path d="M46 25 L48 12 L36 19 Z" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="38" rx="18" ry="16" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="44" rx="11" ry="9" fill="var(--bg-card)"/><circle cx="25" cy="34" r="2" fill="${stroke}"/><circle cx="39" cy="34" r="2" fill="${stroke}"/></svg>`,
         hedgehog: `<svg viewBox="0 0 64 64"><path d="M12 42 C12 20, 52 20, 52 42 Z" fill="var(--bg-subtle)" stroke="${stroke}" stroke-width="1.6" stroke-dasharray="4 2"/><ellipse cx="32" cy="43" rx="17" ry="11" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><circle cx="24" cy="41" r="2" fill="${stroke}"/><circle cx="40" cy="41" r="2" fill="${stroke}"/></svg>`,
-        corgi: `<svg viewBox="0 0 64 64"><ellipse cx="18" cy="18" rx="5.5" ry="10" transform="rotate(-15 18 18)" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="46" cy="18" rx="5.5" ry="10" transform="rotate(15 46 18)" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="39" rx="18" ry="15" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><path d="M28 24 H36 L34 44 H30 Z" fill="var(--bg-card)"/><circle cx="25" cy="35" r="2" fill="${stroke}"/><circle cx="39" cy="35" r="2" fill="${stroke}"/></svg>`,
-        owl: `<svg viewBox="0 0 64 64"><ellipse cx="32" cy="36" rx="17" ry="18" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><circle cx="25" cy="32" r="6" fill="none" stroke="${sage}" stroke-width="1.8"/><circle cx="39" cy="32" r="6" fill="none" stroke="${sage}" stroke-width="1.8"/><circle cx="25" cy="32" r="2" fill="${stroke}"/><circle cx="39" cy="32" r="2" fill="${stroke}"/><polygon points="30,38 34,38 32,42" fill="${warm}"/></svg>`,
-        fox: `<svg viewBox="0 0 64 64"><path d="M16 26 L14 12 L28 20 Z" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><path d="M48 26 L50 12 L36 20 Z" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="38" rx="18" ry="15" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><path d="M14 40 Q32 54 50 40 Q42 54 32 54 Q22 54 14 40 Z" fill="var(--bg-card)"/><circle cx="25" cy="34" r="2" fill="${stroke}"/><circle cx="39" cy="34" r="2" fill="${stroke}"/></svg>`,
-        samoyed: `<svg viewBox="0 0 64 64"><path d="M18 24 L18 13 L28 19 Z" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><path d="M46 24 L46 13 L36 19 Z" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><circle cx="32" cy="38" r="18" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><circle cx="25" cy="34" r="2" fill="${stroke}"/><circle cx="39" cy="34" r="2" fill="${stroke}"/><path d="M28 41 Q32 45 36 41" fill="none" stroke="${stroke}" stroke-width="1.6"/></svg>`,
-        otter: `<svg viewBox="0 0 64 64"><circle cx="18" cy="28" r="4" fill="#A3836B" stroke="${stroke}" stroke-width="1.6"/><circle cx="46" cy="28" r="4" fill="#A3836B" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="38" rx="18" ry="14" fill="#A3836B" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="41" rx="11" ry="8" fill="var(--bg-subtle)"/><circle cx="25" cy="35" r="2" fill="${stroke}"/><circle cx="39" cy="35" r="2" fill="${stroke}"/><ellipse cx="32" cy="39" rx="3" ry="2" fill="${stroke}"/></svg>`,
-        deer: `<svg viewBox="0 0 64 64"><path d="M25 20 L21 9 M21 14 L17 12 M39 20 L43 9 M43 14 L47 12" stroke="${sage}" stroke-width="1.8" stroke-linecap="round"/><ellipse cx="32" cy="39" rx="16" ry="16" fill="#D4B28C" stroke="${stroke}" stroke-width="1.6"/><circle cx="26" cy="36" r="2" fill="${stroke}"/><circle cx="38" cy="36" r="2" fill="${stroke}"/><circle cx="32" cy="43" r="2" fill="${stroke}"/></svg>`,
-        capybara: `<svg viewBox="0 0 64 64"><circle cx="32" cy="18" r="4" fill="${warm}" stroke="${stroke}" stroke-width="1.5"/><path d="M32 14 V10" stroke="${sage}" stroke-width="1.8"/><rect x="14" y="24" width="36" height="26" rx="12" fill="#B0835F" stroke="${stroke}" stroke-width="1.6"/><line x1="22" y1="34" x2="28" y2="34" stroke="${stroke}" stroke-width="1.8"/><line x1="36" y1="34" x2="42" y2="34" stroke="${stroke}" stroke-width="1.8"/></svg>`,
-        ragdoll: `<svg viewBox="0 0 64 64"><path d="M18 28 Q14 18 24 20" fill="var(--bg-subtle)" stroke="${stroke}" stroke-width="1.6"/><path d="M46 28 Q50 18 40 20" fill="var(--bg-subtle)" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="38" rx="19" ry="15" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><circle cx="25" cy="35" r="2.2" fill="${sage}"/><circle cx="39" cy="35" r="2.2" fill="${sage}"/></svg>`,
-        penguin: `<svg viewBox="0 0 64 64"><ellipse cx="32" cy="36" rx="16" ry="18" fill="#2C3033" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="39" rx="11" ry="13" fill="var(--bg-card)"/><path d="M18 45 Q32 50 46 45" fill="none" stroke="${sage}" stroke-width="3.5"/><circle cx="26" cy="32" r="2" fill="${stroke}"/><circle cx="38" cy="32" r="2" fill="${stroke}"/><polygon points="30,35 34,35 32,39" fill="${warm}"/></svg>`,
-        seal: `<svg viewBox="0 0 64 64"><ellipse cx="32" cy="40" rx="20" ry="13" fill="var(--bg-subtle)" stroke="${stroke}" stroke-width="1.6"/><circle cx="25" cy="36" r="2.2" fill="${stroke}"/><circle cx="39" cy="36" r="2.2" fill="${stroke}"/><path d="M29 42 Q32 45 35 42" fill="none" stroke="${stroke}" stroke-width="1.6"/></svg>`
+        corgi: `<svg viewBox="0 0 64 64"><ellipse cx="18" cy="18" rx="5.5" ry="10" transform="rotate(-15 18 18)" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="46" cy="18" rx="5.5" ry="10" transform="rotate(15 46 18)" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="39" rx="18" ry="15" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><circle cx="25" cy="35" r="2" fill="${stroke}"/><circle cx="39" cy="35" r="2" fill="${stroke}"/></svg>`,
+        owl: `<svg viewBox="0 0 64 64"><ellipse cx="32" cy="36" rx="17" ry="18" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><circle cx="25" cy="32" r="6" fill="none" stroke="${sage}" stroke-width="1.8"/><circle cx="39" cy="32" r="6" fill="none" stroke="${sage}" stroke-width="1.8"/><circle cx="25" cy="32" r="2" fill="${stroke}"/><circle cx="39" cy="32" r="2" fill="${stroke}"/></svg>`,
+        fox: `<svg viewBox="0 0 64 64"><path d="M16 26 L14 12 L28 20 Z" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><path d="M48 26 L50 12 L36 20 Z" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="38" rx="18" ry="15" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><circle cx="25" cy="34" r="2" fill="${stroke}"/><circle cx="39" cy="34" r="2" fill="${stroke}"/></svg>`,
+        samoyed: `<svg viewBox="0 0 64 64"><path d="M18 24 L18 13 L28 19 Z" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><path d="M46 24 L46 13 L36 19 Z" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><circle cx="32" cy="38" r="18" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><circle cx="25" cy="34" r="2" fill="${stroke}"/><circle cx="39" cy="34" r="2" fill="${stroke}"/></svg>`,
+        otter: `<svg viewBox="0 0 64 64"><circle cx="18" cy="28" r="4" fill="#A3836B" stroke="${stroke}" stroke-width="1.6"/><circle cx="46" cy="28" r="4" fill="#A3836B" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="38" rx="18" ry="14" fill="#A3836B" stroke="${stroke}" stroke-width="1.6"/><circle cx="25" cy="35" r="2" fill="${stroke}"/><circle cx="39" cy="35" r="2" fill="${stroke}"/></svg>`,
+        deer: `<svg viewBox="0 0 64 64"><path d="M25 20 L21 9 M39 20 L43 9" stroke="${sage}" stroke-width="1.8" stroke-linecap="round"/><ellipse cx="32" cy="39" rx="16" ry="16" fill="#D4B28C" stroke="${stroke}" stroke-width="1.6"/><circle cx="26" cy="36" r="2" fill="${stroke}"/><circle cx="38" cy="36" r="2" fill="${stroke}"/></svg>`,
+        capybara: `<svg viewBox="0 0 64 64"><rect x="14" y="24" width="36" height="26" rx="12" fill="#B0835F" stroke="${stroke}" stroke-width="1.6"/><circle cx="22" cy="34" r="2" fill="${stroke}"/><circle cx="42" cy="34" r="2" fill="${stroke}"/></svg>`,
+        ragdoll: `<svg viewBox="0 0 64 64"><ellipse cx="32" cy="38" rx="19" ry="15" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><circle cx="25" cy="35" r="2.2" fill="${sage}"/><circle cx="39" cy="35" r="2.2" fill="${sage}"/></svg>`,
+        penguin: `<svg viewBox="0 0 64 64"><ellipse cx="32" cy="36" rx="16" ry="18" fill="#2C3033" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="39" rx="11" ry="13" fill="var(--bg-card)"/><circle cx="26" cy="32" r="2" fill="${stroke}"/><circle cx="38" cy="32" r="2" fill="${stroke}"/></svg>`,
+        seal: `<svg viewBox="0 0 64 64"><ellipse cx="32" cy="40" rx="20" ry="13" fill="var(--bg-subtle)" stroke="${stroke}" stroke-width="1.6"/><circle cx="25" cy="36" r="2.2" fill="${stroke}"/><circle cx="39" cy="36" r="2.2" fill="${stroke}"/></svg>`
       };
       return svgs[id] || svgs.cat;
     }
@@ -1046,12 +1078,12 @@
 
       let layers = '';
       if (state.houseLv === 1) {
-        layers += `<path d="M40 156 Q80 136 120 156 Q80 170 40 156 Z" fill="var(--bg-subtle)" stroke="var(--ink)" stroke-width="1.6"/>`;
+        layers += `<path d="M50 280 Q120 250 190 280 Q120 300 50 280 Z" fill="var(--bg-subtle)" stroke="var(--ink)" stroke-width="1.6"/>`;
       } else {
-        layers += `<rect x="36" y="90" width="80" height="70" fill="var(--bg-card)" stroke="var(--ink)" stroke-width="1.6"/><polygon points="26,90 76,50 126,90" fill="var(--bg-subtle)" stroke="var(--ink)" stroke-width="1.6"/>`;
+        layers += `<rect x="40" y="180" width="100" height="110" fill="var(--bg-card)" stroke="var(--ink)" stroke-width="1.6"/><polygon points="30,180 90,120 150,180" fill="var(--bg-subtle)" stroke="var(--ink)" stroke-width="1.6"/>`;
       }
       if (hasPond) {
-        layers += `<ellipse cx="320" cy="130" rx="55" ry="24" fill="var(--bg-card)" stroke="var(--sage)" stroke-width="1.6"/>`;
+        layers += `<ellipse cx="290" cy="240" rx="75" ry="36" fill="var(--bg-card)" stroke="var(--sage)" stroke-width="1.6"/>`;
       }
       svg.innerHTML = layers;
     }
@@ -1073,8 +1105,8 @@
         const isWater = meta && meta.habitat === 'water';
         return {
           id,
-          x: isWater ? (72 + Math.random() * 20) : (18 + Math.random() * 40),
-          y: 55 + Math.random() * 32,
+          x: isWater ? (68 + Math.random() * 22) : (15 + Math.random() * 50),
+          y: 40 + Math.random() * 48,
           state: isWater ? 'swim' : 'idle',
           bubble: '',
           dragging: false
@@ -1083,7 +1115,7 @@
 
       layer.innerHTML = '';
       if (petRuntime.length === 0) {
-        layer.innerHTML = `<div style="position:absolute; top:40%; left:50%; transform:translate(-50%,-50%); font-size:12px; color:var(--ink-muted); text-align:center; pointer-events:none;">庭院尚無小夥伴出場<br>點擊右上「靈寵與商店」勾選你想帶出來的小動物！</div>`;
+        layer.innerHTML = `<div style="position:absolute; top:45%; left:50%; transform:translate(-50%,-50%); font-size:12px; color:var(--ink-muted); text-align:center; pointer-events:none;">大草皮上尚無小夥伴出場<br>點擊右上「靈寵與商店」勾選你想帶出來的小動物！</div>`;
         return;
       }
 
@@ -1116,8 +1148,8 @@
         const rect = arena.getBoundingClientRect();
         const cx = e.touches ? e.touches[0].clientX : e.clientX;
         const cy = e.touches ? e.touches[0].clientY : e.clientY;
-        pObj.x = Math.max(10, Math.min(90, ((cx - rect.left) / rect.width) * 100));
-        pObj.y = Math.max(25, Math.min(90, ((cy - rect.top) / rect.height) * 100));
+        pObj.x = Math.max(8, Math.min(92, ((cx - rect.left) / rect.width) * 100));
+        pObj.y = Math.max(15, Math.min(92, ((cy - rect.top) / rect.height) * 100));
         el.style.left = `${pObj.x}%`;
         el.style.top = `${pObj.y}%`;
       };
@@ -1131,11 +1163,11 @@
           speakLine('pet');
           return;
         }
-        if (meta && meta.habitat === 'water' && pObj.x < 62) {
+        if (meta && meta.habitat === 'water' && pObj.x < 58) {
           showPetBubble(pObj, '💦 好熱！滑回水池');
           speakLine('waterPetWarn');
           setTimeout(() => {
-            pObj.x = 75 + Math.random() * 15;
+            pObj.x = 72 + Math.random() * 18;
             el.style.left = `${pObj.x}%`;
           }, 600);
         }
@@ -1167,19 +1199,19 @@
           const meta = PET_CATALOG.find(m => m.id === p.id);
           const isWater = meta && meta.habitat === 'water';
           if (isWater) {
-            p.x = 68 + Math.random() * 24;
-            p.y = 50 + Math.random() * 35;
+            p.x = 65 + Math.random() * 26;
+            p.y = 35 + Math.random() * 52;
           } else {
-            p.x = 15 + Math.random() * 42;
-            p.y = 55 + Math.random() * 32;
+            p.x = 12 + Math.random() * 52;
+            p.y = 30 + Math.random() * 58;
           }
-          const el = document.getElementById(`pet-dom-${p.id}`) || document.querySelector(`#pet-layer .pet-entity:nth-child(${petRuntime.indexOf(p)+1})`);
+          const el = document.querySelector(`#pet-layer .pet-entity:nth-child(${petRuntime.indexOf(p)+1})`);
           if (el) {
             el.style.left = `${p.x}%`;
             el.style.top = `${p.y}%`;
           }
         });
-      }, 4000);
+      }, 4500);
     }
 
     /* ==================== SHOP & MODALS ==================== */
@@ -1570,17 +1602,6 @@
       if (!state.calEvents[calSel]) state.calEvents[calSel] = [];
       state.calEvents[calSel].push({ text: inp.value.trim() });
       inp.value = ''; saveState(); renderCalendar();
-    }
-
-    /* ==================== BLIND BOX ==================== */
-    function openBlindBox() {
-      document.getElementById('blindbox-modal').classList.add('open');
-    }
-    function handleBlindBoxAction() {
-      addRewards({ exp: 20, gold: 20 });
-      saveState(); renderAll(); speakLine('done');
-      closeModal('blindbox-modal');
-      alert('盲盒開啟成功：獲得 +20 金幣與 +20 EXP！');
     }
 
     /* ==================== NAVIGATION & VIEWS ==================== */
