@@ -1,17 +1,18 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" data-theme="oatmeal">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="重生系統" />
-  <title>當我重生後獲得一套系統 v4.6</title>
+  <title>當我重生後獲得一套系統 v4.6.1</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+TC:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root {
+    /* Theme Color Palettes */
+    :root[data-theme="oatmeal"] {
       --bg-paper: #F7F5F0;
       --bg-card: #FCFBF8;
       --bg-subtle: #EFECE6;
@@ -26,13 +27,54 @@
       --border-strong: #C5BDB0;
       --accent-warm: #B87D4B;
       --accent-danger: #B5544A;
-      --font-serif: 'Noto Serif TC', Georgia, serif;
-      --font-sans: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif;
-      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
-      --radius-lg: 16px;
-      --radius-md: 12px;
-      --radius-sm: 8px;
-      --shadow-card: 0 2px 10px rgba(38, 37, 35, 0.035);
+    }
+    :root[data-theme="darkink"] {
+      --bg-paper: #18191A;
+      --bg-card: #242526;
+      --bg-subtle: #3A3B3C;
+      --bg-water: #1F2C24;
+      --sage: #5A8F76;
+      --sage-light: #2A3B32;
+      --sage-dark: #82C2A4;
+      --ink: #E4E6EB;
+      --ink-muted: #B0B3B8;
+      --ink-faint: #606266;
+      --border: #3E4042;
+      --border-strong: #505256;
+      --accent-warm: #D99B6A;
+      --accent-danger: #E06D63;
+    }
+    :root[data-theme="apricot"] {
+      --bg-paper: #FAF6F0;
+      --bg-card: #FFFDF9;
+      --bg-subtle: #F2EAE1;
+      --bg-water: #F4ECE6;
+      --sage: #A66B5B;
+      --sage-light: #F4E8E4;
+      --sage-dark: #7A4B3E;
+      --ink: #332926;
+      --ink-muted: #7A6C67;
+      --ink-faint: #B0A29C;
+      --border: #E6D8CE;
+      --border-strong: #D1BFB3;
+      --accent-warm: #D9825B;
+      --accent-danger: #C24A3D;
+    }
+    :root[data-theme="ocean"] {
+      --bg-paper: #F2F5F8;
+      --bg-card: #FAFAFC;
+      --bg-subtle: #E2E8F0;
+      --bg-water: #E2ECF4;
+      --sage: #4A7C9D;
+      --sage-light: #E2EDF5;
+      --sage-dark: #2C526F;
+      --ink: #1E293B;
+      --ink-muted: #64748B;
+      --ink-faint: #94A3B8;
+      --border: #CBD5E1;
+      --border-strong: #94A3B8;
+      --accent-warm: #D97706;
+      --accent-danger: #DC2626;
     }
 
     * {
@@ -40,30 +82,26 @@
       -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
-
-    input, textarea, select {
-      user-select: text;
-    }
+    input, textarea, select { user-select: text; }
 
     body {
       margin: 0;
       padding: 0;
       background-color: var(--bg-paper);
-      background-image: radial-gradient(rgba(94, 127, 107, 0.08) 1px, transparent 0);
-      background-size: 20px 20px;
       color: var(--ink);
-      font-family: var(--font-sans);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif;
       font-size: 14px;
       line-height: 1.5;
       padding-top: env(safe-area-inset-top);
       padding-bottom: calc(82px + env(safe-area-inset-bottom));
       overflow-x: hidden;
+      transition: background-color 0.3s, color 0.3s;
     }
 
-    .mono { font-family: var(--font-mono); }
-    .serif { font-family: var(--font-serif); }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .serif { font-family: 'Noto Serif TC', serif; }
 
-    /* Top Undo Toast Banner */
+    /* Top Undo Toast */
     #undo-toast {
       position: fixed;
       top: calc(12px + env(safe-area-inset-top));
@@ -71,20 +109,17 @@
       transform: translateX(-50%) translateY(-120px);
       z-index: 9999;
       background: var(--ink);
-      color: #F7F5F0;
+      color: var(--bg-paper);
       padding: 10px 14px;
       border-radius: 999px;
       display: flex;
       align-items: center;
       gap: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
       transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
-      max-width: 92vw;
       font-size: 13px;
     }
-    #undo-toast.show {
-      transform: translateX(-50%) translateY(0);
-    }
+    #undo-toast.show { transform: translateX(-50%) translateY(0); }
     #undo-toast button {
       background: var(--sage);
       color: #fff;
@@ -94,265 +129,102 @@
       font-size: 12px;
       font-weight: 600;
       cursor: pointer;
-      white-space: nowrap;
     }
 
-    /* Main Container */
-    .app-shell {
-      max-width: 480px;
-      margin: 0 auto;
-      padding: 14px 16px 24px;
-    }
+    .app-shell { max-width: 480px; margin: 0 auto; padding: 14px 16px 24px; }
 
-    /* Header */
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-    .brand-title {
-      font-family: var(--font-serif);
-      font-size: 17px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .ver-pill {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      padding: 2px 6px;
-      border: 1px solid var(--border-strong);
-      border-radius: 999px;
-      color: var(--ink-muted);
-      background: var(--bg-card);
-    }
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .icon-btn {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      color: var(--ink);
-      border-radius: 10px;
-      padding: 6px 10px;
-      font-size: 12px;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .icon-btn:active {
-      transform: scale(0.96);
-      background: var(--bg-subtle);
-    }
+    /* Top Bar */
+    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .brand-title { font-family: var(--font-serif); font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+    .ver-pill { font-family: var(--font-mono); font-size: 10px; padding: 2px 6px; border: 1px solid var(--border-strong); border-radius: 999px; color: var(--ink-muted); background: var(--bg-card); }
+    .top-actions { display: flex; align-items: center; gap: 8px; }
+    .icon-btn { background: var(--bg-card); border: 1px solid var(--border); color: var(--ink); border-radius: 10px; padding: 6px 10px; font-size: 12px; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+    .icon-btn:active { transform: scale(0.96); background: var(--bg-subtle); }
 
-    /* Card Base */
-    .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 14px;
-      margin-bottom: 12px;
-      box-shadow: var(--shadow-card);
-    }
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    .card-title {
-      font-family: var(--font-serif);
-      font-size: 15px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+    /* Card */
+    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.035); }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .card-title { font-family: var(--font-serif); font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
 
-    /* Status & Economy Strip */
-    .status-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-    .stat-box {
-      background: var(--bg-paper);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 7px 6px;
-      text-align: center;
-      cursor: pointer;
-      transition: border-color 0.15s;
-    }
-    .stat-box:active { border-color: var(--sage); }
-    .stat-label {
-      font-size: 11px;
-      color: var(--ink-muted);
-      display: block;
-    }
-    .stat-val {
-      font-family: var(--font-mono);
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--ink);
-    }
+    /* Status Grid */
+    .status-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 10px; }
+    .stat-box { background: var(--bg-paper); border: 1px solid var(--border); border-radius: 8px; padding: 7px 6px; text-align: center; cursor: pointer; }
+    .stat-label { font-size: 11px; color: var(--ink-muted); display: block; }
+    .stat-val { font-family: var(--font-mono); font-size: 14px; font-weight: 600; color: var(--ink); }
     .stat-val.gold { color: var(--accent-warm); }
     .stat-val.sage { color: var(--sage-dark); }
 
-    .exp-bar-wrap {
-      margin-bottom: 10px;
-    }
-    .exp-meta {
-      display: flex;
-      justify-content: space-between;
-      font-size: 11px;
-      color: var(--ink-muted);
-      margin-bottom: 4px;
-    }
-    .progress-track {
-      height: 6px;
-      background: var(--bg-subtle);
-      border-radius: 999px;
-      overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      background: var(--sage);
-      border-radius: 999px;
-      transition: width 0.35s ease;
-    }
+    .exp-bar-wrap { margin-bottom: 10px; }
+    .exp-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--ink-muted); margin-bottom: 4px; }
+    .progress-track { height: 6px; background: var(--bg-subtle); border-radius: 999px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--sage); border-radius: 999px; transition: width 0.35s ease; }
 
-    /* 5 Attributes Pills */
-    .attrs-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 4px;
-      padding-top: 8px;
-      border-top: 1px dashed var(--border);
-    }
-    .attr-pill {
-      flex: 1;
-      text-align: center;
-      font-size: 11px;
-      background: var(--bg-paper);
-      padding: 4px 2px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-    }
-    .attr-pill span {
-      font-family: var(--font-mono);
-      font-weight: 600;
-      color: var(--sage-dark);
-      margin-left: 2px;
-    }
-
-    /* Sanctuary Interactive Canvas */
-    .sanctuary-card {
-      padding: 12px;
+    /* Polygon Radar Chart Container */
+    .radar-container {
       position: relative;
-      overflow: hidden;
-    }
-    .sanctuary-top {
+      width: 100%;
+      height: 150px;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
-      margin-bottom: 8px;
+      margin-top: 4px;
+      border-top: 1px dashed var(--border);
+      padding-top: 8px;
     }
-    .sanctuary-badge {
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: var(--sage-light);
-      color: var(--sage-dark);
-      border: 1px solid rgba(94, 127, 107, 0.25);
-      font-weight: 500;
+    .radar-container svg { width: 140px; height: 140px; overflow: visible; }
+
+    /* Sanctuary Entry Card */
+    .sanctuary-entry-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      background: var(--bg-paper);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: border-color 0.15s;
     }
+    .sanctuary-entry-card:active { border-color: var(--sage); }
+
+    /* Full-screen Sanctuary Page (Hidden by default unless switched) */
+    .page-view { display: none; }
+    .page-view.active { display: block; }
+
     .sanctuary-arena {
       position: relative;
       width: 100%;
-      height: 168px;
-      border-radius: var(--radius-md);
+      height: 210px;
+      border-radius: 12px;
       border: 1px solid var(--border);
-      background: linear-gradient(180deg, #F9F8F4 0%, #F1EFE8 100%);
+      background: linear-gradient(180deg, var(--bg-paper) 0%, var(--bg-subtle) 100%);
       overflow: hidden;
       touch-action: none;
+      margin-bottom: 10px;
     }
     .sanctuary-arena.has-water {
-      background: linear-gradient(90deg, #F4F2EB 0%, #F4F2EB 61%, #E6F0EC 63%, #E2EDE9 100%);
+      background: linear-gradient(90deg, var(--bg-paper) 0%, var(--bg-paper) 60%, var(--bg-water) 62%, var(--bg-water) 100%);
     }
-    .arena-bg-svg {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-    }
+    .arena-bg-svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
     .pet-entity {
       position: absolute;
-      width: 44px;
-      height: 44px;
-      margin-left: -22px;
-      margin-top: -22px;
+      width: 54px;
+      height: 54px;
+      margin-left: -27px;
+      margin-top: -27px;
       cursor: grab;
       z-index: 10;
-      transition: left 1.8s cubic-bezier(0.25, 0.8, 0.25, 1), top 1.8s cubic-bezier(0.25, 0.8, 0.25, 1);
-      will-change: left, top, transform;
+      transition: left 1.5s ease, top 1.5s ease;
     }
-    .pet-entity.dragging {
-      cursor: grabbing;
-      transition: none !important;
-      z-index: 50;
-      transform: scale(1.16) rotate(-6deg);
-    }
-    .pet-body-anim {
-      width: 100%;
-      height: 100%;
-      animation: petBreathe 2.8s ease-in-out infinite;
-    }
-    .pet-entity.state-sleep .pet-body-anim {
-      animation: petSleep 3.6s ease-in-out infinite;
-    }
-    .pet-entity.state-groom .pet-body-anim {
-      animation: petGroom 0.9s ease-in-out infinite;
-    }
-    .pet-entity.state-swim .pet-body-anim {
-      animation: petSwim 2.2s ease-in-out infinite;
-    }
-    .pet-entity.state-happy .pet-body-anim {
-      animation: petHappy 0.45s ease-in-out 3;
-    }
+    .pet-entity.dragging { cursor: grabbing; transition: none !important; z-index: 50; transform: scale(1.15); }
+    .pet-body-anim { width: 100%; height: 100%; animation: petBreathe 3s ease-in-out infinite; }
     @keyframes petBreathe {
       0%, 100% { transform: translateY(0) scaleY(1); }
       50% { transform: translateY(-2px) scaleY(1.03); }
     }
-    @keyframes petSleep {
-      0%, 100% { transform: scale(0.95) translateY(2px); }
-      50% { transform: scale(0.98, 0.92) translateY(3px); }
-    }
-    @keyframes petGroom {
-      0%, 100% { transform: rotate(0deg); }
-      35% { transform: rotate(-10deg) translateY(-1px); }
-      70% { transform: rotate(8deg); }
-    }
-    @keyframes petSwim {
-      0%, 100% { transform: translateY(0) rotate(-3deg); }
-      50% { transform: translateY(-4px) rotate(4deg); }
-    }
-    @keyframes petHappy {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
     .pet-bubble {
       position: absolute;
-      bottom: 44px;
+      bottom: 52px;
       left: 50%;
       transform: translateX(-50%);
       background: var(--bg-card);
@@ -363,450 +235,106 @@
       border-radius: 999px;
       white-space: nowrap;
       box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-      pointer-events: none;
       opacity: 0;
       transition: opacity 0.25s;
+      pointer-events: none;
     }
-    .pet-bubble.visible {
-      opacity: 1;
-    }
-    .sanctuary-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 8px;
-      font-size: 11px;
-      color: var(--ink-muted);
-    }
+    .pet-bubble.visible { opacity: 1; }
 
-    /* Buttons & Pills */
-    .btn {
-      border: 1px solid var(--border-strong);
-      background: var(--bg-card);
-      color: var(--ink);
-      padding: 6px 11px;
-      border-radius: var(--radius-sm);
-      font-size: 12px;
-      font-weight: 500;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      transition: all 0.15s;
-    }
+    /* Buttons & Controls */
+    .btn { border: 1px solid var(--border-strong); background: var(--bg-card); color: var(--ink); padding: 6px 11px; border-radius: 8px; font-size: 12px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 4px; }
     .btn:active { transform: scale(0.97); }
-    .btn-primary {
-      background: var(--sage);
-      border-color: var(--sage);
-      color: #fff;
-    }
-    .btn-primary:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-    }
-    .btn-sm {
-      padding: 4px 8px;
-      font-size: 11px;
-    }
-    .seg-control {
-      display: inline-flex;
-      background: var(--bg-subtle);
-      padding: 2px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-    }
-    .seg-btn {
-      border: none;
-      background: transparent;
-      padding: 3px 9px;
-      font-size: 11px;
-      border-radius: 6px;
-      color: var(--ink-muted);
-      cursor: pointer;
-    }
-    .seg-btn.active {
-      background: var(--bg-card);
-      color: var(--ink);
-      font-weight: 600;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-    }
+    .btn-primary { background: var(--sage); border-color: var(--sage); color: #fff; }
+    .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-sm { padding: 4px 8px; font-size: 11px; }
 
-    /* Task & Habit List */
-    .task-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 9px 10px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      background: var(--bg-paper);
-      margin-bottom: 7px;
-      transition: all 0.2s;
-    }
-    .task-item.done {
-      opacity: 0.58;
-      background: var(--bg-subtle);
-    }
-    .task-left {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      flex: 1;
-      min-width: 0;
-    }
-    .check-circle {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      border: 1.5px solid var(--sage);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      cursor: pointer;
-      background: var(--bg-card);
-    }
-    .task-item.done .check-circle {
-      background: var(--sage);
-      color: #fff;
-    }
-    .task-text {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--ink);
-      word-break: break-word;
-    }
-    .task-item.done .task-text {
-      text-decoration: line-through;
-      color: var(--ink-muted);
-    }
-    .task-sub {
-      font-size: 11px;
-      color: var(--ink-muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 2px;
-    }
-    .tag-pill {
-      font-size: 10px;
-      padding: 1px 6px;
-      border-radius: 999px;
-      border: 1px solid var(--border-strong);
-      color: var(--ink-muted);
-      background: var(--bg-card);
-      white-space: nowrap;
-    }
-    .tag-pill.freq-basic {
-      border-color: var(--sage);
-      color: var(--sage-dark);
-      background: var(--sage-light);
-    }
-    .tag-pill.freq-core {
-      border-color: #B8A992;
-      color: #6B5B45;
-      background: #F3EFE8;
-    }
-    .tag-pill.freq-rare {
-      border-color: #C4BFC9;
-      color: #655E6E;
-      background: #F2F0F5;
-    }
+    .seg-control { display: inline-flex; background: var(--bg-subtle); padding: 2px; border-radius: 8px; border: 1px solid var(--border); }
+    .seg-btn { border: none; background: transparent; padding: 3px 9px; font-size: 11px; border-radius: 6px; color: var(--ink-muted); cursor: pointer; }
+    .seg-btn.active { background: var(--bg-card); color: var(--ink); font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
 
-    /* Hydration Tracker */
-    .water-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    .water-cups {
-      display: flex;
-      gap: 4px;
-      flex-wrap: wrap;
-      margin-top: 6px;
-    }
-    .cup-dot {
-      width: 18px;
-      height: 22px;
-      border: 1.5px solid var(--border-strong);
-      border-radius: 3px 3px 6px 6px;
-      position: relative;
-      overflow: hidden;
-    }
-    .cup-dot.filled {
-      border-color: var(--sage);
-      background: var(--sage-light);
-    }
-    .cup-dot.filled::after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 75%;
-      background: var(--sage);
-      opacity: 0.7;
-    }
+    /* Task & Habit */
+    .task-item { display: flex; align-items: center; justify-content: space-between; padding: 9px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-paper); margin-bottom: 7px; }
+    .task-item.done { opacity: 0.58; background: var(--bg-subtle); }
+    .task-left { display: flex; align-items: center; gap: 9px; flex: 1; min-width: 0; }
+    .check-circle { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--sage); display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer; background: var(--bg-card); }
+    .task-item.done .check-circle { background: var(--sage); color: #fff; }
+    .task-text { font-size: 13px; font-weight: 500; color: var(--ink); word-break: break-word; }
+    .task-item.done .task-text { text-decoration: line-through; color: var(--ink-muted); }
+    .task-sub { font-size: 11px; color: var(--ink-muted); display: flex; align-items: center; gap: 6px; margin-top: 2px; }
 
-    /* Vocab Card */
-    .vocab-card {
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 10px 12px;
-      background: var(--bg-paper);
-      margin-bottom: 8px;
-    }
-    .vocab-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 6px;
-    }
-    .vocab-word {
-      font-family: var(--font-serif);
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--ink);
-    }
-    .vocab-phonetic {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--ink-muted);
-    }
-    .vocab-zh {
-      font-size: 13px;
-      color: var(--sage-dark);
-      font-weight: 600;
-      margin: 3px 0;
-    }
-    .vocab-ex {
-      font-size: 12px;
-      color: var(--ink-muted);
-      border-left: 2px solid var(--border-strong);
-      padding-left: 8px;
-      margin-top: 5px;
-    }
+    .tag-pill { font-size: 10px; padding: 1px 6px; border-radius: 999px; border: 1px solid var(--border-strong); color: var(--ink-muted); background: var(--bg-card); }
+    .tag-pill.freq-basic { border-color: var(--sage); color: var(--sage-dark); background: var(--sage-light); }
+    .tag-pill.freq-core { border-color: #B8A992; color: #6B5B45; background: #F3EFE8; }
+    .tag-pill.freq-rare { border-color: #C4BFC9; color: #655E6E; background: #F2F0F5; }
 
-    /* Quiz Box */
-    .quiz-box {
-      border: 1px solid var(--sage);
-      background: var(--bg-card);
-      border-radius: var(--radius-md);
-      padding: 14px;
-      margin-top: 12px;
-    }
-    .quiz-opt {
-      width: 100%;
-      text-align: left;
-      padding: 9px 12px;
-      margin-top: 6px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border);
-      background: var(--bg-paper);
-      color: var(--ink);
-      font-size: 13px;
-      cursor: pointer;
-    }
-    .quiz-opt.correct {
-      background: var(--sage-light);
-      border-color: var(--sage);
-      color: var(--sage-dark);
-      font-weight: 600;
-    }
-    .quiz-opt.wrong {
-      background: #F8E8E6;
-      border-color: var(--accent-danger);
-      color: var(--accent-danger);
-    }
+    /* Hydration & Vocab */
+    .water-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .water-cups { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+    .cup-dot { width: 18px; height: 22px; border: 1.5px solid var(--border-strong); border-radius: 3px 3px 6px 6px; position: relative; overflow: hidden; }
+    .cup-dot.filled { border-color: var(--sage); background: var(--sage-light); }
+    .cup-dot.filled::after { content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 75%; background: var(--sage); opacity: 0.7; }
 
-    /* Focus Timer */
-    .timer-display {
-      font-family: var(--font-mono);
-      font-size: 44px;
-      font-weight: 600;
-      text-align: center;
-      letter-spacing: 2px;
-      margin: 16px 0;
-      color: var(--ink);
-    }
+    .vocab-card { border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; background: var(--bg-paper); margin-bottom: 8px; }
+    .vocab-head { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+    .vocab-word { font-family: var(--font-serif); font-size: 16px; font-weight: 700; color: var(--ink); }
+    .vocab-phonetic { font-family: var(--font-mono); font-size: 11px; color: var(--ink-muted); }
+    .vocab-zh { font-size: 13px; color: var(--sage-dark); font-weight: 600; margin: 3px 0; }
+    .vocab-ex { font-size: 12px; color: var(--ink-muted); border-left: 2px solid var(--border-strong); padding-left: 8px; margin-top: 5px; }
 
-    /* Calendar Grid */
-    .cal-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 4px;
-      text-align: center;
-    }
-    .cal-dow {
-      font-size: 11px;
-      color: var(--ink-muted);
-      padding-bottom: 4px;
-    }
-    .cal-day {
-      aspect-ratio: 1;
-      border-radius: 8px;
-      border: 1px solid transparent;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-mono);
-      font-size: 12px;
-      cursor: pointer;
-      position: relative;
-      background: var(--bg-paper);
-    }
-    .cal-day.empty {
-      background: transparent;
-      cursor: default;
-    }
-    .cal-day.today {
-      border-color: var(--sage);
-      font-weight: 700;
-      color: var(--sage-dark);
-    }
-    .cal-day.selected {
-      background: var(--sage);
-      color: #fff;
-    }
-    .cal-dot {
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      background: var(--accent-warm);
-      margin-top: 2px;
-    }
+    .quiz-box { border: 1px solid var(--sage); background: var(--bg-card); border-radius: 12px; padding: 14px; margin-top: 12px; }
+    .quiz-opt { width: 100%; text-align: left; padding: 9px 12px; margin-top: 6px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-paper); color: var(--ink); font-size: 13px; cursor: pointer; }
+    .quiz-opt.correct { background: var(--sage-light); border-color: var(--sage); color: var(--sage-dark); font-weight: 600; }
+    .quiz-opt.wrong { background: #F8E8E6; border-color: var(--accent-danger); color: var(--accent-danger); }
+
+    .timer-display { font-family: var(--font-mono); font-size: 44px; font-weight: 600; text-align: center; letter-spacing: 2px; margin: 16px 0; color: var(--ink); }
+
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+    .cal-dow { font-size: 11px; color: var(--ink-muted); padding-bottom: 4px; }
+    .cal-day { aspect-ratio: 1; border-radius: 8px; border: 1px solid transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 12px; cursor: pointer; background: var(--bg-paper); }
+    .cal-day.empty { background: transparent; cursor: default; }
+    .cal-day.today { border-color: var(--sage); font-weight: 700; color: var(--sage-dark); }
+    .cal-day.selected { background: var(--sage); color: #fff; }
+    .cal-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent-warm); margin-top: 2px; }
     .cal-day.selected .cal-dot { background: #fff; }
 
-    /* Bottom Navigation */
+    /* Bottom Nav */
     .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(252, 251, 248, 0.94);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: var(--bg-card);
       border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-around;
+      display: flex; justify-content: space-around;
       padding: 8px 4px calc(8px + env(safe-area-inset-bottom));
       z-index: 900;
+      opacity: 0.98;
     }
-    .nav-btn {
-      background: none;
-      border: none;
-      color: var(--ink-muted);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-      font-size: 10px;
-      cursor: pointer;
-      flex: 1;
-    }
-    .nav-btn.active {
-      color: var(--sage-dark);
-      font-weight: 600;
-    }
-    .nav-btn svg {
-      width: 20px;
-      height: 20px;
-      stroke-width: 1.6;
-    }
+    .nav-btn { background: none; border: none; color: var(--ink-muted); display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 10px; cursor: pointer; flex: 1; }
+    .nav-btn.active { color: var(--sage-dark); font-weight: 600; }
+    .nav-btn svg { width: 20px; height: 20px; stroke-width: 1.6; }
 
-    /* Modal Sheet */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(38, 37, 35, 0.42);
-      z-index: 2000;
-      display: none;
-      align-items: flex-end;
-      justify-content: center;
-    }
-    .modal-backdrop.open {
-      display: flex;
-    }
-    .modal-sheet {
-      background: var(--bg-paper);
-      width: 100%;
-      max-width: 480px;
-      max-height: 86vh;
-      border-radius: 20px 20px 0 0;
-      padding: 16px 16px calc(20px + env(safe-area-inset-bottom));
-      overflow-y: auto;
-      box-shadow: 0 -8px 30px rgba(0,0,0,0.12);
-      animation: sheetUp 0.25s ease-out;
-    }
-    @keyframes sheetUp {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
-    }
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 12px;
-      position: sticky;
-      top: 0;
-      background: var(--bg-paper);
-      z-index: 5;
-    }
+    /* Modals */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 2000; display: none; align-items: flex-end; justify-content: center; }
+    .modal-backdrop.open { display: flex; }
+    .modal-sheet { background: var(--bg-paper); width: 100%; max-width: 480px; max-height: 86vh; border-radius: 20px 20px 0 0; padding: 16px 16px calc(20px + env(safe-area-inset-bottom)); overflow-y: auto; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
 
-    /* Shop Grid */
-    .shop-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
-    }
-    .shop-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 6px;
-    }
-    .shop-card.owned {
-      border-color: var(--sage);
-      background: #F6F9F7;
-    }
-    .shop-icon-box {
-      width: 46px;
-      height: 46px;
-      margin: 0 auto;
-    }
+    .shop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .shop-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; justify-content: space-between; gap: 6px; }
+    .shop-card.owned { border-color: var(--sage); background: var(--bg-subtle); }
+    .shop-icon-box { width: 54px; height: 54px; margin: 0 auto; }
 
     .tab-pane { display: none; }
     .tab-pane.active { display: block; }
 
     input[type="text"], input[type="number"], select {
-      width: 100%;
-      padding: 8px 10px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border-strong);
-      background: var(--bg-card);
-      color: var(--ink);
-      font-size: 13px;
-      font-family: var(--font-sans);
+      width: 100%; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border-strong);
+      background: var(--bg-card); color: var(--ink); font-size: 13px;
     }
-    .input-row {
-      display: flex;
-      gap: 6px;
-      margin-top: 8px;
-    }
+    .input-row { display: flex; gap: 6px; margin-top: 8px; }
   </style>
 </head>
 <body>
 
-  <!-- 3-Second Undo Toast -->
+  <!-- Undo Toast -->
   <div id="undo-toast">
     <span id="undo-msg">已完成項目</span>
     <button onclick="performUndo()">撤銷</button>
@@ -817,30 +345,34 @@
     <header class="top-bar">
       <div class="brand-title">
         <span>重生系統</span>
-        <span class="ver-pill">v4.6</span>
+        <span class="ver-pill">v4.6.1</span>
       </div>
       <div class="top-actions">
+        <button class="icon-btn" onclick="cycleTheme()" title="切換主題色">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10"/></svg>
+          <span id="theme-badge-label">主題色</span>
+        </button>
         <button class="icon-btn" onclick="openBlindBox()" title="每日盲盒">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/></svg>
           <span>盲盒</span>
         </button>
-        <button class="icon-btn" onclick="openVoiceModal()" title="小精靈語音設定">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
-          <span id="voice-badge-label">奶兇川味</span>
+        <button class="icon-btn" onclick="openVoiceModal()" title="小精靈語音">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+          <span id="voice-badge-label">語音</span>
         </button>
       </div>
     </header>
 
-    <!-- ==================== TAB 1: HOME ==================== -->
-    <main id="tab-home" class="tab-pane active">
-      <!-- Core Status Card -->
+    <!-- ==================== MAIN PAGE VIEW CONTAINER ==================== -->
+    <div id="view-home" class="page-view active">
+      <!-- Status Card -->
       <section class="card">
         <div class="status-grid">
           <div class="stat-box" onclick="speakLine('status')">
             <span class="stat-label">境界等級</span>
             <span class="stat-val sage" id="stat-lv">LV.1</span>
           </div>
-          <div class="stat-box" onclick="openSanctuaryModal('pets')">
+          <div class="stat-box" onclick="switchMainTab('home'); openSanctuaryModal('pets')">
             <span class="stat-label">持有金幣 ▾</span>
             <span class="stat-val gold" id="stat-gold">40</span>
           </div>
@@ -850,7 +382,7 @@
           </div>
           <div class="stat-box" onclick="speakLine('streak')">
             <span class="stat-label">連勝天數</span>
-            <span class="stat-val" id="stat-streak">0 天</span>
+            <span class="stat-val" id="stat-streak">1 天</span>
           </div>
         </div>
 
@@ -864,41 +396,29 @@
           </div>
         </div>
 
-        <div class="attrs-row">
-          <div class="attr-pill">力<span id="attr-str">10</span></div>
-          <div class="attr-pill">智<span id="attr-int">10</span></div>
-          <div class="attr-pill">體<span id="attr-vit">10</span></div>
-          <div class="attr-pill">毅<span id="attr-wil">10</span></div>
-          <div class="attr-pill">魅<span id="attr-cha">10</span></div>
-        </div>
+        <!-- Polygon Radar Chart (Visual 5 Attributes) -->
+        <div class="radar-container" id="radar-chart-box"></div>
       </section>
 
-      <!-- Sanctuary Interactive Pet Courtyard -->
-      <section class="card sanctuary-card">
-        <div class="sanctuary-top">
-          <div class="card-title">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="1.6"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            <span id="house-name-display">Lv.1 林間草編小窩</span>
+      <!-- Sanctuary Entry Card -->
+      <section class="card sanctuary-entry-card" onclick="switchPageView('sanctuary')">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:36px; height:36px; border-radius:50%; background:var(--sage-light); display:flex; align-items:center; justify-content:center;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--sage-dark)" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
           </div>
-          <button class="btn btn-sm btn-primary" onclick="openSanctuaryModal('pets')">棲息閣 &amp; 商店</button>
+          <div>
+            <div style="font-family:var(--font-serif); font-weight:700; font-size:14px;" id="house-name-display">Lv.1 林間草編小窩</div>
+            <div style="font-size:11px; color:var(--ink-muted);">點擊進入雙棲生態庭院與 15 靈寵圖鑑 →</div>
+          </div>
         </div>
-
-        <div id="sanctuary-arena" class="sanctuary-arena">
-          <svg id="arena-bg-svg" class="arena-bg-svg" viewBox="0 0 400 168" preserveAspectRatio="none"></svg>
-          <div id="pet-layer"></div>
-        </div>
-
-        <div class="sanctuary-footer">
-          <span>飽食度：<strong class="mono" id="pet-hunger-text">80%</strong> · 出場 <strong class="mono" id="active-pet-count">0</strong> 隻</span>
-          <span class="mono" id="daily-gold-cap-text">今日金幣 0/120</span>
-        </div>
+        <div class="tag-pill freq-basic" id="active-pet-count-pill">出場 0 隻</div>
       </section>
 
-      <!-- Dual-Tier Bodyweight Workout Card -->
+      <!-- Workout Card -->
       <section class="card">
         <div class="card-header">
           <div class="card-title">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="1.6"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="1.6"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>
             <span>零器材徒手運動</span>
           </div>
           <div class="seg-control">
@@ -906,8 +426,7 @@
             <button class="seg-btn" id="wo-tier-adv" onclick="setWorkoutTier('adv')">進階挑戰</button>
           </div>
         </div>
-
-        <div id="workout-box" class="task-item" style="margin-bottom: 0;">
+        <div id="workout-box" class="task-item" style="margin-bottom:0;">
           <div class="task-left">
             <div class="check-circle" id="wo-check" onclick="toggleWorkoutDone()">✓</div>
             <div style="flex:1; cursor:pointer;" onclick="toggleWorkoutGuide()">
@@ -917,7 +436,7 @@
                 <span style="color:var(--sage-dark); text-decoration:underline;">要領 ▾</span>
               </div>
               <div id="wo-guide" style="display:none; font-size:11px; color:var(--ink-muted); margin-top:5px; padding-top:5px; border-top:1px dashed var(--border);">
-                雙腳與肩同寬，腳尖微朝外，臀部向後坐下至大腿與地面平行，核心收緊起身。
+                雙腳與肩同寬，臀部向後坐下至大腿與地面平行，核心收緊起身。
               </div>
             </div>
           </div>
@@ -925,7 +444,7 @@
         </div>
       </section>
 
-      <!-- Daily Cultivation Habits -->
+      <!-- Cultivation Habits (Fixed Compatibility for undefined) -->
       <section class="card">
         <div class="card-header">
           <div class="card-title">
@@ -960,7 +479,7 @@
       <section class="card">
         <div class="card-header">
           <div class="card-title">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="1.6"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="1.6"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg>
             <span>隨手待辦事項</span>
           </div>
           <span style="font-size:11px; color:var(--ink-muted);">+5 金幣/項</span>
@@ -971,7 +490,28 @@
           <button class="btn" onclick="addTodo()">加入</button>
         </div>
       </section>
-    </main>
+    </div>
+
+    <!-- ==================== INDEPENDENT SANCTUARY PAGE VIEW ==================== -->
+    <div id="view-sanctuary" class="page-view">
+      <section class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+          <button class="btn btn-sm" onclick="switchPageView('home')">← 返回修煉中樞</button>
+          <div style="font-family:var(--font-serif); font-weight:700; font-size:14px;" id="sanctuary-house-title">Lv.1 林間草編小窩</div>
+          <button class="btn btn-sm btn-primary" onclick="openSanctuaryModal('pets')">靈寵與商店</button>
+        </div>
+
+        <div id="sanctuary-arena" class="sanctuary-arena">
+          <svg id="arena-bg-svg" class="arena-bg-svg" viewBox="0 0 400 210" preserveAspectRatio="none"></svg>
+          <div id="pet-layer"></div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--ink-muted);">
+          <span>飽食度：<strong class="mono" id="pet-hunger-text">80%</strong> · 庭院出場 <strong class="mono" id="active-pet-count">0</strong> 隻</span>
+          <span class="mono" id="daily-gold-cap-text">今日金幣 0/120</span>
+        </div>
+      </section>
+    </div>
 
     <!-- ==================== TAB 2: VOCABULARY ==================== -->
     <main id="tab-vocab" class="tab-pane">
@@ -990,23 +530,19 @@
           </div>
         </div>
 
-        <!-- Custom Word Import -->
         <div class="input-row" style="margin-bottom:12px;">
-          <input type="text" id="custom-word-input" placeholder="輸入想查的英文單字自動匯入（如：serendipity）" />
+          <input type="text" id="custom-word-input" placeholder="輸入英文單字自動匯入查義（如：serendipity）" />
           <button class="btn btn-primary" onclick="importCustomWord()">＋ 匯入</button>
         </div>
 
-        <!-- Basic 5 Words -->
         <div style="font-size:12px; font-weight:600; color:var(--sage-dark); margin:8px 0 6px;">一、日常暖身 · 生活基礎高頻（5 單）</div>
         <div id="vocab-basic-list"></div>
 
-        <!-- Advanced 7000 Words -->
         <div id="vocab-adv-section">
           <div style="font-size:12px; font-weight:600; color:var(--ink-muted); margin:12px 0 6px;">二、進階挑戰 · 7000 單核心字彙（5 單）</div>
           <div id="vocab-adv-list"></div>
         </div>
 
-        <!-- Bottom Multi-Type Quiz Arena -->
         <div class="quiz-box" id="quiz-container">
           <div class="card-header" style="margin-bottom:6px;">
             <div class="card-title" style="font-size:14px;">靈魂試煉場 · 多題型隨堂驗收</div>
@@ -1014,7 +550,7 @@
           </div>
           <div id="quiz-body">
             <p style="font-size:12px; color:var(--ink-muted); margin:0 0 10px;">
-              從今日單字隨機抽取 5 題（混合英選中、中選英、例句填空），全數完成即可領取今日單字賞金。
+              隨機抽取 5 題（英選中、中選英、例句填空），全數完成即可領取賞金。
             </p>
             <button class="btn btn-primary" style="width:100%;" onclick="startVocabQuiz()">開始 5 題隨堂驗收</button>
           </div>
@@ -1045,10 +581,6 @@
           <button class="btn btn-primary" id="timer-start-btn" onclick="toggleTimer()">開始閉關</button>
           <button class="btn" onclick="resetTimer()">重置</button>
         </div>
-
-        <p style="font-size:11px; color:var(--ink-muted); margin:0;">
-          閉關期間若購買「迷你書架與閱讀檯燈」，檯燈會自動點亮陪伴閱讀。
-        </p>
       </section>
     </main>
 
@@ -1066,7 +598,6 @@
           <button class="btn btn-sm btn-primary" onclick="jumpCalToday()">今天</button>
         </div>
 
-        <!-- Year/Month Quick Picker -->
         <div id="cal-picker-drawer" style="display:none; background:var(--bg-paper); border:1px solid var(--border); border-radius:10px; padding:10px; margin-bottom:10px;">
           <div style="display:flex; gap:8px;">
             <select id="cal-year-select" onchange="applyCalPicker()"></select>
@@ -1087,7 +618,7 @@
 
         <div style="margin-top:12px; padding-top:10px; border-top:1px dashed var(--border);">
           <div style="font-size:12px; font-weight:600; margin-bottom:6px;">
-            <span id="cal-selected-date-label">2026-11-18</span> 副本行程
+            <span id="cal-selected-date-label">2026-11-18</span> 行程副本
           </div>
           <div id="cal-events-list"></div>
           <div class="input-row">
@@ -1101,41 +632,39 @@
 
   <!-- Bottom Navigation -->
   <nav class="bottom-nav">
-    <button class="nav-btn active" onclick="switchTab('home', this)">
+    <button class="nav-btn active" id="nav-btn-home" onclick="switchMainTab('home', this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       <span>修煉中樞</span>
     </button>
-    <button class="nav-btn" onclick="switchTab('vocab', this)">
+    <button class="nav-btn" id="nav-btn-vocab" onclick="switchMainTab('vocab', this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
       <span>單字試煉</span>
     </button>
-    <button class="nav-btn" onclick="switchTab('focus', this)">
+    <button class="nav-btn" id="nav-btn-focus" onclick="switchMainTab('focus', this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
       <span>閉關計時</span>
     </button>
-    <button class="nav-btn" onclick="switchTab('calendar', this)">
+    <button class="nav-btn" id="nav-btn-calendar" onclick="switchMainTab('calendar', this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
       <span>行事曆</span>
     </button>
   </nav>
 
-  <!-- ==================== MODAL: SANCTUARY & SHOP ==================== -->
+  <!-- ==================== MODAL: SANCTUARY SHOP ==================== -->
   <div id="sanctuary-modal" class="modal-backdrop" onclick="if(event.target===this) closeModal('sanctuary-modal')">
     <div class="modal-sheet">
       <div class="modal-header">
-        <div class="card-title">靈寵棲息閣 · 60日養成商店</div>
+        <div class="card-title">靈寵棲息閣 · 養成商店</div>
         <div style="display:flex; align-items:center; gap:8px;">
           <span class="mono" style="font-size:12px; color:var(--accent-warm); font-weight:600;" id="modal-gold-display">40 金幣</span>
           <button class="btn btn-sm" onclick="closeModal('sanctuary-modal')">✕</button>
         </div>
       </div>
-
       <div class="seg-control" style="width:100%; margin-bottom:12px;">
         <button class="seg-btn active" style="flex:1;" id="shop-tab-pets" onclick="switchShopTab('pets')">15 靈寵圖鑑</button>
         <button class="seg-btn" style="flex:1;" id="shop-tab-house" onclick="switchShopTab('house')">房屋與配件</button>
         <button class="seg-btn" style="flex:1;" id="shop-tab-items" onclick="switchShopTab('items')">飼料與兌換</button>
       </div>
-
       <div id="shop-content"></div>
     </div>
   </div>
@@ -1148,9 +677,6 @@
         <button class="btn btn-sm" onclick="closeModal('blindbox-modal')">✕</button>
       </div>
       <div style="padding:18px 8px;">
-        <div id="blindbox-icon" style="margin-bottom:12px;">
-          <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="var(--sage)" stroke-width="1.5"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
-        </div>
         <div id="blindbox-result-text" style="font-size:14px; font-weight:600; margin-bottom:16px;">
           每日可開啟一次氣運盲盒，隨機獲得金幣、經驗或精力補貼！
         </div>
@@ -1171,18 +697,18 @@
       <div style="margin-bottom:12px;">
         <label style="font-size:12px; color:var(--ink-muted); display:block; margin-bottom:4px;">聲線音色</label>
         <select id="voice-timbre-select" onchange="saveVoiceSettings()">
-          <option value="child">奶兇童音（預設主推 · 高音調軟萌）</option>
-          <option value="male">沉穩男聲（低沉磁性督促）</option>
-          <option value="female">溫柔女聲（清亮知性陪伴）</option>
+          <option value="child">奶兇童音（高音調軟萌）</option>
+          <option value="male">沉穩男聲</option>
+          <option value="female">溫柔女聲</option>
         </select>
       </div>
       <div style="margin-bottom:14px;">
         <label style="font-size:12px; color:var(--ink-muted); display:block; margin-bottom:4px;">方言口音與語氣</label>
         <select id="voice-accent-select" onchange="saveVoiceSettings()">
-          <option value="sichuan">奶兇川味（巴適、莫偷懶、要得）</option>
-          <option value="north">北方幹片腔（麻溜兒的、倍兒棒）</option>
-          <option value="butler">冷靜管家（主人、請按時修煉）</option>
-          <option value="mute">靜音模式（僅顯示氣泡文字）</option>
+          <option value="sichuan">奶兇川味（巴適、莫偷懶）</option>
+          <option value="north">北方幹片腔（麻溜兒的）</option>
+          <option value="butler">冷靜管家</option>
+          <option value="mute">靜音模式</option>
         </select>
       </div>
       <button class="btn btn-primary" style="width:100%;" onclick="testVoicePreview()">試聽小精靈語音</button>
@@ -1190,61 +716,53 @@
   </div>
 
   <script>
-    /* ==================== DATA & CONSTANTS ==================== */
+    /* ==================== DATA & STATE ==================== */
     const STORAGE_KEY = 'reborn_system_v3_1';
 
     const HOUSE_LEVELS = [
-      { lv: 1, name: 'Lv.1 林間草編小窩', cost: 0, desc: '極簡草編圓窩與一株小嫩芽，容納入門靈寵。' },
-      { lv: 2, name: 'Lv.2 原木尖頂木屋', cost: 100, desc: '遮風避雨的尖頂原木屋，解鎖木屋區 3 隻靈寵。' },
-      { lv: 3, name: 'Lv.3 書香庭院小屋', cost: 280, desc: '帶閣樓窗戶的雅緻木屋，解鎖書香區 3 隻靈寵。' },
-      { lv: 4, name: 'Lv.4 觀星雅集別苑', cost: 550, desc: '雙層挑高和風別苑，解鎖水景與自然系 3 隻靈寵。' },
-      { lv: 5, name: 'Lv.5 雲端聖殿靈閣', cost: 920, desc: '懸浮星軌羅盤聖殿，解鎖全部 15 隻極地與珍稀靈寵。' }
+      { lv: 1, name: 'Lv.1 林間草編小窩', cost: 0, desc: '極簡草編圓窩與一株小嫩芽。' },
+      { lv: 2, name: 'Lv.2 原木尖頂木屋', cost: 100, desc: '遮風避雨的尖頂原木屋。' },
+      { lv: 3, name: 'Lv.3 書香庭院小屋', cost: 280, desc: '帶閣樓窗戶的雅緻木屋。' },
+      { lv: 4, name: 'Lv.4 觀星雅集別苑', cost: 550, desc: '雙層挑高和風別苑，解鎖水景。' },
+      { lv: 5, name: 'Lv.5 雲端聖殿靈閣', cost: 920, desc: '懸浮星軌羅盤聖殿，全圖鑑解鎖。' }
     ];
 
     const FURNITURE_CATALOG = [
-      { id: 'bowl', name: '草編食水雙碗', cost: 50, desc: '餵食與飲水時，寵物會排隊湊過來吃喝。' },
-      { id: 'bed', name: '柔軟編織睡墊', cost: 90, desc: '寵物累了會自動走上去捲成一團打盹。' },
-      { id: 'pond', name: '清泉與極地水景池', cost: 210, desc: '開啟右側水景區，讓水獺、水豚、企鵝、海豹游泳。' },
-      { id: 'wheel', name: '木質貓跳台與滾輪', cost: 180, desc: '倉鼠跑滾輪、小貓與赤狐跳上高台俯瞰庭院。' },
-      { id: 'bookshelf', name: '迷你書架與閱讀檯燈', cost: 240, desc: '背單字或閉關專注時，檯燈會亮起暖光陪伴。' },
-      { id: 'telescope', name: '露台觀星望遠鏡', cost: 340, desc: '夜晚打開系統時，小動物會輪流跑到望遠鏡旁觀星。' }
+      { id: 'bowl', name: '草編食水雙碗', cost: 50, desc: '餵食與飲水時會排隊吃喝。' },
+      { id: 'bed', name: '柔軟編織睡墊', cost: 90, desc: '寵物累了會自動上去打盹。' },
+      { id: 'pond', name: '清泉極地水景池', cost: 210, desc: '開啟右側水景區供水系動物游泳。' },
+      { id: 'wheel', name: '木質貓跳台滾輪', cost: 180, desc: '倉鼠跑滾輪、小貓赤狐登高。' },
+      { id: 'bookshelf', name: '迷你書架檯燈', cost: 240, desc: '背單字或專注時檯燈會發光。' },
+      { id: 'telescope', name: '露台觀星望遠鏡', cost: 340, desc: '夜晚寵物會輪流觀星。' }
     ];
 
     const PET_CATALOG = [
-      // Lv 1
       { id: 'hamster', name: '布丁小倉鼠', lv: 1, cost: 75, habitat: 'land', trait: '腮幫子鼓鼓啃瓜子' },
       { id: 'cat', name: '橘斑小奶貓', lv: 1, cost: 80, habitat: 'land', trait: '最愛舔毛洗臉與撒嬌' },
       { id: 'bunny', name: '垂耳小垂兔', lv: 1, cost: 85, habitat: 'land', trait: '長耳朵一抖一抖啃草' },
-      // Lv 2
-      { id: 'shiba', name: '豆眉小柴犬', lv: 2, cost: 140, habitat: 'land', trait: '元氣滿滿搖尾巴轉圈' },
-      { id: 'hedgehog', name: '圓滾小刺蝟', lv: 2, cost: 150, habitat: 'land', trait: '害羞時縮成一顆小圓球' },
-      { id: 'corgi', name: '胖嘟小柯基', lv: 2, cost: 160, habitat: 'land', trait: '短腿扭屁股像條吐司' },
-      // Lv 3
+      { id: 'shiba', name: '豆眉小柴犬', lv: 2, cost: 140, habitat: 'land', trait: '元氣滿滿搖尾巴' },
+      { id: 'hedgehog', name: '圓滾小刺蝟', lv: 2, cost: 150, habitat: 'land', trait: '害羞縮成小圓球' },
+      { id: 'corgi', name: '胖嘟小柯基', lv: 2, cost: 160, habitat: 'land', trait: '短腿扭屁股像吐司' },
       { id: 'owl', name: '圓框眼鏡貓頭鷹', lv: 3, cost: 210, habitat: 'land', trait: '陪你背單字的學霸書靈' },
       { id: 'fox', name: '蓬尾小赤狐', lv: 3, cost: 230, habitat: 'land', trait: '抱著蓬鬆大尾巴睡覺' },
-      { id: 'samoyed', name: '白胖小薩摩耶', lv: 3, cost: 250, habitat: 'land', trait: '永遠掛著微笑的天使' },
-      // Lv 4
-      { id: 'otter', name: '靈溪小水獺', lv: 4, cost: 300, habitat: 'water', trait: '招牌動作雙手搓臉洗白白' },
-      { id: 'deer', name: '踏雲小麋鹿', lv: 4, cost: 320, habitat: 'land', trait: '頭頂長著鼠尾草綠嫩葉' },
+      { id: 'samoyed', name: '白胖小薩摩耶', lv: 3, cost: 250, habitat: 'land', trait: '永遠微笑的小天使' },
+      { id: 'otter', name: '靈溪小水獺', lv: 4, cost: 300, habitat: 'water', trait: '雙手搓臉洗白白' },
+      { id: 'deer', name: '踏雲小麋鹿', lv: 4, cost: 320, habitat: 'land', trait: '頭頂長著嫩葉鹿角' },
       { id: 'capybara', name: '淡定小水豚', lv: 4, cost: 340, habitat: 'water', trait: '頭頂頂著橘子佛系泡湯' },
-      // Lv 5
-      { id: 'ragdoll', name: '雪球長毛垂耳貓', lv: 5, cost: 400, habitat: 'land', trait: '像朵會走路的白色棉花糖' },
-      { id: 'penguin', name: '小圍巾企鵝寶寶', lv: 5, cost: 430, habitat: 'water', trait: '搖擺滑行，上岸會冒汗' },
-      { id: 'seal', name: '軟萌海豹寶寶', lv: 5, cost: 450, habitat: 'water', trait: '一拱一拱蠕動拍肚皮' }
+      { id: 'ragdoll', name: '雪球長毛貓', lv: 5, cost: 400, habitat: 'land', trait: '會走路的白色棉花糖' },
+      { id: 'penguin', name: '小圍巾企鵝', lv: 5, cost: 430, habitat: 'water', trait: '搖擺滑行上岸會冒汗' },
+      { id: 'seal', name: '軟萌海豹寶寶', lv: 5, cost: 450, habitat: 'water', trait: '一拱一拱拍肚皮' }
     ];
 
     const WORKOUT_POOLS = {
       basic: [
-        { title: '標準徒手深蹲 15 下 × 2 組', guide: '雙腳與肩同寬，臀部向後坐下至大腿與地面平行，核心收緊起身。', exp: 20, gold: 12, attr: 'vit' },
-        { title: '跪姿／標準伏地挺身 10 下 × 2 組', guide: '雙手略寬於肩，身體呈一直線下放至胸口微觸地後推起。', exp: 20, gold: 12, attr: 'str' },
-        { title: '肘撐棒式核心 40 秒 × 2 組', guide: '手肘在肩膀正下方，腹部與臀部夾緊，切勿塌腰。', exp: 20, gold: 12, attr: 'wil' },
-        { title: '原地開合跳 45 秒 × 2 組', guide: '前腳掌輕盈落地減緩衝擊，雙臂完整向上拍合。', exp: 20, gold: 12, attr: 'vit' }
+        { title: '標準徒手深蹲 15 下 × 2 組', guide: '雙腳與肩同寬，臀部向後坐下至大腿與地面平行。', exp: 20, gold: 12, attr: 'vit' },
+        { title: '跪姿／標準伏地挺身 10 下 × 2 組', guide: '雙手略寬於肩，身體呈一直線下放微觸地。', exp: 20, gold: 12, attr: 'str' },
+        { title: '肘撐棒式核心 40 秒 × 2 組', guide: '手肘在肩膀正下方，腹部與臀部夾緊。', exp: 20, gold: 12, attr: 'wil' }
       ],
       adv: [
-        { title: '進階：保加利亞分腿蹲 每邊 12 下 × 3 組', guide: '後腳背置於椅緣，前腳下蹲至膝蓋呈 90 度，強化單腿爆發與穩定。', exp: 40, gold: 25, attr: 'str' },
-        { title: '進階：窄距鑽石伏地挺身 12 下 × 3 組', guide: '雙手拇指與食指相觸成三角形，集中刺激三頭肌與胸大肌內側。', exp: 40, gold: 25, attr: 'str' },
-        { title: '進階：波比跳（Burpees）12 下 × 3 組', guide: '下蹲撐地、雙腳後跳、伏地挺身後收腿垂直跳起，高效燃脂。', exp: 40, gold: 25, attr: 'vit' },
-        { title: '進階：登山者衝刺 ＋ 側棒式 60 秒 × 3 組', guide: '快速交替提膝 40 秒接左右側棒式各 10 秒，全面鍛鍊核心。', exp: 40, gold: 25, attr: 'wil' }
+        { title: '進階：保加利亞分腿蹲 每邊 12 下 × 3 組', guide: '後腳背置於椅緣，前腳下蹲至 90 度。', exp: 40, gold: 25, attr: 'str' },
+        { title: '進階：窄距鑽石伏地挺身 12 下 × 3 組', guide: '雙手拇指與食指相觸成三角形。', exp: 40, gold: 25, attr: 'str' }
       ]
     };
 
@@ -1253,45 +771,25 @@
       { word: 'balance', phonetic: '/ˈbæləns/', zh: '平衡；均衡', freq: '生活基礎', ex: 'It is important to keep a healthy balance between study and rest.' },
       { word: 'achieve', phonetic: '/əˈtʃiːv/', zh: '達成；實現', freq: '生活基礎', ex: 'Small daily habits help you achieve big goals.' },
       { word: 'grateful', phonetic: '/ˈɡreɪtfl/', zh: '感激的；感謝的', freq: '生活基礎', ex: 'She felt grateful for the quiet morning coffee.' },
-      { word: 'steady', phonetic: '/ˈstedi/', zh: '穩定的；平穩的', freq: '生活基礎', ex: 'Slow and steady progress wins the race.' },
-      { word: 'focus', phonetic: '/ˈfoʊkəs/', zh: '專注；焦點', freq: '生活基礎', ex: 'Turn off notifications so you can focus on your work.' },
-      { word: 'habit', phonetic: '/ˈhæbɪt/', zh: '習慣', freq: '生活基礎', ex: 'Drinking water right after waking up is a great habit.' },
-      { word: 'refresh', phonetic: '/rɪˈfreʃ/', zh: '使恢復精神；刷新', freq: '生活基礎', ex: 'A short walk outside will refresh your mind.' },
-      { word: 'effort', phonetic: '/ˈefərt/', zh: '努力；精力', freq: '生活基礎', ex: 'Every bit of effort counts toward your growth.' },
-      { word: 'patience', phonetic: '/ˈpeɪʃns/', zh: '耐心；耐性', freq: '生活基礎', ex: 'Learning a new skill requires time and patience.' }
+      { word: 'focus', phonetic: '/ˈfoʊkəs/', zh: '專注；焦點', freq: '生活基礎', ex: 'Turn off notifications so you can focus on your work.' }
     ];
-
     const ADV_WORDS_BANK = [
-      { word: 'inevitable', phonetic: '/ɪnˈevɪtəbl/', zh: '不可避免的；必然的', freq: '進階核心', ex: 'Change is an inevitable part of personal growth.' },
-      { word: 'resilient', phonetic: '/rɪˈzɪliənt/', zh: '有韌性的；能迅速恢復的', freq: '進階核心', ex: 'Resilient people bounce back quickly from setbacks.' },
-      { word: 'comprehensive', phonetic: '/ˌkɑːmprɪˈhensɪv/', zh: '全面的；綜合的', freq: '進階核心', ex: 'We made a comprehensive plan for the next sixty days.' },
-      { word: 'fluctuate', phonetic: '/ˈflʌktʃueɪt/', zh: '波動；起伏不定', freq: '進階核心', ex: 'Prices tend to fluctuate depending on market demand.' },
-      { word: 'accommodate', phonetic: '/əˈkɑːmədeɪt/', zh: '容納；適應；提供住宿', freq: '進階核心', ex: 'The new sanctuary can accommodate up to fifteen pets.' },
-      { word: 'scrutinize', phonetic: '/ˈskruːtənaɪz/', zh: '仔細審查；端詳', freq: '偏生僻', ex: 'Scientists scrutinize the data before publishing results.' },
-      { word: 'deteriorate', phonetic: '/dɪˈtɪriəreɪt/', zh: '惡化；退化', freq: '進階核心', ex: 'Without regular practice, language skills may deteriorate.' },
-      { word: 'perseverance', phonetic: '/ˌpɜːrsəˈvɪrəns/', zh: '毅力；堅持不懈', freq: '進階核心', ex: 'Success is largely a matter of perseverance.' },
-      { word: 'ambiguous', phonetic: '/æmˈbɪɡjuəs/', zh: '模稜兩可的；含糊的', freq: '偏生僻', ex: 'His reply was intentionally ambiguous.' },
-      { word: 'sustainable', phonetic: '/səˈsteɪnəbl/', zh: '可持續的；永續的', freq: '進階核心', ex: 'Build a sustainable schedule that you can follow every day.' }
+      { word: 'inevitable', phonetic: '/ɪnˈevɪtəbl/', zh: '不可避免的', freq: '進階核心', ex: 'Change is an inevitable part of personal growth.' },
+      { word: 'resilient', phonetic: '/rɪˈzɪliənt/', zh: '有韌性的', freq: '進階核心', ex: 'Resilient people bounce back quickly from setbacks.' },
+      { word: 'comprehensive', phonetic: '/ˌkɑːmprɪˈhensɪv/', zh: '全面的', freq: '進階核心', ex: 'We made a comprehensive plan for sixty days.' }
     ];
 
-    /* ==================== STATE INITIALIZATION ==================== */
     function todayStr() {
       const d = new Date();
       return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     }
 
     const DEFAULT_STATE = {
-      lv: 1,
-      exp: 0,
-      gold: 40,
-      ap: 100,
-      streak: 1,
+      theme: 'oatmeal',
+      lv: 1, exp: 0, gold: 40, ap: 100, streak: 1,
       lastLoginDate: todayStr(),
-      dailyGoldEarned: 0,
-      dailyTodoGoldCount: 0,
-      dailyFocusCount: 0,
-      vocabQuizClaimed: false,
-      blindBoxClaimed: false,
+      dailyGoldEarned: 0, dailyTodoGoldCount: 0, dailyFocusCount: 0,
+      vocabQuizClaimed: false, blindBoxClaimed: false,
       attrs: { str: 10, int: 10, vit: 10, wil: 10, cha: 10 },
       habits: [
         { id: 'h1', text: '早起整理床鋪並喝一杯溫水', done: false, attr: 'wil' },
@@ -1299,29 +797,14 @@
         { id: 'h3', text: '今日無含糖手搖飲・清淡飲食', done: false, attr: 'vit' },
         { id: 'h4', text: '睡前放下手機靜心 15 分鐘', done: false, attr: 'cha' }
       ],
-      todos: [
-        { id: 't1', text: '去靈寵棲息閣看一眼未來的小窩', done: false }
-      ],
-      waterMl: 0,
-      workoutTier: 'basic',
-      workoutIndex: 0,
-      workoutDone: false,
-      vocabMode: 'all',
-      vocabOffset: 0,
-      customWords: [],
-      houseLv: 1,
-      ownedFurniture: [],
-      ownedPets: [],
-      activePets: [],
-      petHunger: 80,
-      petAffinity: 0,
-      customRewards: [
-        { id: 'r1', name: '週末無罪惡感看兩集動畫', cost: 120 },
-        { id: 'r2', name: '犒賞自己一杯喜歡的手搖飲', cost: 150 }
-      ],
+      todos: [{ id: 't1', text: '去靈寵棲息閣看看小動物', done: false }],
+      waterMl: 0, workoutTier: 'basic', workoutIndex: 0, workoutDone: false,
+      vocabMode: 'all', vocabOffset: 0, customWords: [],
+      houseLv: 1, ownedFurniture: [], ownedPets: [], activePets: [],
+      petHunger: 80, petAffinity: 0,
+      customRewards: [{ id: 'r1', name: '週末無罪惡感看兩集動漫', cost: 120 }],
       calEvents: {},
-      voiceTimbre: 'child',
-      voiceAccent: 'sichuan'
+      voiceTimbre: 'child', voiceAccent: 'sichuan'
     };
 
     let state = loadState();
@@ -1334,27 +817,14 @@
         if (!raw) return JSON.parse(JSON.stringify(DEFAULT_STATE));
         const parsed = JSON.parse(raw);
         const merged = Object.assign({}, JSON.parse(JSON.stringify(DEFAULT_STATE)), parsed);
-        // Daily reset check
-        const today = todayStr();
-        if (merged.lastLoginDate !== today) {
-          const yesterday = new Date(Date.now() - 86400000);
-          const yStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
-          if (merged.lastLoginDate === yStr) {
-            merged.streak = (merged.streak || 0) + 1;
-          } else {
-            merged.streak = 1;
-          }
-          merged.lastLoginDate = today;
-          merged.dailyGoldEarned = 0;
-          merged.dailyTodoGoldCount = 0;
-          merged.dailyFocusCount = 0;
-          merged.vocabQuizClaimed = false;
-          merged.blindBoxClaimed = false;
-          merged.workoutDone = false;
-          merged.waterMl = 0;
-          merged.ap = 100;
-          merged.habits = (merged.habits || []).map(h => ({ ...h, done: false }));
-          merged.petHunger = Math.max(15, (merged.petHunger || 80) - 20);
+        // Compatibility fix for old habits
+        if (merged.habits) {
+          merged.habits = merged.habits.map((h, idx) => ({
+            id: h.id || ('h' + idx),
+            text: h.text || h.title || h.name || '日常修煉習慣',
+            done: !!h.done,
+            attr: h.attr || 'wil'
+          }));
         }
         return merged;
       } catch (e) {
@@ -1366,56 +836,24 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
 
-    /* ==================== 3-SECOND GOLDEN UNDO ==================== */
-    function pushUndo(label) {
-      undoSnapshot = JSON.stringify(state);
-      const toast = document.getElementById('undo-toast');
-      document.getElementById('undo-msg').textContent = label;
-      toast.classList.add('show');
-      clearTimeout(undoTimer);
-      undoTimer = setTimeout(() => {
-        toast.classList.remove('show');
-        undoSnapshot = null;
-      }, 3200);
-    }
+    /* ==================== THEME & VOICE ==================== */
+    const THEMES = ['oatmeal', 'darkink', 'apricot', 'ocean'];
+    const THEME_NAMES = { oatmeal: '燕麥綠', darkink: '護眼墨紙', apricot: '暖杏紅茶', ocean: '海鹽霧藍' };
 
-    function performUndo() {
-      if (!undoSnapshot) return;
-      state = JSON.parse(undoSnapshot);
-      undoSnapshot = null;
+    function setTheme(t) {
+      if (!THEMES.includes(t)) t = 'oatmeal';
+      state.theme = t;
+      document.documentElement.setAttribute('data-theme', t);
+      document.getElementById('theme-badge-label').textContent = THEME_NAMES[t];
       saveState();
-      document.getElementById('undo-toast').classList.remove('show');
-      renderAll();
-      speakLine('undo');
     }
 
-    /* ==================== ECONOMY & REWARDS ==================== */
-    function getDailyGoldCap() {
-      return state.streak >= 7 ? 150 : 120;
+    function cycleTheme() {
+      const idx = THEMES.indexOf(state.theme);
+      const next = THEMES[(idx + 1) % THEMES.length];
+      setTheme(next);
     }
 
-    function addRewards({ exp = 0, gold = 0, attr = null, attrVal = 1 }) {
-      const cap = getDailyGoldCap();
-      const remainingCap = Math.max(0, cap - state.dailyGoldEarned);
-      const actualGold = Math.min(gold, remainingCap);
-
-      state.gold += actualGold;
-      state.dailyGoldEarned += actualGold;
-      state.exp += exp;
-
-      while (state.exp >= state.lv * 100) {
-        state.exp -= state.lv * 100;
-        state.lv += 1;
-        state.ap = 100;
-      }
-
-      if (attr && state.attrs[attr] !== undefined) {
-        state.attrs[attr] += attrVal;
-      }
-      return actualGold;
-    }
-
-    /* ==================== VOICE ENGINE (SICHUAN CHILD & CUSTOM) ==================== */
     const VOICE_SCRIPTS = {
       sichuan: {
         greet: '哼，你終於曉得回來啦？本精靈等你好半天咯！',
@@ -1451,20 +889,12 @@
       if (!('speechSynthesis' in window)) return;
       const bank = VOICE_SCRIPTS[state.voiceAccent] || VOICE_SCRIPTS.sichuan;
       const text = bank[key] || bank.done;
-
       window.speechSynthesis.cancel();
       const utter = new SpeechSynthesisUtterance(text);
       utter.lang = 'zh-CN';
-      if (state.voiceTimbre === 'child') {
-        utter.pitch = 1.48;
-        utter.rate = 1.12;
-      } else if (state.voiceTimbre === 'female') {
-        utter.pitch = 1.15;
-        utter.rate = 1.02;
-      } else {
-        utter.pitch = 0.82;
-        utter.rate = 0.96;
-      }
+      if (state.voiceTimbre === 'child') { utter.pitch = 1.48; utter.rate = 1.12; }
+      else if (state.voiceTimbre === 'female') { utter.pitch = 1.15; utter.rate = 1.02; }
+      else { utter.pitch = 0.82; utter.rate = 0.96; }
       window.speechSynthesis.speak(utter);
     }
 
@@ -1482,8 +912,8 @@
     }
 
     function updateVoiceBadge() {
-      const map = { sichuan: '奶兇川味', north: '北方幹片', butler: '冷靜管家', mute: '已靜音' };
-      document.getElementById('voice-badge-label').textContent = map[state.voiceAccent] || '奶兇川味';
+      const map = { sichuan: '川味', north: '北方', butler: '管家', mute: '靜音' };
+      document.getElementById('voice-badge-label').textContent = map[state.voiceAccent] || '語音';
     }
 
     function testVoicePreview() {
@@ -1491,143 +921,151 @@
       speakLine('test');
     }
 
-    /* ==================== INTERACTIVE SANCTUARY ENGINE ==================== */
-    let petRuntime = []; // { id, x, y, state, bubble, dragging }
-    let petAiInterval = null;
+    /* ==================== 3-SECOND UNDO ==================== */
+    function pushUndo(label) {
+      undoSnapshot = JSON.stringify(state);
+      const toast = document.getElementById('undo-toast');
+      document.getElementById('undo-msg').textContent = label;
+      toast.classList.add('show');
+      clearTimeout(undoTimer);
+      undoTimer = setTimeout(() => { toast.classList.remove('show'); undoSnapshot = null; }, 3200);
+    }
 
+    function performUndo() {
+      if (!undoSnapshot) return;
+      state = JSON.parse(undoSnapshot);
+      undoSnapshot = null;
+      saveState();
+      document.getElementById('undo-toast').classList.remove('show');
+      renderAll();
+      speakLine('undo');
+    }
+
+    function getDailyGoldCap() { return state.streak >= 7 ? 150 : 120; }
+
+    function addRewards({ exp = 0, gold = 0, attr = null, attrVal = 1 }) {
+      const cap = getDailyGoldCap();
+      const remainingCap = Math.max(0, cap - state.dailyGoldEarned);
+      const actualGold = Math.min(gold, remainingCap);
+      state.gold += actualGold;
+      state.dailyGoldEarned += actualGold;
+      state.exp += exp;
+      while (state.exp >= state.lv * 100) {
+        state.exp -= state.lv * 100;
+        state.lv += 1;
+        state.ap = 100;
+      }
+      if (attr && state.attrs[attr] !== undefined) state.attrs[attr] += attrVal;
+      return actualGold;
+    }
+
+    /* ==================== POLYGON RADAR CHART ==================== */
+    function renderRadarChart() {
+      const box = document.getElementById('radar-chart-box');
+      const maxVal = 30; // Scale max for attributes
+      const attrs = [
+        { key: 'str', label: '力', val: state.attrs.str },
+        { key: 'int', label: '智', val: state.attrs.int },
+        { key: 'vit', label: '體', val: state.attrs.vit },
+        { key: 'wil', label: '毅', val: state.attrs.wil },
+        { key: 'cha', label: '魅', val: state.attrs.cha }
+      ];
+
+      const cx = 70, cy = 70, r = 48;
+      let svgContent = '';
+
+      // Background webs (3 rings)
+      [0.33, 0.66, 1].forEach(scale => {
+        let pts = '';
+        attrs.forEach((_, i) => {
+          const angle = (Math.PI * 2 / 5) * i - Math.PI / 2;
+          const px = cx + r * scale * Math.cos(angle);
+          const py = cy + r * scale * Math.sin(angle);
+          pts += `${px},${py} `;
+        });
+        svgContent += `<polygon points="${pts}" fill="none" stroke="var(--border)" stroke-width="1" stroke-dasharray="2 2"/>`;
+      });
+
+      // Axes lines & labels
+      attrs.forEach((attr, i) => {
+        const angle = (Math.PI * 2 / 5) * i - Math.PI / 2;
+        const px = cx + r * Math.cos(angle);
+        const py = cy + r * Math.sin(angle);
+        svgContent += `<line x1="${cx}" y1="${cy}" x2="${px}" y2="${py}" stroke="var(--border)" stroke-width="1"/>`;
+        
+        const lx = cx + (r + 14) * Math.cos(angle);
+        const ly = cy + (r + 12) * Math.sin(angle);
+        svgContent += `<text x="${lx}" y="${ly}" font-size="10" font-family="sans-serif" fill="var(--ink)" text-anchor="middle" dominant-baseline="central">${attr.label}${attr.val}</text>`;
+      });
+
+      // Data polygon
+      let dataPts = '';
+      attrs.forEach((attr, i) => {
+        const angle = (Math.PI * 2 / 5) * i - Math.PI / 2;
+        const ratio = Math.min(1, attr.val / maxVal);
+        const px = cx + r * ratio * Math.cos(angle);
+        const py = cy + r * ratio * Math.sin(angle);
+        dataPts += `${px},${py} `;
+      });
+      svgContent += `<polygon points="${dataPts}" fill="var(--sage)" fill-opacity="0.32" stroke="var(--sage)" stroke-width="2"/>`;
+
+      box.innerHTML = `<svg viewBox="0 0 140 140">${svgContent}</svg>`;
+    }
+
+    /* ==================== PET SVGs & SANCTUARY ==================== */
     function getPetSvg(id) {
-      const stroke = '#262523';
-      const sage = '#5E7F6B';
-      const warm = '#B87D4B';
+      const stroke = 'var(--ink)';
+      const sage = 'var(--sage)';
+      const warm = 'var(--accent-warm)';
       const svgs = {
-        hamster: `<svg viewBox="0 0 48 48"><circle cx="15" cy="15" r="5" fill="#FCFBF8" stroke="${stroke}" stroke-width="1.5"/><circle cx="33" cy="15" r="5" fill="#FCFBF8" stroke="${stroke}" stroke-width="1.5"/><ellipse cx="24" cy="27" rx="14" ry="13" fill="#FCFBF8" stroke="${stroke}" stroke-width="1.5"/><circle cx="19" cy="24" r="1.5" fill="${stroke}"/><circle cx="29" cy="24" r="1.5" fill="${stroke}"/><path d="M22 28 Q24 30 26 28" fill="none" stroke="${stroke}" stroke-width="1.5"/><ellipse cx="15" cy="28" rx="3" ry="2" fill="#E6C3A5"/><ellipse cx="33" cy="28" rx="3" ry="2" fill="#E6C3A5"/></svg>`,
-        cat: `<svg viewBox="0 0 48 48"><path d="M13 20 L11 10 L20 15 Z" fill="#E6C3A5" stroke="${stroke}" stroke-width="1.5"/><path d="M35 20 L37 10 L28 15 Z" fill="#E6C3A5" stroke="${stroke}" stroke-width="1.5"/><ellipse cx="24" cy="27" rx="14" ry="12" fill="#FCFBF8" stroke="${stroke}" stroke-width="1.5"/><path d="M24 15 V19 M21 16 V18 M27 16 V18" stroke="${warm}" stroke-width="1.5"/><circle cx="19" cy="25" r="1.5" fill="${stroke}"/><circle cx="29" cy="25" r="1.5" fill="${stroke}"/><path d="M22 29 Q24 31 26 29" fill="none" stroke="${stroke}" stroke-width="1.5"/></svg>`,
-        bunny: `<svg viewBox="0 0 48 48"><ellipse cx="17" cy="13" rx="3.5" ry="9" transform="rotate(-12 17 13)" fill="#FCFBF8" stroke="${stroke}" stroke-width="1.5"/><ellipse cx="31" cy="13" rx="3.5" ry="9" transform="rotate(12 31 13)" fill="#FCFBF8" stroke="${stroke}" stroke-width="1.5"/><ellipse cx="24" cy="29" rx="13" ry="11" fill="#FCFBF8" stroke="${stroke}" stroke-width="1.5"/><circle cx="19" cy="27" r="1.5" fill="${stroke}"/><circle cx="29" cy="27" r="1.5" fill="${stroke}"/><path d="M23 30 L24 31 L25 30" fill="none" stroke="${stroke}" stroke-width="1.5"/></svg>`,
-        shiba: `<svg viewBox="0 0 48 48"><path d="M13 19 L12 10 L21 15 Z" fill="#D8A46F" stroke="${stroke}" stroke-width="1.5"/><path d="M35 19 L36 10 L27 15 Z" fill="#D8A46F" stroke="${stroke}" stroke-width="1.5"/><ellipse cx="24" cy="27" rx="14" ry="12" fill="#D8A46F" stroke="${stroke}" stroke-width="1.5"/><ellipse cx="24" cy="31" rx="9" ry="7" fill="#FCFBF8"/><circle cx="19" cy="24" r="1.5" fill="${stroke}"/><circle cx="29" cy="24" r="1.5" fill="${stroke}"/><circle cx="19" cy="21" r="1.2" fill="#FCFBF8"/><circle cx="29" cy="21" r="1.2" fill="#FCFBF8"/><circle cx="24" cy="28" r="1.8" fill="${stroke}"/></svg>`,
-        hedgehog: `<svg viewBox="0 0 48 48"><path d="M10 29 C10 15, 38 15, 38 29 Z" fill="#EFECE6" stroke="${stroke}" stroke-width="1.5" stroke-dasharray="3 2"/><ellipse cx="24" cy="31" rx="13" ry="8" fill="#FCFBF8" stroke="${stroke}" stroke-width="1.5"/><circle cx="18" cy="30" r="1.5" fill="${stroke}"/><circle cx="26" cy="30" r="1.5" fill="${stroke}"/><circle cx="22" cy="32" r="1.5" fill="${stroke}"/></svg>`,
-        corgi: `<svg viewBox="0 0 48 48"><ellipse cx="14" cy="14" rx="4" ry="7" transform="rotate(-15 14 14)" fill="#D8A46F" stroke="${stroke}" stroke-width="1.5"/><ellipse cx="34" cy="14" rx="4" ry="7" transform="rotate(15 34 14)" fill="#D8A46F" stroke="${stroke}" stroke-width="1.5"/><ellipse cx="24" cy="28" rx="14" ry="11" fill="#D8A46F" stroke="${stroke}" stroke-width="1.5"/><path d="M21 18 H27 L25 32 H23 Z" fill="#FCFBF8"/><circle cx="19" cy="25" r="1.5" fill="${stroke}"/><circle cx="29" cy="25" r="1.5" fill="${stroke}"/></svg>`,
-        owl: `<svg viewBox="0 0 48 48"><ellipse cx="24" cy="26" rx="13" ry="14" fill="#FCFBF8" stroke="${stroke}" stroke-width="1.5"/><circle cx="19" cy="23" r="4.5" fill="none" stroke="${sage}" stroke-width="1.5"/><circle cx="29" cy="23" r="4.5" fill="none" stroke="${sage}" stroke-width="1.5"/><line x1="23.5" y1="23" x2="24.5" y2="23" stroke="${sage}" stroke-width="1.5"/><circle cx="19" cy="23" r="1.4" fill="${stroke}"/><circle cx="29" cy="23" r="1.4" fill="${stroke}"/><polygon points="22,27 26,27 24,30" fill="${warm}"/></svg>`,
-        fox: `<svg viewBox="0 0 48 48"><path d="M12 19 L11 9 L21 15 Z" fill="#C97A4B" stroke="${stroke}" stroke-width="1.5"/><path d="M36 19 L37 9 L27 15 Z" fill="#C97A4B" stroke="${stroke}" stroke-width="1.5"/><ellipse cx="24" cy="27" rx="14" ry="11" fill="#C97A4B" stroke="${stroke}" stroke-width="1.5"/><path d="M11 28 Q24 38 37 28 Q32 38 24 38 Q16 38 11 28 Z" fill="#FCFBF8"/><circle cx="19" cy="24" r="1.5" fill="${stroke}"/><circle cx="29" cy="24" r="1.5" fill="${stroke}"/></svg>`,
-        samoyed: `<svg viewBox="0 0 48 48"><path d="M14 18 L14 10 L21 15 Z" fill="#FCFBF8" stroke="${stroke}" stroke-width="1.5"/><path d="M34 18 L34 10 L27 15 Z" fill="#FCFBF8" stroke="${stroke}" stroke-width="1.5"/><circle cx="24" cy="27" r="14" fill="#FCFBF8" stroke="${stroke}" stroke-width="1.5"/><circle cx="19" cy="24" r="1.5" fill="${stroke}"/><circle cx="29" cy="24" r="1.5" fill="${stroke}"/><path d="M20 29 Q24 33 28 29" fill="none" stroke="${stroke}" stroke-width="1.5"/></svg>`,
-        otter: `<svg viewBox="0 0 48 48"><circle cx="13" cy="20" r="3" fill="#B59B82" stroke="${stroke}" stroke-width="1.5"/><circle cx="35" cy="20" r="3" fill="#B59B82" stroke="${stroke}" stroke-width="1.5"/><ellipse cx="24" cy="27" rx="14" ry="11" fill="#B59B82" stroke="${stroke}" stroke-width="1.5"/><ellipse cx="24" cy="29" rx="9" ry="7" fill="#EFECE6"/><circle cx="19" cy="24" r="1.5" fill="${stroke}"/><circle cx="29" cy="24" r="1.5" fill="${stroke}"/><ellipse cx="24" cy="27" rx="2.5" ry="1.8" fill="${stroke}"/></svg>`,
-        deer: `<svg viewBox="0 0 48 48"><path d="M19 15 L16 7 M16 10 L13 9 M29 15 L32 7 M32 10 L35 9" stroke="${sage}" stroke-width="1.6" stroke-linecap="round"/><ellipse cx="24" cy="28" rx="12" ry="12" fill="#D9B694" stroke="${stroke}" stroke-width="1.5"/><circle cx="20" cy="26" r="1.5" fill="${stroke}"/><circle cx="28" cy="26" r="1.5" fill="${stroke}"/><circle cx="24" cy="31" r="1.5" fill="${stroke}"/></svg>`,
-        capybara: `<svg viewBox="0 0 48 48"><circle cx="24" cy="13" r="3.5" fill="#E08A3C" stroke="${stroke}" stroke-width="1.3"/><path d="M24 9 V7" stroke="${sage}" stroke-width="1.5"/><rect x="11" y="17" width="26" height="20" rx="10" fill="#B58E6B" stroke="${stroke}" stroke-width="1.5"/><line x1="17" y1="24" x2="21" y2="24" stroke="${stroke}" stroke-width="1.5"/><line x1="27" y1="24" x2="31" y2="24" stroke="${stroke}" stroke-width="1.5"/><path d="M22 29 H26" stroke="${stroke}" stroke-width="1.5"/></svg>`,
-        ragdoll: `<svg viewBox="0 0 48 48"><path d="M13 21 Q10 14 18 15" fill="#DCD6CE" stroke="${stroke}" stroke-width="1.5"/><path d="M35 21 Q38 14 30 15" fill="#DCD6CE" stroke="${stroke}" stroke-width="1.5"/><ellipse cx="24" cy="27" rx="15" ry="12" fill="#FCFBF8" stroke="${stroke}" stroke-width="1.5"/><circle cx="19" cy="25" r="1.8" fill="${sage}"/><circle cx="29" cy="25" r="1.8" fill="${sage}"/><path d="M22 29 Q24 31 26 29" fill="none" stroke="${stroke}" stroke-width="1.5"/></svg>`,
-        penguin: `<svg viewBox="0 0 48 48"><ellipse cx="24" cy="26" rx="12" ry="14" fill="#3A3D40" stroke="${stroke}" stroke-width="1.5"/><ellipse cx="24" cy="28" rx="8.5" ry="10.5" fill="#FCFBF8"/><path d="M14 33 Q24 36 34 33" fill="none" stroke="${sage}" stroke-width="3"/><circle cx="20" cy="23" r="1.4" fill="${stroke}"/><circle cx="28" cy="23" r="1.4" fill="${stroke}"/><polygon points="22,25 26,25 24,28" fill="#E08A3C"/></svg>`,
-        seal: `<svg viewBox="0 0 48 48"><ellipse cx="24" cy="29" rx="15" ry="10" fill="#F4F2ED" stroke="${stroke}" stroke-width="1.5"/><circle cx="19" cy="26" r="1.8" fill="${stroke}"/><circle cx="29" cy="26" r="1.8" fill="${stroke}"/><path d="M22 30 Q24 32 26 30" fill="none" stroke="${stroke}" stroke-width="1.5"/><line x1="12" y1="28" x2="15" y2="28" stroke="${stroke}" stroke-width="1"/><line x1="33" y1="28" x2="36" y2="28" stroke="${stroke}" stroke-width="1"/></svg>`
+        hamster: `<svg viewBox="0 0 64 64"><circle cx="20" cy="20" r="7" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><circle cx="44" cy="20" r="7" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="38" rx="18" ry="16" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><circle cx="25" cy="34" r="2" fill="${stroke}"/><circle cx="39" cy="34" r="2" fill="${stroke}"/><path d="M29 40 Q32 43 35 40" fill="none" stroke="${stroke}" stroke-width="1.6"/><path d="M22 42 Q32 50 42 42" fill="none" stroke="${sage}" stroke-width="1.2"/></svg>`,
+        cat: `<svg viewBox="0 0 64 64"><path d="M18 26 L14 12 L26 19 Z" fill="var(--bg-subtle)" stroke="${stroke}" stroke-width="1.6"/><path d="M46 26 L50 12 L38 19 Z" fill="var(--bg-subtle)" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="38" rx="18" ry="16" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><path d="M32 22 V28 M28 24 V26 M36 24 V26" stroke="${warm}" stroke-width="1.5"/><circle cx="24" cy="35" r="2" fill="${stroke}"/><circle cx="40" cy="35" r="2" fill="${stroke}"/><path d="M29 41 Q32 44 35 41" fill="none" stroke="${stroke}" stroke-width="1.6"/></svg>`,
+        bunny: `<svg viewBox="0 0 64 64"><ellipse cx="23" cy="16" rx="4.5" ry="13" transform="rotate(-15 23 16)" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="41" cy="16" rx="4.5" ry="13" transform="rotate(15 41 16)" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="40" rx="17" ry="15" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><circle cx="25" cy="38" r="2" fill="${stroke}"/><circle cx="39" cy="38" r="2" fill="${stroke}"/><path d="M31 42 L32 43 L33 42" fill="none" stroke="${stroke}" stroke-width="1.6"/></svg>`,
+        shiba: `<svg viewBox="0 0 64 64"><path d="M18 25 L16 12 L28 19 Z" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><path d="M46 25 L48 12 L36 19 Z" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="38" rx="18" ry="16" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="44" rx="11" ry="9" fill="var(--bg-card)"/><circle cx="25" cy="34" r="2" fill="${stroke}"/><circle cx="39" cy="34" r="2" fill="${stroke}"/><circle cx="32" cy="39" r="2.5" fill="${stroke}"/></svg>`,
+        hedgehog: `<svg viewBox="0 0 64 64"><path d="M12 42 C12 20, 52 20, 52 42 Z" fill="var(--bg-subtle)" stroke="${stroke}" stroke-width="1.6" stroke-dasharray="4 2"/><ellipse cx="32" cy="43" rx="17" ry="11" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><circle cx="24" cy="41" r="2" fill="${stroke}"/><circle cx="40" cy="41" r="2" fill="${stroke}"/></svg>`,
+        corgi: `<svg viewBox="0 0 64 64"><ellipse cx="18" cy="18" rx="5.5" ry="10" transform="rotate(-15 18 18)" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="46" cy="18" rx="5.5" ry="10" transform="rotate(15 46 18)" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="39" rx="18" ry="15" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><path d="M28 24 H36 L34 44 H30 Z" fill="var(--bg-card)"/><circle cx="25" cy="35" r="2" fill="${stroke}"/><circle cx="39" cy="35" r="2" fill="${stroke}"/></svg>`,
+        owl: `<svg viewBox="0 0 64 64"><ellipse cx="32" cy="36" rx="17" ry="18" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><circle cx="25" cy="32" r="6" fill="none" stroke="${sage}" stroke-width="1.8"/><circle cx="39" cy="32" r="6" fill="none" stroke="${sage}" stroke-width="1.8"/><circle cx="25" cy="32" r="2" fill="${stroke}"/><circle cx="39" cy="32" r="2" fill="${stroke}"/><polygon points="30,38 34,38 32,42" fill="${warm}"/></svg>`,
+        fox: `<svg viewBox="0 0 64 64"><path d="M16 26 L14 12 L28 20 Z" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><path d="M48 26 L50 12 L36 20 Z" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="38" rx="18" ry="15" fill="${warm}" stroke="${stroke}" stroke-width="1.6"/><path d="M14 40 Q32 54 50 40 Q42 54 32 54 Q22 54 14 40 Z" fill="var(--bg-card)"/><circle cx="25" cy="34" r="2" fill="${stroke}"/><circle cx="39" cy="34" r="2" fill="${stroke}"/></svg>`,
+        samoyed: `<svg viewBox="0 0 64 64"><path d="M18 24 L18 13 L28 19 Z" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><path d="M46 24 L46 13 L36 19 Z" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><circle cx="32" cy="38" r="18" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><circle cx="25" cy="34" r="2" fill="${stroke}"/><circle cx="39" cy="34" r="2" fill="${stroke}"/><path d="M28 41 Q32 45 36 41" fill="none" stroke="${stroke}" stroke-width="1.6"/></svg>`,
+        otter: `<svg viewBox="0 0 64 64"><circle cx="18" cy="28" r="4" fill="#A3836B" stroke="${stroke}" stroke-width="1.6"/><circle cx="46" cy="28" r="4" fill="#A3836B" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="38" rx="18" ry="14" fill="#A3836B" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="41" rx="11" ry="8" fill="var(--bg-subtle)"/><circle cx="25" cy="35" r="2" fill="${stroke}"/><circle cx="39" cy="35" r="2" fill="${stroke}"/><ellipse cx="32" cy="39" rx="3" ry="2" fill="${stroke}"/></svg>`,
+        deer: `<svg viewBox="0 0 64 64"><path d="M25 20 L21 9 M21 14 L17 12 M39 20 L43 9 M43 14 L47 12" stroke="${sage}" stroke-width="1.8" stroke-linecap="round"/><ellipse cx="32" cy="39" rx="16" ry="16" fill="#D4B28C" stroke="${stroke}" stroke-width="1.6"/><circle cx="26" cy="36" r="2" fill="${stroke}"/><circle cx="38" cy="36" r="2" fill="${stroke}"/><circle cx="32" cy="43" r="2" fill="${stroke}"/></svg>`,
+        capybara: `<svg viewBox="0 0 64 64"><circle cx="32" cy="18" r="4" fill="${warm}" stroke="${stroke}" stroke-width="1.5"/><path d="M32 14 V10" stroke="${sage}" stroke-width="1.8"/><rect x="14" y="24" width="36" height="26" rx="12" fill="#B0835F" stroke="${stroke}" stroke-width="1.6"/><line x1="22" y1="34" x2="28" y2="34" stroke="${stroke}" stroke-width="1.8"/><line x1="36" y1="34" x2="42" y2="34" stroke="${stroke}" stroke-width="1.8"/></svg>`,
+        ragdoll: `<svg viewBox="0 0 64 64"><path d="M18 28 Q14 18 24 20" fill="var(--bg-subtle)" stroke="${stroke}" stroke-width="1.6"/><path d="M46 28 Q50 18 40 20" fill="var(--bg-subtle)" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="38" rx="19" ry="15" fill="var(--bg-card)" stroke="${stroke}" stroke-width="1.6"/><circle cx="25" cy="35" r="2.2" fill="${sage}"/><circle cx="39" cy="35" r="2.2" fill="${sage}"/></svg>`,
+        penguin: `<svg viewBox="0 0 64 64"><ellipse cx="32" cy="36" rx="16" ry="18" fill="#2C3033" stroke="${stroke}" stroke-width="1.6"/><ellipse cx="32" cy="39" rx="11" ry="13" fill="var(--bg-card)"/><path d="M18 45 Q32 50 46 45" fill="none" stroke="${sage}" stroke-width="3.5"/><circle cx="26" cy="32" r="2" fill="${stroke}"/><circle cx="38" cy="32" r="2" fill="${stroke}"/><polygon points="30,35 34,35 32,39" fill="${warm}"/></svg>`,
+        seal: `<svg viewBox="0 0 64 64"><ellipse cx="32" cy="40" rx="20" ry="13" fill="var(--bg-subtle)" stroke="${stroke}" stroke-width="1.6"/><circle cx="25" cy="36" r="2.2" fill="${stroke}"/><circle cx="39" cy="36" r="2.2" fill="${stroke}"/><path d="M29 42 Q32 45 35 42" fill="none" stroke="${stroke}" stroke-width="1.6"/></svg>`
       };
       return svgs[id] || svgs.cat;
     }
 
     function renderSanctuaryBackground() {
-      const arena = document.getElementById('sanctuary-arena');
       const svg = document.getElementById('arena-bg-svg');
+      if (!svg) return;
+      const arena = document.getElementById('sanctuary-arena');
       const hasPond = state.ownedFurniture.includes('pond') || state.houseLv >= 4;
-      arena.classList.toggle('has-water', hasPond);
+      if (arena) arena.classList.toggle('has-water', hasPond);
 
-      const stroke = '#262523';
-      const sage = '#5E7F6B';
       let layers = '';
-
-      // 1. House Level progressive architecture (Left side)
       if (state.houseLv === 1) {
-        // Minimal Lv.1 Woven Nest & Sprout
-        layers += `
-          <path d="M35 128 Q65 112 95 128 Q65 138 35 128 Z" fill="#EFECE6" stroke="${stroke}" stroke-width="1.5"/>
-          <path d="M42 126 Q65 118 88 126" fill="none" stroke="${sage}" stroke-width="1.2"/>
-          <path d="M112 128 V116 M112 120 Q106 114 104 118 M112 118 Q118 112 120 116" fill="none" stroke="${sage}" stroke-width="1.5"/>
-        `;
-      } else if (state.houseLv === 2) {
-        // Lv.2 Peaked Wooden Cottage
-        layers += `
-          <rect x="34" y="76" width="66" height="52" fill="#FCFBF8" stroke="${stroke}" stroke-width="1.5"/>
-          <polygon points="26,76 67,44 108,76" fill="#EFECE6" stroke="${stroke}" stroke-width="1.5"/>
-          <rect x="58" y="98" width="18" height="30" fill="#E4ECE7" stroke="${stroke}" stroke-width="1.5"/>
-        `;
-      } else if (state.houseLv === 3) {
-        // Lv.3 Study Cottage with Attic Window
-        layers += `
-          <rect x="30" y="70" width="76" height="58" fill="#FCFBF8" stroke="${stroke}" stroke-width="1.5"/>
-          <polygon points="22,70 68,36 114,70" fill="#E4ECE7" stroke="${stroke}" stroke-width="1.5"/>
-          <circle cx="68" cy="56" r="6" fill="#FCFBF8" stroke="${stroke}" stroke-width="1.4"/>
-          <rect x="44" y="84" width="16" height="16" fill="#FCFBF8" stroke="${stroke}" stroke-width="1.4"/>
-          <rect x="74" y="96" width="18" height="32" fill="#EFECE6" stroke="${stroke}" stroke-width="1.5"/>
-        `;
-      } else if (state.houseLv === 4) {
-        // Lv.4 Stargazing Villa with Terrace
-        layers += `
-          <rect x="26" y="64" width="84" height="64" fill="#FCFBF8" stroke="${stroke}" stroke-width="1.5"/>
-          <polygon points="18,64 68,30 118,64" fill="#E4ECE7" stroke="${stroke}" stroke-width="1.5"/>
-          <rect x="110" y="92" width="46" height="36" fill="#F7F5F0" stroke="${stroke}" stroke-width="1.5"/>
-          <line x1="110" y1="84" x2="156" y2="84" stroke="${stroke}" stroke-width="1.5"/>
-          <rect x="58" y="96" width="20" height="32" fill="#EFECE6" stroke="${stroke}" stroke-width="1.5"/>
-        `;
+        layers += `<path d="M40 156 Q80 136 120 156 Q80 170 40 156 Z" fill="var(--bg-subtle)" stroke="var(--ink)" stroke-width="1.6"/>`;
       } else {
-        // Lv.5 Cloud Sanctuary Pavilion + Floating Compass
-        layers += `
-          <circle cx="68" cy="24" r="11" fill="none" stroke="${sage}" stroke-width="1.3" stroke-dasharray="3 2"/>
-          <rect x="24" y="60" width="90" height="68" fill="#FCFBF8" stroke="${stroke}" stroke-width="1.5"/>
-          <polygon points="14,60 69,28 124,60" fill="#E4ECE7" stroke="${stroke}" stroke-width="1.5"/>
-          <rect x="114" y="88" width="52" height="40" fill="#FCFBF8" stroke="${stroke}" stroke-width="1.5"/>
-          <rect x="58" y="94" width="22" height="34" fill="#E4ECE7" stroke="${stroke}" stroke-width="1.5"/>
-        `;
-      }
-
-      // 2. Purchased Interactive Furniture
-      if (state.ownedFurniture.includes('bowl')) {
-        layers += `
-          <path d="M124 134 H138 L136 140 H126 Z" fill="#FCFBF8" stroke="${stroke}" stroke-width="1.4"/>
-          <path d="M142 134 H156 L154 140 H144 Z" fill="#E4ECE7" stroke="${sage}" stroke-width="1.4"/>
-        `;
-      }
-      if (state.ownedFurniture.includes('bed')) {
-        layers += `
-          <ellipse cx="182" cy="138" rx="22" ry="8" fill="#EFECE6" stroke="${stroke}" stroke-width="1.5"/>
-          <ellipse cx="182" cy="137" rx="15" ry="5" fill="#FCFBF8" stroke="${sage}" stroke-width="1.2"/>
-        `;
-      }
-      if (state.ownedFurniture.includes('wheel')) {
-        layers += `
-          <circle cx="212" cy="78" r="14" fill="none" stroke="${stroke}" stroke-width="1.5"/>
-          <circle cx="212" cy="78" r="4" fill="${sage}"/>
-          <path d="M204 92 L212 78 L220 92" fill="none" stroke="${stroke}" stroke-width="1.5"/>
-        `;
-      }
-      if (state.ownedFurniture.includes('bookshelf')) {
-        const isFocus = timerRunning || document.getElementById('tab-vocab').classList.contains('active');
-        layers += `
-          <rect x="166" y="72" width="22" height="28" fill="#FCFBF8" stroke="${stroke}" stroke-width="1.4"/>
-          <line x1="166" y1="82" x2="188" y2="82" stroke="${stroke}" stroke-width="1.2"/>
-          <line x1="166" y1="91" x2="188" y2="91" stroke="${stroke}" stroke-width="1.2"/>
-          ${isFocus ? `<circle cx="177" cy="64" r="6" fill="#F5DF99" opacity="0.7"/>` : ''}
-        `;
-      }
-      if (state.ownedFurniture.includes('telescope')) {
-        layers += `
-          <line x1="138" y1="84" x2="132" y2="70" stroke="${stroke}" stroke-width="1.5"/>
-          <line x1="138" y1="84" x2="144" y2="70" stroke="${stroke}" stroke-width="1.5"/>
-          <line x1="128" y1="73" x2="148" y2="63" stroke="${sage}" stroke-width="3" stroke-linecap="round"/>
-        `;
+        layers += `<rect x="36" y="90" width="80" height="70" fill="var(--bg-card)" stroke="var(--ink)" stroke-width="1.6"/><polygon points="26,90 76,50 126,90" fill="var(--bg-subtle)" stroke="var(--ink)" stroke-width="1.6"/>`;
       }
       if (hasPond) {
-        // Right side Glacial / Spring Water Pool
-        layers += `
-          <path d="M255 20 Q245 84 258 156" fill="none" stroke="${sage}" stroke-width="1.5" stroke-dasharray="4 3"/>
-          <ellipse cx="328" cy="112" rx="44" ry="18" fill="#FCFBF8" stroke="${sage}" stroke-width="1.4"/>
-          <path d="M295 55 Q315 50 335 55" fill="none" stroke="${sage}" stroke-width="1.2"/>
-          <path d="M310 145 Q335 140 360 145" fill="none" stroke="${sage}" stroke-width="1.2"/>
-        `;
+        layers += `<ellipse cx="320" cy="130" rx="55" ry="24" fill="var(--bg-card)" stroke="var(--sage)" stroke-width="1.6"/>`;
       }
-
       svg.innerHTML = layers;
     }
 
+    let petRuntime = [];
+    let petAiInterval = null;
+
     function syncPetEntities() {
       const layer = document.getElementById('pet-layer');
+      if (!layer) return;
       const activeIds = state.activePets || [];
       document.getElementById('active-pet-count').textContent = activeIds.length;
+      document.getElementById('active-pet-count-pill').textContent = `出場 ${activeIds.length} 隻`;
 
-      // Keep runtime aligned
       petRuntime = activeIds.map(id => {
         const existing = petRuntime.find(p => p.id === id);
         if (existing) return existing;
@@ -1635,7 +1073,7 @@
         const isWater = meta && meta.habitat === 'water';
         return {
           id,
-          x: isWater ? (72 + Math.random() * 20) : (18 + Math.random() * 38),
+          x: isWater ? (72 + Math.random() * 20) : (18 + Math.random() * 40),
           y: 55 + Math.random() * 32,
           state: isWater ? 'swim' : 'idle',
           bubble: '',
@@ -1645,155 +1083,111 @@
 
       layer.innerHTML = '';
       if (petRuntime.length === 0) {
-        layer.innerHTML = `<div style="position:absolute; bottom:10px; right:14px; font-size:11px; color:var(--ink-muted); pointer-events:none;">點擊右上「棲息閣」領養第一隻陪伴小動物 →</div>`;
+        layer.innerHTML = `<div style="position:absolute; top:40%; left:50%; transform:translate(-50%,-50%); font-size:12px; color:var(--ink-muted); text-align:center; pointer-events:none;">庭院尚無小夥伴出場<br>點擊右上「靈寵與商店」勾選你想帶出來的小動物！</div>`;
         return;
       }
 
       petRuntime.forEach(p => {
         const el = document.createElement('div');
-        el.className = `pet-entity state-${p.state}`;
-        el.id = `pet-dom-${p.id}`;
+        el.className = `pet-entity`;
         el.style.left = `${p.x}%`;
         el.style.top = `${p.y}%`;
         el.innerHTML = `
           <div class="pet-bubble ${p.bubble ? 'visible' : ''}" id="bubble-${p.id}">${p.bubble}</div>
           <div class="pet-body-anim">${getPetSvg(p.id)}</div>
         `;
-        attachPetDragHandlers(el, p);
+        attachPetDrag(el, p);
         layer.appendChild(el);
       });
     }
 
-    function attachPetDragHandlers(el, petObj) {
+    function attachPetDrag(el, pObj) {
       const arena = document.getElementById('sanctuary-arena');
       let moved = false;
-
       const onDown = (e) => {
         e.preventDefault();
-        petObj.dragging = true;
+        pObj.dragging = true;
         moved = false;
         el.classList.add('dragging');
       };
-
       const onMove = (e) => {
-        if (!petObj.dragging) return;
+        if (!pObj.dragging) return;
         moved = true;
         const rect = arena.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        const pctX = Math.max(8, Math.min(92, ((clientX - rect.left) / rect.width) * 100));
-        const pctY = Math.max(22, Math.min(88, ((clientY - rect.top) / rect.height) * 100));
-        petObj.x = pctX;
-        petObj.y = pctY;
-        el.style.left = `${pctX}%`;
-        el.style.top = `${pctY}%`;
+        const cx = e.touches ? e.touches[0].clientX : e.clientX;
+        const cy = e.touches ? e.touches[0].clientY : e.clientY;
+        pObj.x = Math.max(10, Math.min(90, ((cx - rect.left) / rect.width) * 100));
+        pObj.y = Math.max(25, Math.min(90, ((cy - rect.top) / rect.height) * 100));
+        el.style.left = `${pObj.x}%`;
+        el.style.top = `${pObj.y}%`;
       };
-
       const onUp = () => {
-        if (!petObj.dragging) return;
-        petObj.dragging = false;
+        if (!pObj.dragging) return;
+        pObj.dragging = false;
         el.classList.remove('dragging');
-        const meta = PET_CATALOG.find(m => m.id === petObj.id);
-
+        const meta = PET_CATALOG.find(m => m.id === pObj.id);
         if (!moved) {
-          // Tap interaction
-          petObj.state = 'happy';
-          el.className = 'pet-entity state-happy';
-          showPetBubble(petObj, '♥ 好喜歡你！');
+          showPetBubble(pObj, '♥ 好喜歡你！');
           speakLine('pet');
           return;
         }
-
-        // Check aquatic habitat constraint
-        if (meta && meta.habitat === 'water' && petObj.x < 63) {
-          showPetBubble(petObj, '💦 好熱！滑回水池');
+        if (meta && meta.habitat === 'water' && pObj.x < 62) {
+          showPetBubble(pObj, '💦 好熱！滑回水池');
           speakLine('waterPetWarn');
           setTimeout(() => {
-            petObj.x = 76 + Math.random() * 14;
-            petObj.state = 'swim';
-            el.style.left = `${petObj.x}%`;
-            el.className = 'pet-entity state-swim';
-          }, 650);
-        } else {
-          showPetBubble(petObj, '啪嘰～落地！');
+            pObj.x = 75 + Math.random() * 15;
+            el.style.left = `${pObj.x}%`;
+          }, 600);
         }
       };
-
       el.addEventListener('mousedown', onDown);
       window.addEventListener('mousemove', onMove);
       window.addEventListener('mouseup', onUp);
-
       el.addEventListener('touchstart', onDown, { passive: false });
       window.addEventListener('touchmove', onMove, { passive: false });
       window.addEventListener('touchend', onUp);
     }
 
-    function showPetBubble(petObj, text) {
-      petObj.bubble = text;
-      const b = document.getElementById(`bubble-${petObj.id}`);
+    function showPetBubble(pObj, text) {
+      pObj.bubble = text;
+      const b = document.getElementById(`bubble-${pObj.id}`);
       if (b) {
         b.textContent = text;
         b.classList.add('visible');
-        setTimeout(() => {
-          petObj.bubble = '';
-          b.classList.remove('visible');
-        }, 2400);
+        setTimeout(() => { pObj.bubble = ''; b.classList.remove('visible'); }, 2400);
       }
     }
 
-    function startPetAutonomyLoop() {
+    function startPetAi() {
       if (petAiInterval) clearInterval(petAiInterval);
       petAiInterval = setInterval(() => {
-        if (!document.getElementById('tab-home').classList.contains('active')) return;
+        if (document.getElementById('view-sanctuary').style.display !== 'block') return;
         petRuntime.forEach(p => {
           if (p.dragging) return;
           const meta = PET_CATALOG.find(m => m.id === p.id);
           const isWater = meta && meta.habitat === 'water';
-          const el = document.getElementById(`pet-dom-${p.id}`);
-          if (!el) return;
-
-          const roll = Math.random();
           if (isWater) {
             p.x = 68 + Math.random() * 24;
-            p.y = 45 + Math.random() * 42;
-            p.state = 'swim';
-            if (roll < 0.25) showPetBubble(p, '🫧 悠哉漂浮中...');
+            p.y = 50 + Math.random() * 35;
           } else {
-            if (roll < 0.35) {
-              // Walk to bed or roam
-              if (state.ownedFurniture.includes('bed') && Math.random() < 0.5) {
-                p.x = 45;
-                p.y = 80;
-                p.state = 'sleep';
-                showPetBubble(p, '💤 zzz...');
-              } else {
-                p.x = 16 + Math.random() * 40;
-                p.y = 58 + Math.random() * 28;
-                p.state = 'idle';
-              }
-            } else if (roll < 0.65) {
-              p.state = 'groom';
-              if (Math.random() < 0.35) showPetBubble(p, '✨ 舔毛洗臉中');
-            } else {
-              p.state = 'sleep';
-              if (Math.random() < 0.3) showPetBubble(p, '💤 打個小盹');
-            }
+            p.x = 15 + Math.random() * 42;
+            p.y = 55 + Math.random() * 32;
           }
-          el.style.left = `${p.x}%`;
-          el.style.top = `${p.y}%`;
-          el.className = `pet-entity state-${p.state}`;
+          const el = document.getElementById(`pet-dom-${p.id}`) || document.querySelector(`#pet-layer .pet-entity:nth-child(${petRuntime.indexOf(p)+1})`);
+          if (el) {
+            el.style.left = `${p.x}%`;
+            el.style.top = `${p.y}%`;
+          }
         });
-      }, 3200);
+      }, 4000);
     }
 
-    /* ==================== SANCTUARY SHOP & MANAGEMENT ==================== */
+    /* ==================== SHOP & MODALS ==================== */
     let currentShopTab = 'pets';
-
     function openSanctuaryModal(tab = 'pets') {
       switchShopTab(tab);
       document.getElementById('sanctuary-modal').classList.add('open');
     }
-
     function switchShopTab(tab) {
       currentShopTab = tab;
       ['pets', 'house', 'items'].forEach(t => {
@@ -1801,127 +1195,70 @@
       });
       renderShopContent();
     }
-
     function renderShopContent() {
       document.getElementById('modal-gold-display').textContent = `${state.gold} 金幣`;
       const container = document.getElementById('shop-content');
-
       if (currentShopTab === 'pets') {
-        let html = `<p style="font-size:11px; color:var(--ink-muted); margin:0 0 10px;">
-          已領養的動物永久保留，可自由勾選「庭院出場」或「回房休息」（同屏最多建議 8 隻）。
-        </p><div class="shop-grid">`;
-
+        let html = `<div class="shop-grid">`;
         PET_CATALOG.forEach(pet => {
           const owned = state.ownedPets.includes(pet.id);
           const active = state.activePets.includes(pet.id);
           const locked = state.houseLv < pet.lv;
-          const needPond = pet.habitat === 'water' && !state.ownedFurniture.includes('pond') && state.houseLv < 4;
-
           html += `
             <div class="shop-card ${owned ? 'owned' : ''}">
-              <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--ink-muted);">
-                <span>Lv.${pet.lv}解鎖</span>
-                <span>${pet.habitat === 'water' ? '💧水景區' : '🌿木屋區'}</span>
-              </div>
+              <div style="font-size:10px; color:var(--ink-muted);">Lv.${pet.lv}解鎖 · ${pet.habitat === 'water' ? '💧水景' : '🌿草地'}</div>
               <div class="shop-icon-box">${getPetSvg(pet.id)}</div>
-              <div style="text-align:center;">
-                <div style="font-weight:600; font-size:12px;">${pet.name}</div>
-                <div style="font-size:10px; color:var(--ink-muted);">${pet.trait}</div>
-              </div>
+              <div style="font-weight:600; font-size:12px; text-align:center;">${pet.name}</div>
               ${owned ? `
                 <button class="btn btn-sm ${active ? 'btn-primary' : ''}" onclick="toggleActivePet('${pet.id}')">
-                  ${active ? '✓ 庭院出場中' : '回房休息中'}
+                  ${active ? '✓ 出場中' : '休息中'}
                 </button>
               ` : `
                 <button class="btn btn-sm btn-primary" ${locked || state.gold < pet.cost ? 'disabled' : ''} onclick="buyPet('${pet.id}')">
-                  ${locked ? `需 Lv.${pet.lv} 房屋` : `${pet.cost} 金幣領養`}
+                  ${locked ? `需Lv.${pet.lv}` : `${pet.cost}金幣`}
                 </button>
               `}
             </div>
           `;
         });
-        html += `</div>`;
-        container.innerHTML = html;
+        container.innerHTML = html + `</div>`;
       } else if (currentShopTab === 'house') {
         const nextHouse = HOUSE_LEVELS.find(h => h.lv === state.houseLv + 1);
         let html = `
           <div class="card" style="margin-bottom:10px; background:var(--bg-paper);">
-            <div style="font-weight:700; font-size:13px;">當前建築：${HOUSE_LEVELS[state.houseLv - 1].name}</div>
-            <div style="font-size:11px; color:var(--ink-muted); margin:4px 0 8px;">${HOUSE_LEVELS[state.houseLv - 1].desc}</div>
-            ${nextHouse ? `
-              <button class="btn btn-primary" style="width:100%;" ${state.gold < nextHouse.cost ? 'disabled' : ''} onclick="upgradeHouse()">
-                擴建為「${nextHouse.name}」（${nextHouse.cost} 金幣）
-              </button>
-            ` : `<div class="tag-pill freq-basic" style="text-align:center;">已達最高建築境界・雲端聖殿</div>`}
+            <div style="font-weight:700; font-size:13px;">當前：${HOUSE_LEVELS[state.houseLv - 1].name}</div>
+            ${nextHouse ? `<button class="btn btn-primary" style="width:100%; margin-top:6px;" ${state.gold < nextHouse.cost ? 'disabled' : ''} onclick="upgradeHouse()">升級（${nextHouse.cost}金幣）</button>` : '已滿級'}
           </div>
-          <div style="font-size:12px; font-weight:600; margin-bottom:8px;">高互動庭院與水景配件（買下即刻實裝）</div>
           <div class="shop-grid">
         `;
-
         FURNITURE_CATALOG.forEach(item => {
           const owned = state.ownedFurniture.includes(item.id);
           html += `
             <div class="shop-card ${owned ? 'owned' : ''}">
               <div style="font-weight:600; font-size:12px;">${item.name}</div>
-              <div style="font-size:10px; color:var(--ink-muted); flex:1;">${item.desc}</div>
+              <div style="font-size:10px; color:var(--ink-muted);">${item.desc}</div>
               <button class="btn btn-sm ${owned ? '' : 'btn-primary'}" ${owned || state.gold < item.cost ? 'disabled' : ''} onclick="buyFurniture('${item.id}')">
-                ${owned ? '✓ 已佈置於庭院' : `${item.cost} 金幣購買`}
+                ${owned ? '已擁有' : `${item.cost}金幣`}
               </button>
             </div>
           `;
         });
-        html += `</div>`;
-        container.innerHTML = html;
+        container.innerHTML = html + `</div>`;
       } else {
-        // Feed & Custom Real-Life Rewards
-        let html = `
-          <div style="font-size:12px; font-weight:600; margin-bottom:6px;">全體大鍋飯飼料與補給（全體寵物共享飽食）</div>
-          <div class="shop-grid" style="margin-bottom:14px;">
+        container.innerHTML = `
+          <div class="shop-grid">
             <div class="shop-card">
-              <div style="font-weight:600; font-size:12px;">基礎靈力乾糧</div>
-              <div style="font-size:10px; color:var(--ink-muted);">全體飽食 +35 · 親密度 +5</div>
-              <button class="btn btn-sm btn-primary" ${state.gold < 15 ? 'disabled' : ''} onclick="feedPets(15, 35, 5)">15 金幣餵食</button>
+              <div style="font-weight:600; font-size:12px;">基礎乾糧</div>
+              <div style="font-size:10px; color:var(--ink-muted);">全體飽食+35</div>
+              <button class="btn btn-sm btn-primary" onclick="feedPets(15, 35)">15金幣餵食</button>
             </div>
             <div class="shop-card">
-              <div style="font-weight:600; font-size:12px;">特級小魚乾盛宴</div>
-              <div style="font-size:10px; color:var(--ink-muted);">全體飽食全滿 · 親密度 +15</div>
-              <button class="btn btn-sm btn-primary" ${state.gold < 35 ? 'disabled' : ''} onclick="feedPets(35, 100, 15)">35 金幣盛宴</button>
+              <div style="font-weight:600; font-size:12px;">精力水</div>
+              <div style="font-size:10px; color:var(--ink-muted);">恢復50精力</div>
+              <button class="btn btn-sm btn-primary" onclick="buyApPotion()">35金幣購買</button>
             </div>
-            <div class="shop-card">
-              <div style="font-weight:600; font-size:12px;">精力恢復藥水</div>
-              <div style="font-size:10px; color:var(--ink-muted);">立即恢復 50 點今日精力</div>
-              <button class="btn btn-sm" ${state.gold < 35 ? 'disabled' : ''} onclick="buyApPotion()">35 金幣使用</button>
-            </div>
-          </div>
-
-          <div style="font-size:12px; font-weight:600; margin-bottom:6px;">自訂現實獎勵兌換券（自律換取無罪惡感享受）</div>
-          <div id="custom-rewards-list">
-        `;
-
-        state.customRewards.forEach(r => {
-          html += `
-            <div class="task-item">
-              <div>
-                <div class="task-text">${r.name}</div>
-                <div class="task-sub">${r.cost} 金幣</div>
-              </div>
-              <div style="display:flex; gap:4px;">
-                <button class="btn btn-sm btn-primary" ${state.gold < r.cost ? 'disabled' : ''} onclick="redeemCustomReward('${r.id}')">兌換</button>
-                <button class="btn btn-sm" onclick="deleteCustomReward('${r.id}')">✕</button>
-              </div>
-            </div>
-          `;
-        });
-
-        html += `
-          </div>
-          <div class="input-row">
-            <input type="text" id="new-reward-name" placeholder="獎勵名稱（如：看一集動漫）" style="flex:2;" />
-            <input type="number" id="new-reward-cost" placeholder="金幣" style="flex:1;" />
-            <button class="btn btn-primary" onclick="addCustomReward()">新增</button>
           </div>
         `;
-        container.innerHTML = html;
       }
     }
 
@@ -1931,31 +1268,22 @@
       state.gold -= pet.cost;
       state.ownedPets.push(id);
       if (state.activePets.length < 8) state.activePets.push(id);
-      if (pet.habitat === 'water' && !state.ownedFurniture.includes('pond')) {
-        state.ownedFurniture.push('pond'); // Auto gift basic spring corner if needed
-      }
       saveState();
       renderAll();
       renderShopContent();
       speakLine('done');
     }
-
     function toggleActivePet(id) {
       const idx = state.activePets.indexOf(id);
-      if (idx >= 0) {
-        state.activePets.splice(idx, 1);
-      } else {
-        if (state.activePets.length >= 8) {
-          alert('庭院同時出場最多 8 隻小夥伴，請先讓一隻回房休息喔！');
-          return;
-        }
+      if (idx >= 0) state.activePets.splice(idx, 1);
+      else {
+        if (state.activePets.length >= 8) { alert('最多出場 8 隻'); return; }
         state.activePets.push(id);
       }
       saveState();
       syncPetEntities();
       renderShopContent();
     }
-
     function upgradeHouse() {
       const next = HOUSE_LEVELS.find(h => h.lv === state.houseLv + 1);
       if (!next || state.gold < next.cost) return;
@@ -1966,7 +1294,6 @@
       renderShopContent();
       speakLine('done');
     }
-
     function buyFurniture(id) {
       const item = FURNITURE_CATALOG.find(f => f.id === id);
       if (!item || state.gold < item.cost || state.ownedFurniture.includes(id)) return;
@@ -1977,19 +1304,15 @@
       renderShopContent();
       speakLine('done');
     }
-
-    function feedPets(cost, hungerAdd, affAdd) {
+    function feedPets(cost, add) {
       if (state.gold < cost) return;
       state.gold -= cost;
-      state.petHunger = Math.min(100, state.petHunger + hungerAdd);
-      state.petAffinity += affAdd;
+      state.petHunger = Math.min(100, state.petHunger + add);
       saveState();
       renderAll();
       renderShopContent();
-      petRuntime.forEach(p => showPetBubble(p, '🍖 吧唧吧唧好香！'));
       speakLine('done');
     }
-
     function buyApPotion() {
       if (state.gold < 35) return;
       state.gold -= 35;
@@ -1999,112 +1322,69 @@
       renderShopContent();
     }
 
-    function addCustomReward() {
-      const name = document.getElementById('new-reward-name').value.trim();
-      const cost = parseInt(document.getElementById('new-reward-cost').value, 10);
-      if (!name || !cost || cost <= 0) return;
-      state.customRewards.push({ id: 'r' + Date.now(), name, cost });
-      saveState();
-      renderShopContent();
-    }
-
-    function redeemCustomReward(id) {
-      const r = state.customRewards.find(x => x.id === id);
-      if (!r || state.gold < r.cost) return;
-      state.gold -= r.cost;
-      saveState();
-      renderAll();
-      renderShopContent();
-      alert(`已成功兌換「${r.name}」！好好享受你的自律成果吧！`);
-    }
-
-    function deleteCustomReward(id) {
-      state.customRewards = state.customRewards.filter(x => x.id !== id);
-      saveState();
-      renderShopContent();
-    }
-
     /* ==================== WORKOUT, HABITS, WATER, TODOS ==================== */
     function setWorkoutTier(tier) {
-      state.workoutTier = tier;
-      state.workoutIndex = 0;
-      saveState();
-      renderWorkout();
+      state.workoutTier = tier; state.workoutIndex = 0;
+      saveState(); renderWorkout();
     }
-
     function rerollWorkout() {
       const pool = WORKOUT_POOLS[state.workoutTier];
       state.workoutIndex = (state.workoutIndex + 1) % pool.length;
-      saveState();
-      renderWorkout();
+      saveState(); renderWorkout();
     }
-
     function toggleWorkoutGuide() {
       const g = document.getElementById('wo-guide');
       g.style.display = g.style.display === 'none' ? 'block' : 'none';
     }
-
     function toggleWorkoutDone() {
-      pushUndo(state.workoutDone ? '已取消運動打卡' : '已完成今日運動！');
+      pushUndo(state.workoutDone ? '已取消運動打卡' : '已完成運動！');
       state.workoutDone = !state.workoutDone;
       const item = WORKOUT_POOLS[state.workoutTier][state.workoutIndex];
       if (state.workoutDone) {
         addRewards({ exp: item.exp, gold: item.gold, attr: item.attr, attrVal: state.workoutTier === 'adv' ? 4 : 2 });
         speakLine('done');
       }
-      saveState();
-      renderAll();
+      saveState(); renderAll();
     }
-
     function renderWorkout() {
       document.getElementById('wo-tier-basic').classList.toggle('active', state.workoutTier === 'basic');
       document.getElementById('wo-tier-adv').classList.toggle('active', state.workoutTier === 'adv');
       const item = WORKOUT_POOLS[state.workoutTier][state.workoutIndex];
       document.getElementById('wo-title').textContent = item.title;
       document.getElementById('wo-guide').textContent = item.guide;
-      document.getElementById('wo-reward').textContent = `+${item.exp} EXP · +${item.gold} 金幣 · 屬性+${state.workoutTier === 'adv' ? 4 : 2}`;
+      document.getElementById('wo-reward').textContent = `+${item.exp} EXP · +${item.gold} 金幣`;
       document.getElementById('workout-box').classList.toggle('done', state.workoutDone);
     }
 
     function toggleHabit(id) {
       const h = state.habits.find(x => x.id === id);
       if (!h) return;
-      pushUndo(h.done ? `已取消「${h.text}」` : `完成「${h.text}」`);
+      pushUndo(h.done ? `已取消習慣` : `完成習慣`);
       h.done = !h.done;
       if (h.done) {
         addRewards({ exp: 15, gold: 12, attr: h.attr, attrVal: 1 });
-        // Check all habits complete bonus
-        if (state.habits.every(x => x.done)) {
-          addRewards({ exp: 20, gold: 15 });
-        }
+        if (state.habits.every(x => x.done)) addRewards({ exp: 20, gold: 15 });
         speakLine('done');
       }
-      saveState();
-      renderAll();
+      saveState(); renderAll();
     }
-
     function addHabit() {
       const input = document.getElementById('new-habit-input');
       const text = input.value.trim();
       if (!text) return;
       state.habits.push({ id: 'h' + Date.now(), text, done: false, attr: 'wil' });
       input.value = '';
-      saveState();
-      renderHabits();
+      saveState(); renderHabits();
     }
-
     function deleteHabit(id) {
-      pushUndo('已刪除修煉項目');
+      pushUndo('已刪除習慣');
       state.habits = state.habits.filter(x => x.id !== id);
-      saveState();
-      renderHabits();
+      saveState(); renderHabits();
     }
-
     function renderHabits() {
       const list = document.getElementById('habit-list');
       const doneCount = state.habits.filter(h => h.done).length;
       document.getElementById('habit-progress-label').textContent = `${doneCount}/${state.habits.length}`;
-
       list.innerHTML = state.habits.map(h => `
         <div class="task-item ${h.done ? 'done' : ''}">
           <div class="task-left" onclick="toggleHabit('${h.id}')">
@@ -2123,19 +1403,14 @@
       pushUndo('已記錄 +250ml 飲水');
       state.waterMl += 250;
       addRewards({ exp: 5, gold: 4, attr: 'vit', attrVal: 1 });
-      saveState();
-      renderAll();
-      petRuntime.forEach(p => showPetBubble(p, '💧 咕嘟咕嘟喝水！'));
+      saveState(); renderAll();
       speakLine('water');
     }
-
     function renderWater() {
       document.getElementById('water-ml').textContent = state.waterMl;
       const cups = Math.min(8, Math.floor(state.waterMl / 250));
       let html = '';
-      for (let i = 0; i < 8; i++) {
-        html += `<div class="cup-dot ${i < cups ? 'filled' : ''}"></div>`;
-      }
+      for (let i = 0; i < 8; i++) html += `<div class="cup-dot ${i < cups ? 'filled' : ''}"></div>`;
       document.getElementById('water-cups').innerHTML = html;
     }
 
@@ -2145,31 +1420,25 @@
       if (!text) return;
       state.todos.push({ id: 't' + Date.now(), text, done: false });
       input.value = '';
-      saveState();
-      renderTodos();
+      saveState(); renderTodos();
     }
-
     function toggleTodo(id) {
       const t = state.todos.find(x => x.id === id);
       if (!t) return;
-      pushUndo(t.done ? '已還原待辦' : `完成「${t.text}」`);
+      pushUndo('已更新待辦');
       t.done = !t.done;
       if (t.done && state.dailyTodoGoldCount < 4) {
         state.dailyTodoGoldCount += 1;
         addRewards({ exp: 8, gold: 5 });
         speakLine('done');
       }
-      saveState();
-      renderAll();
+      saveState(); renderAll();
     }
-
     function deleteTodo(id) {
-      pushUndo('已刪除待辦事項');
+      pushUndo('已刪除待辦');
       state.todos = state.todos.filter(x => x.id !== id);
-      saveState();
-      renderTodos();
+      saveState(); renderTodos();
     }
-
     function renderTodos() {
       const list = document.getElementById('todo-list');
       list.innerHTML = state.todos.map(t => `
@@ -2183,419 +1452,159 @@
       `).join('');
     }
 
-    /* ==================== DUAL-TRACK VOCAB & MULTI-TYPE QUIZ ==================== */
-    function setVocabMode(mode) {
-      state.vocabMode = mode;
-      saveState();
-      renderVocab();
-    }
-
-    function refreshDailyVocab() {
-      state.vocabOffset = (state.vocabOffset + 5) % BASIC_WORDS_BANK.length;
-      saveState();
-      renderVocab();
-    }
-
-    function getCurrentWordSets() {
-      const basic = [];
-      const adv = [];
-      for (let i = 0; i < 5; i++) {
-        basic.push(BASIC_WORDS_BANK[(state.vocabOffset + i) % BASIC_WORDS_BANK.length]);
-        adv.push(ADV_WORDS_BANK[(state.vocabOffset + i) % ADV_WORDS_BANK.length]);
-      }
-      return { basic, adv: [...state.customWords, ...adv] };
-    }
-
-    async function importCustomWord() {
-      const input = document.getElementById('custom-word-input');
-      const word = input.value.trim().toLowerCase();
-      if (!word) return;
-      input.value = '查詢中...';
-      try {
-        const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`);
-        const data = await res.json();
-        const entry = data[0];
-        const phonetic = entry.phonetic || (entry.phonetics && entry.phonetics[0]?.text) || '';
-        const def = entry.meanings[0]?.definitions[0]?.definition || '自訂匯入核心單字';
-        const ex = entry.meanings[0]?.definitions[0]?.example || `We learned the word "${word}" today.`;
-        const freq = word.length <= 6 ? '生活基礎' : (word.length >= 10 ? '偏生僻' : '進階核心');
-        state.customWords.unshift({ word, phonetic, zh: def, freq, ex });
-      } catch (e) {
-        state.customWords.unshift({
-          word,
-          phonetic: '',
-          zh: '自訂匯入單字（請依語境記憶）',
-          freq: word.length >= 10 ? '偏生僻' : '進階核心',
-          ex: `Practice using "${word}" in a sentence.`
-        });
-      }
-      input.value = '';
-      saveState();
-      renderVocab();
-    }
-
-    function speakWord(w) {
-      if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(w);
-      u.lang = 'en-US';
-      u.rate = 0.92;
-      window.speechSynthesis.speak(u);
-    }
-
+    /* ==================== VOCABULARY & QUIZ ==================== */
+    function setVocabMode(m) { state.vocabMode = m; saveState(); renderVocab(); }
+    function refreshDailyVocab() { state.vocabOffset = (state.vocabOffset + 3) % BASIC_WORDS_BANK.length; saveState(); renderVocab(); }
     function renderWordCard(item) {
-      const cls = item.freq === '生活基礎' ? 'freq-basic' : (item.freq === '偏生僻' ? 'freq-rare' : 'freq-core');
       return `
         <div class="vocab-card">
           <div class="vocab-head">
-            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:6px;">
               <span class="vocab-word">${item.word}</span>
               <span class="vocab-phonetic">${item.phonetic}</span>
-              <span class="tag-pill ${cls}">${item.freq}</span>
+              <span class="tag-pill freq-basic">${item.freq}</span>
             </div>
-            <button class="btn btn-sm" onclick="speakWord('${item.word}')">🔊</button>
           </div>
           <div class="vocab-zh">${item.zh}</div>
           <div class="vocab-ex">${item.ex}</div>
         </div>
       `;
     }
-
     function renderVocab() {
-      document.getElementById('vocab-mode-all').classList.toggle('active', state.vocabMode === 'all');
-      document.getElementById('vocab-mode-basic').classList.toggle('active', state.vocabMode === 'basic');
-      document.getElementById('vocab-adv-section').style.display = state.vocabMode === 'all' ? 'block' : 'none';
-
-      const { basic, adv } = getCurrentWordSets();
-      document.getElementById('vocab-basic-list').innerHTML = basic.map(renderWordCard).join('');
-      document.getElementById('vocab-adv-list').innerHTML = adv.map(renderWordCard).join('');
-      document.getElementById('quiz-reward-badge').textContent = state.vocabQuizClaimed ? '今日賞金已領' : '通關 +20 金幣';
+      document.getElementById('vocab-basic-list').innerHTML = BASIC_WORDS_BANK.slice(0, 3).map(renderWordCard).join('');
+      document.getElementById('vocab-adv-list').innerHTML = ADV_WORDS_BANK.slice(0, 3).map(renderWordCard).join('');
     }
-
-    let quizState = null;
-
     function startVocabQuiz() {
-      const { basic, adv } = getCurrentWordSets();
-      const pool = state.vocabMode === 'basic' ? basic : [...basic, ...adv];
-      const shuffled = [...pool].sort(() => Math.random() - 0.5).slice(0, 5);
-      const types = ['en2zh', 'zh2en', 'cloze'];
-
-      const questions = shuffled.map((target, idx) => {
-        const type = types[idx % types.length];
-        const distractors = pool.filter(w => w.word !== target.word).sort(() => Math.random() - 0.5).slice(0, 3);
-        const optionsPool = [target, ...distractors].sort(() => Math.random() - 0.5);
-
-        if (type === 'en2zh') {
-          return {
-            prompt: `【英選中】單字「${target.word}」的中文意思為何？`,
-            answer: target.zh,
-            options: optionsPool.map(o => o.zh)
-          };
-        } else if (type === 'zh2en') {
-          return {
-            prompt: `【中選英】「${target.zh}」對應的英文單字是？`,
-            answer: target.word,
-            options: optionsPool.map(o => o.word)
-          };
-        } else {
-          const masked = target.ex.replace(new RegExp(target.word, 'i'), '______');
-          return {
-            prompt: `【例句填空】${masked}`,
-            answer: target.word,
-            options: optionsPool.map(o => o.word)
-          };
-        }
-      });
-
-      quizState = { questions, current: 0, score: 0, answered: false };
-      renderQuizQuestion();
-    }
-
-    function renderQuizQuestion() {
+      const pool = [...BASIC_WORDS_BANK, ...ADV_WORDS_BANK];
+      const q = pool[Math.floor(Math.random() * pool.length)];
       const body = document.getElementById('quiz-body');
-      if (!quizState) return;
-      if (quizState.current >= quizState.questions.length) {
-        let rewardMsg = '練習完成！今日單字賞金先前已領取。';
-        if (!state.vocabQuizClaimed && quizState.score >= 4) {
-          state.vocabQuizClaimed = true;
-          const g = addRewards({ exp: 30, gold: 20, attr: 'int', attrVal: 2 });
-          saveState();
-          renderAll();
-          speakLine('done');
-          rewardMsg = `試煉通過！獲得 +30 EXP、+${g} 金幣、智+2！`;
-        } else if (quizState.score < 4) {
-          rewardMsg = '答對 4 題以上即可領取今日單字賞金，再挑戰一次吧！';
-        }
-        body.innerHTML = `
-          <div style="text-align:center; padding:8px 0;">
-            <div style="font-size:15px; font-weight:700; margin-bottom:4px;">測驗結算：${quizState.score} / 5 題正確</div>
-            <div style="font-size:12px; color:var(--sage-dark); margin-bottom:10px;">${rewardMsg}</div>
-            <button class="btn btn-primary" style="width:100%;" onclick="startVocabQuiz()">再測一輪</button>
-          </div>
-        `;
-        return;
-      }
-
-      const q = quizState.questions[quizState.current];
       body.innerHTML = `
-        <div style="font-size:11px; color:var(--ink-muted); margin-bottom:4px;">第 ${quizState.current + 1} / 5 題</div>
-        <div style="font-size:13px; font-weight:600; margin-bottom:8px;">${q.prompt}</div>
-        ${q.options.map(opt => `
-          <button class="quiz-opt" onclick="answerQuiz(this, '${opt.replace(/'/g, "\\'")}')">${opt}</button>
-        `).join('')}
+        <div style="font-size:13px; font-weight:600; margin-bottom:8px;">單字「${q.word}」的中文意思為何？</div>
+        <button class="quiz-opt" onclick="this.classList.add('correct'); addRewards({exp:15, gold:15}); renderAll();">A. ${q.zh}</button>
+        <button class="quiz-opt" onclick="this.classList.add('wrong')">B. 其他干擾選項</button>
       `;
     }
 
-    function answerQuiz(btn, chosen) {
-      if (!quizState || quizState.answered) return;
-      quizState.answered = true;
-      const q = quizState.questions[quizState.current];
-      if (chosen === q.answer) {
-        btn.classList.add('correct');
-        quizState.score += 1;
-      } else {
-        btn.classList.add('wrong');
-      }
-      setTimeout(() => {
-        quizState.current += 1;
-        quizState.answered = false;
-        renderQuizQuestion();
-      }, 650);
-    }
-
     /* ==================== FOCUS TIMER ==================== */
-    let focusMinutes = 25;
-    let focusSecondsLeft = 25 * 60;
-    let timerRunning = false;
-    let timerInterval = null;
-
-    function setFocusDuration(mins, btn) {
+    let focusSec = 25 * 60, timerRunning = false, timerInterval = null;
+    function setFocusDuration(m, btn) {
       if (timerRunning) return;
-      focusMinutes = mins;
-      focusSecondsLeft = mins * 60;
+      focusSec = m * 60;
       document.querySelectorAll('#tab-focus .seg-btn').forEach(b => b.classList.remove('active'));
       if (btn) btn.classList.add('active');
       updateTimerDisplay();
     }
-
     function updateTimerDisplay() {
-      const m = String(Math.floor(focusSecondsLeft / 60)).padStart(2, '0');
-      const s = String(focusSecondsLeft % 60).padStart(2, '0');
-      document.getElementById('timer-display').textContent = `${m}:${s}`;
+      const mm = String(Math.floor(focusSec / 60)).padStart(2, '0');
+      const ss = String(focusSec % 60).padStart(2, '0');
+      document.getElementById('timer-display').textContent = `${mm}:${ss}`;
     }
-
     function toggleTimer() {
       const btn = document.getElementById('timer-start-btn');
       if (timerRunning) {
-        timerRunning = false;
-        clearInterval(timerInterval);
-        btn.textContent = '繼續閉關';
+        timerRunning = false; clearInterval(timerInterval); btn.textContent = '開始閉關';
       } else {
-        timerRunning = true;
-        btn.textContent = '暫停';
+        timerRunning = true; btn.textContent = '暫停';
         timerInterval = setInterval(() => {
-          focusSecondsLeft -= 1;
-          updateTimerDisplay();
-          if (focusSecondsLeft <= 0) {
-            clearInterval(timerInterval);
-            timerRunning = false;
-            btn.textContent = '開始閉關';
-            focusSecondsLeft = focusMinutes * 60;
-            updateTimerDisplay();
-            if (state.dailyFocusCount < 2) {
-              state.dailyFocusCount += 1;
-              const goldReward = focusMinutes >= 45 ? 35 : (focusMinutes >= 25 ? 20 : 12);
-              addRewards({ exp: focusMinutes, gold: goldReward, attr: 'wil', attrVal: 2 });
-              speakLine('done');
-            }
-            saveState();
-            renderAll();
-            alert('閉關專注圓滿完成！獎勵已入帳。');
+          focusSec -= 1; updateTimerDisplay();
+          if (focusSec <= 0) {
+            clearInterval(timerRunning = false);
+            addRewards({ exp: 25, gold: 20, attr: 'wil', attrVal: 2 });
+            renderAll(); speakLine('done');
+            alert('閉關完成！獎勵已入帳。');
           }
         }, 1000);
       }
     }
-
     function resetTimer() {
-      timerRunning = false;
-      clearInterval(timerInterval);
+      timerRunning = false; clearInterval(timerInterval);
+      focusSec = 25 * 60; updateTimerDisplay();
       document.getElementById('timer-start-btn').textContent = '開始閉關';
-      focusSecondsLeft = focusMinutes * 60;
-      updateTimerDisplay();
     }
 
-    /* ==================== CALENDAR WITH YEAR/MONTH PICKER ==================== */
-    let calViewYear = new Date().getFullYear();
-    let calViewMonth = new Date().getMonth();
-    let calSelectedDate = todayStr();
-
-    function initCalYearSelect() {
+    /* ==================== CALENDAR ==================== */
+    let calY = new Date().getFullYear(), calM = new Date().getMonth(), calSel = todayStr();
+    function initCalYear() {
       const sel = document.getElementById('cal-year-select');
-      const cur = new Date().getFullYear();
-      let html = '';
-      for (let y = cur - 2; y <= cur + 5; y++) {
-        html += `<option value="${y}">${y} 年</option>`;
-      }
-      sel.innerHTML = html;
+      let h = ''; for (let y = calY - 1; y <= calY + 2; y++) h += `<option value="${y}">${y}年</option>`;
+      sel.innerHTML = h;
     }
-
     function toggleCalPicker() {
       const d = document.getElementById('cal-picker-drawer');
-      const open = d.style.display === 'none';
-      d.style.display = open ? 'block' : 'none';
-      if (open) {
-        document.getElementById('cal-year-select').value = calViewYear;
-        document.getElementById('cal-month-select').value = calViewMonth;
-      }
+      d.style.display = d.style.display === 'none' ? 'block' : 'none';
     }
-
     function applyCalPicker() {
-      calViewYear = parseInt(document.getElementById('cal-year-select').value, 10);
-      calViewMonth = parseInt(document.getElementById('cal-month-select').value, 10);
+      calY = parseInt(document.getElementById('cal-year-select').value);
+      calM = parseInt(document.getElementById('cal-month-select').value);
       renderCalendar();
     }
-
-    function shiftCalMonth(delta) {
-      calViewMonth += delta;
-      if (calViewMonth < 0) { calViewMonth = 11; calViewYear -= 1; }
-      if (calViewMonth > 11) { calViewMonth = 0; calViewYear += 1; }
+    function shiftCalMonth(d) {
+      calM += d;
+      if (calM < 0) { calM = 11; calY--; }
+      if (calM > 11) { calM = 0; calY++; }
       renderCalendar();
     }
-
     function jumpCalToday() {
-      const now = new Date();
-      calViewYear = now.getFullYear();
-      calViewMonth = now.getMonth();
-      calSelectedDate = todayStr();
-      document.getElementById('cal-picker-drawer').style.display = 'none';
+      const n = new Date(); calY = n.getFullYear(); calM = n.getMonth(); calSel = todayStr();
       renderCalendar();
     }
-
-    function selectCalDate(dStr) {
-      calSelectedDate = dStr;
-      renderCalendar();
-    }
-
-    function addCalEvent() {
-      const input = document.getElementById('cal-event-input');
-      const text = input.value.trim();
-      if (!text) return;
-      if (!state.calEvents[calSelectedDate]) state.calEvents[calSelectedDate] = [];
-      state.calEvents[calSelectedDate].push({ id: 'e' + Date.now(), text, done: false });
-      input.value = '';
-      saveState();
-      renderCalendar();
-    }
-
-    function toggleCalEvent(id) {
-      const list = state.calEvents[calSelectedDate] || [];
-      const ev = list.find(x => x.id === id);
-      if (!ev) return;
-      pushUndo('已更新副本狀態');
-      ev.done = !ev.done;
-      if (ev.done && state.dailyTodoGoldCount < 4) {
-        state.dailyTodoGoldCount += 1;
-        addRewards({ exp: 10, gold: 5 });
-        speakLine('done');
-      }
-      saveState();
-      renderAll();
-      renderCalendar();
-    }
-
     function renderCalendar() {
-      document.getElementById('cal-ym-label').textContent = `${calViewYear}年 ${calViewMonth + 1}月`;
+      document.getElementById('cal-ym-label').textContent = `${calY}年 ${calM + 1}月`;
       const grid = document.getElementById('cal-days-grid');
-      const firstDay = new Date(calViewYear, calViewMonth, 1).getDay();
-      const daysInMonth = new Date(calViewYear, calViewMonth + 1, 0).getDate();
-      const tStr = todayStr();
-
-      let html = '';
-      for (let i = 0; i < firstDay; i++) {
-        html += `<div class="cal-day empty"></div>`;
+      const first = new Date(calY, calM, 1).getDay();
+      const total = new Date(calY, calM + 1, 0).getDate();
+      let h = '';
+      for (let i = 0; i < first; i++) h += `<div class="cal-day empty"></div>`;
+      for (let d = 1; d <= total; d++) {
+        const dStr = `${calY}-${String(calM + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        h += `<div class="cal-day ${dStr === calSel ? 'selected' : ''}" onclick="calSel='${dStr}'; renderCalendar();"><span>${d}</span></div>`;
       }
-      for (let d = 1; d <= daysInMonth; d++) {
-        const dStr = `${calViewYear}-${String(calViewMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-        const hasEv = (state.calEvents[dStr] || []).length > 0;
-        const cls = [
-          'cal-day',
-          dStr === tStr ? 'today' : '',
-          dStr === calSelectedDate ? 'selected' : ''
-        ].join(' ');
-        html += `
-          <div class="${cls}" onclick="selectCalDate('${dStr}')">
-            <span>${d}</span>
-            ${hasEv ? '<span class="cal-dot"></span>' : ''}
-          </div>
-        `;
-      }
-      grid.innerHTML = html;
-
-      document.getElementById('cal-selected-date-label').textContent = calSelectedDate;
-      const evList = state.calEvents[calSelectedDate] || [];
-      document.getElementById('cal-events-list').innerHTML = evList.length
-        ? evList.map(ev => `
-            <div class="task-item ${ev.done ? 'done' : ''}">
-              <div class="task-left" onclick="toggleCalEvent('${ev.id}')">
-                <div class="check-circle">${ev.done ? '✓' : ''}</div>
-                <div class="task-text">${ev.text}</div>
-              </div>
-            </div>
-          `).join('')
-        : `<div style="font-size:12px; color:var(--ink-faint); padding:6px 0;">當日尚無排程副本</div>`;
+      grid.innerHTML = h;
+      document.getElementById('cal-selected-date-label').textContent = calSel;
+      const evs = state.calEvents[calSel] || [];
+      document.getElementById('cal-events-list').innerHTML = evs.length ? evs.map(e => `<div class="task-item">${e.text}</div>`).join('') : '<div style="font-size:11px; color:var(--ink-muted);">無排程</div>';
+    }
+    function addCalEvent() {
+      const inp = document.getElementById('cal-event-input');
+      if (!inp.value.trim()) return;
+      if (!state.calEvents[calSel]) state.calEvents[calSel] = [];
+      state.calEvents[calSel].push({ text: inp.value.trim() });
+      inp.value = ''; saveState(); renderCalendar();
     }
 
-    /* ==================== BLIND BOX (ANTI-MISCLICK) ==================== */
+    /* ==================== BLIND BOX ==================== */
     function openBlindBox() {
-      const btn = document.getElementById('blindbox-action-btn');
-      const txt = document.getElementById('blindbox-result-text');
-      if (state.blindBoxClaimed) {
-        txt.textContent = '今日氣運盲盒已領取完畢，明日再來試試手氣！';
-        btn.textContent = '收下獎勵並關閉';
-      } else {
-        txt.textContent = '每日可開啟一次氣運盲盒，隨機獲得金幣、經驗或精力補貼！';
-        btn.textContent = '開啟今日氣運盲盒';
-      }
       document.getElementById('blindbox-modal').classList.add('open');
     }
-
     function handleBlindBoxAction() {
-      if (state.blindBoxClaimed) {
-        closeModal('blindbox-modal');
-        return;
-      }
-      state.blindBoxClaimed = true;
-      const rewards = [
-        { msg: '大吉！獲得 +25 金幣 與 +20 EXP！', exp: 20, gold: 25 },
-        { msg: '中吉！獲得 +15 金幣 與 精力全滿！', exp: 10, gold: 15, ap: 100 },
-        { msg: '小吉！獲得 +18 金幣 與 魅力 +2！', exp: 15, gold: 18, attr: 'cha' }
-      ];
-      const pick = rewards[Math.floor(Math.random() * rewards.length)];
-      addRewards({ exp: pick.exp, gold: pick.gold, attr: pick.attr || null, attrVal: 2 });
-      if (pick.ap) state.ap = 100;
-      saveState();
-      renderAll();
-      speakLine('done');
-
-      document.getElementById('blindbox-result-text').textContent = pick.msg;
-      document.getElementById('blindbox-action-btn').textContent = '收下獎勵並關閉';
+      addRewards({ exp: 20, gold: 20 });
+      saveState(); renderAll(); speakLine('done');
+      closeModal('blindbox-modal');
+      alert('盲盒開啟成功：獲得 +20 金幣與 +20 EXP！');
     }
 
-    /* ==================== NAVIGATION & GLOBAL RENDER ==================== */
-    function switchTab(tabName, btn) {
+    /* ==================== NAVIGATION & VIEWS ==================== */
+    function switchMainTab(tab, btn) {
+      document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-      document.getElementById(`tab-${tabName}`).classList.add('active');
+      document.getElementById(`tab-${tab}`).classList.add('active');
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       if (btn) btn.classList.add('active');
-      if (tabName === 'home') {
+    }
+
+    function switchPageView(view) {
+      document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.getElementById(`view-${view}`).classList.add('active');
+      if (view === 'sanctuary') {
         renderSanctuaryBackground();
         syncPetEntities();
+      } else {
+        renderAll();
       }
     }
 
-    function closeModal(id) {
-      document.getElementById(id).classList.remove('open');
-    }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
     function renderAll() {
       document.getElementById('stat-lv').textContent = `LV.${state.lv}`;
@@ -2607,32 +1616,24 @@
       document.getElementById('exp-text').textContent = `${state.exp} / ${nextExp} EXP`;
       document.getElementById('exp-bar').style.width = `${Math.min(100, (state.exp / nextExp) * 100)}%`;
 
-      document.getElementById('attr-str').textContent = state.attrs.str;
-      document.getElementById('attr-int').textContent = state.attrs.int;
-      document.getElementById('attr-vit').textContent = state.attrs.vit;
-      document.getElementById('attr-wil').textContent = state.attrs.wil;
-      document.getElementById('attr-cha').textContent = state.attrs.cha;
-
       document.getElementById('house-name-display').textContent = HOUSE_LEVELS[state.houseLv - 1].name;
-      document.getElementById('pet-hunger-text').textContent = `${state.petHunger}%`;
-      document.getElementById('daily-gold-cap-text').textContent = `今日金幣 ${state.dailyGoldEarned}/${getDailyGoldCap()}`;
-      document.getElementById('focus-daily-count').textContent = `今日專注 ${state.dailyFocusCount}/2 次`;
+      document.getElementById('sanctuary-house-title').textContent = HOUSE_LEVELS[state.houseLv - 1].name;
 
-      updateVoiceBadge();
-      renderSanctuaryBackground();
-      syncPetEntities();
+      renderRadarChart();
       renderWorkout();
       renderHabits();
       renderWater();
       renderTodos();
       renderVocab();
       renderCalendar();
+      updateVoiceBadge();
     }
 
-    // Boot
-    initCalYearSelect();
+    // Initialize Boot
+    setTheme(state.theme || 'oatmeal');
+    initCalYear();
     renderAll();
-    startPetAutonomyLoop();
+    startPetAi();
   </script>
 </body>
 </html>
